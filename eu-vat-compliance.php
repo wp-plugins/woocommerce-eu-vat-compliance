@@ -22,8 +22,8 @@ if (!in_array('woocommerce/woocommerce.php', $active_plugins ) && !array_key_exi
 
 define('WC_EU_VAT_COMPLIANCE_DIR', dirname(__FILE__));
 
-// This plugin performs various conceptually distinct functions. So, we have separated the code accordingly.
-// Not all of these files may be present, depending on a) whether this is the free or premium version b) whether I've yet written them
+// This plugin performs various distinct functions. So, we have separated the code accordingly.
+// Not all of these files may be present, depending on a) whether this is the free or premium version b) whether I've written the feature yet
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/vat-number.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/sales-reports.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/record-order-country.php');
@@ -48,6 +48,4 @@ add_action('plugins_loaded', 'eu_vat_compliance_plugins_loaded');
 function eu_vat_compliance_plugins_loaded() {
 	load_plugin_textdomain('wc_eu_vat_compliance', false, WC_EU_VAT_COMPLIANCE_DIR.'/languages');
 }
-
-
 

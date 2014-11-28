@@ -1,10 +1,8 @@
 <?php
 
-//if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
+if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 
-/*
-Purpose: have up-to-date VAT rates
-*/
+// Purpose: have up-to-date VAT rates
 
 class WC_EU_VAT_Compliance_VAT_Rates {
 
