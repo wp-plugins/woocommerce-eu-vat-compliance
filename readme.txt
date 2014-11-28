@@ -7,7 +7,7 @@ Tags: woocommerce, eu vat, vat compliance, moss, vat rates, eu tax, hmrc, woocom
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
 
-Provides features to assist with EU VAT compliance for WooCommerce, for the new VAT regime beginning 1st January 2015, including for with the MOSS system.
+Assists with EU VAT compliance for WooCommerce, for the new VAT regime beginning 1st January 2015, including for with the MOSS system.
 
 == Description ==
 
