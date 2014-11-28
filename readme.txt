@@ -3,27 +3,27 @@ Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.0
 Stable tag: 1.0
-Tags: woocommerce, eu vat, vat compliance, moss, vat rates
+Tags: woocommerce, eu vat, vat compliance, moss, vat rates, eu tax, hmrc, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
 
-Provides features to assist with EU VAT compliance, including with the UK HMRC's MOSS system.
+Provides features to assist with EU VAT compliance for WooCommerce, for the new VAT regime beginning 1st January 2015, including for with the MOSS system.
 
 == Description ==
 
-From January 1st 2015, all digital goods sold to EU consumers are liable to EU VAT charged in the country of purchase, at the VAT rate in that country of purchase (background information: http://www.telegraph.co.uk/finance/businessclub/11254829/New-EU-VAT-rules-threaten-to-kill-UK-micro-firms.html).
+From January 1st 2015, all digital goods sold to EU consumers are liable to EU VAT charged in the country of *purchase*, at the VAT rate in that country (background information: http://www.telegraph.co.uk/finance/businessclub/11254829/New-EU-VAT-rules-threaten-to-kill-UK-micro-firms.html).
 
-This applies even if the seller is not based in the EU, and there is no minimum threshold - 100% of sales to EU customers are liable to this tax. (Whether you think the EU can enforce the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers).
+This applies even if the seller is not based in the EU, and there is no minimum threshold - 100% of sales to EU customers are liable to these per-country taxes. (Whether you think the EU can enforce the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers).
 
 This WooCommerce plugin provides features to assist with EU VAT compliance from January 1st 2015. Currently, those features include:
 
-- A facility to automatically configure all current EU reduced and standard VAT rates in your WooCommerce tax tables.
+- A facility to automatically configure all current EU reduced and standard VAT rates in your WooCommerce tax tables. Much better than typing in approximately 30 different country codes and VAT rates by hand.
 
 - This is an early release - more features will be added later; some will be available only in a premium version; when the premium version is ready for sale, a link will appear here.
 
 Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT regime will continue to operate.
 
-This plugin requires WooCommerce 2.0 or later (tested up to 2.2). It fetches data on current VAT rales from Amazon S3; or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
+This plugin requires WooCommerce 2.0 or later (tested up to 2.2). It will not interfere with any other taxes or reports which you have set up. It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin. Please make sure that you review this plugin's installation instructions and have not missed any important information there.
 
 = Legalese =
 
