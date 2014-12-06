@@ -23,6 +23,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - Displays VAT information in the admin order display: shows the VAT paid, the country used to calculate tax, and the geographical IP information.
 
+- Can distinguish VAT from other taxes, in case you need to charge multiple taxes.
+
 - More features (including reporting) will be added later; some will be available only in a premium version; when the premium version is ready for sale, a link will appear here.
 
 Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT regime will continue to operate.
