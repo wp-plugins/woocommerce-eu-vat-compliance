@@ -31,7 +31,7 @@ Before January 1st 2015, of course, you will want to be careful about which feat
 
 This plugin requires WooCommerce 2.0 or later (tested up to 2.2). It will not interfere with any other taxes or reports which you have set up. It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
 
-Geographical IP lookups are performed via the MaxMind GeoIP database, via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can activate the CloudFlare feature for sending geographical information.
+Geographical IP lookups are performed via the MaxMind GeoIP database, via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
 
 Please make sure that you review this plugin's installation instructions and have not missed any important information there.
 
