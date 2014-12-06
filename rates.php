@@ -4,7 +4,7 @@ if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 
 // Purpose: have up-to-date VAT rates
 
-class WC_EU_VAT_Compliance_VAT_Rates {
+class WC_EU_VAT_Compliance_Rates {
 
 	private $rates = array();
 
@@ -27,6 +27,9 @@ class WC_EU_VAT_Compliance_VAT_Rates {
 		global $pagenow;
 		// wp-admin/admin.php?page=wc-settings&tab=tax&s=standard
 		if ('admin.php' == $pagenow && !empty($_REQUEST['page']) && ('woocommerce_settings' == $_REQUEST['page'] || 'wc-settings' == $_REQUEST['page']) && !empty($_REQUEST['tab']) && 'tax' == $_REQUEST['tab'] && !empty($_REQUEST['section'])) {
+
+			add_action('woocommerce_settings_tax', array($this, 'woocommerce_settings_tax'));
+
 			if ('standard' == $_REQUEST['section']) {
 				$this->which_rate = 'standard_rate';
 				add_action('admin_footer', array($this, 'admin_footer'));
@@ -41,6 +44,10 @@ class WC_EU_VAT_Compliance_VAT_Rates {
 		} elseif (function_exists('WC')) {
 			$this->wc = WC();
 		}
+	}
+
+	public function woocommerce_settings_tax() {
+		echo 'tahare';
 	}
 
 	// Only fires on the correct page
@@ -147,10 +154,16 @@ class WC_EU_VAT_Compliance_VAT_Rates {
 
 				<?php
 					$selector = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) ? 'a.remove' : 'a.remove_tax_rates';
+					$vat_descr_info = esc_attr(__('Note: for any tax you enter below to be recognised as VAT for EU VAT purposes, its name will need to contain one of the following words or phrases:', 'wc_eu_vat_compliance')).' '.WooCommerce_EU_VAT_Compliance()->get_vat_matches('html-printable').'. <a href="?page='.$_REQUEST['page'].'&tab=tax">'.esc_attr(__('You can configure this list in the tax options.', 'wc_eu_vat_compliance')).'<a>';
 				?>
+
+				
 
 				var $foot = jQuery('table.wc_tax_rates tfoot <?php echo $selector;?>').first();
 				$foot.after('<a href="#" id="euvatcompliance-updaterates" class="button euvatcompliance-updaterates"><?php echo htmlspecialchars($rate_description);?></a>');
+
+				jQuery('table.wc_tax_rates').first().before('<p><em><?php echo $vat_descr_info; ?></em></p>');
+
 				jQuery('table.wc_tax_rates').on('click', '.euvatcompliance-updaterates', function() {
 					jQuery.each(rates, function(iso, country) {
 						var rate = country.standard_rate;
