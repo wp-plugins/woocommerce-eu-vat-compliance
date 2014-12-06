@@ -19,6 +19,8 @@ This WooCommerce plugin provides features to assist with EU VAT compliance from 
 
 - A facility to automatically configure all current EU reduced and standard VAT rates in your WooCommerce tax tables. Much better than typing in approximately 30 different country codes and VAT rates by hand.
 
+- (Not yet released - undergoing testing) - A facility to record necessary information about the buyer's location
+
 - This is an early release - more features will be added later; some will be available only in a premium version; when the premium version is ready for sale, a link will appear here.
 
 Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT regime will continue to operate.
