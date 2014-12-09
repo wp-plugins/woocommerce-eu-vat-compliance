@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.0
-Stable tag: 1.1
+Stable tag: 1.1.1
 Tags: woocommerce, eu vat, vat compliance, moss, vat rates, eu tax, hmrc, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -23,13 +23,15 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - Displays VAT information in the admin order display: shows the VAT paid, the country used to calculate tax, and the geographical IP information.
 
+- Can distinguish VAT from other taxes, in case you need to charge multiple taxes.
+
 - More features (including reporting) will be added later; some will be available only in a premium version; when the premium version is ready for sale, a link will appear here.
 
 Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT regime will continue to operate.
 
 This plugin requires WooCommerce 2.0 or later (tested up to 2.2). It will not interfere with any other taxes or reports which you have set up. It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
 
-Geographical IP lookups are performed via the MaxMind GeoIP database, via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can activate the CloudFlare feature for sending geographical information.
+Geographical IP lookups are performed via the MaxMind GeoIP database, via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
 
 Please make sure that you review this plugin's installation instructions and have not missed any important information there.
 
@@ -67,6 +69,10 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Changelog ==
 
+= 1.1.1 - 2014-12-09 =
+
+* Fix bug with display of info in admin area in WooCommerce 2.2
+
 = 1.1 - 2014-12-06 =
 
 * GeoIP information, and what information WooCommerce used in setting taxes, is now recorded at order time
@@ -99,4 +105,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.1 : Information about the customer's tax location is now recorded at order time, and displayed in the admin area
+* 1.1.1 : Fix bug with display of country info in admin area in WC 2.2
