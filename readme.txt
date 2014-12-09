@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.0
-Stable tag: 1.1
+Stable tag: 1.1.1
 Tags: woocommerce, eu vat, vat compliance, moss, vat rates, eu tax, hmrc, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -69,6 +69,10 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Changelog ==
 
+= 1.1.1 - 2014-12-09 =
+
+* Fix bug with display of info in admin area in WooCommerce 2.2
+
 = 1.1 - 2014-12-06 =
 
 * GeoIP information, and what information WooCommerce used in setting taxes, is now recorded at order time
@@ -101,4 +105,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.1 : Information about the customer's tax location is now recorded at order time, and displayed in the admin area
+* 1.1.1 : Fix bug with display of country info in admin area in WC 2.2

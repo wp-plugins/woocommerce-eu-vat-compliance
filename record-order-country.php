@@ -165,7 +165,7 @@ Array
 	// Show recorded information on the admin page
 	public function woocommerce_admin_order_data_after_shipping_address($order) {
 
-		$post_id = (isset($order->post)) ? $order->post->id : $order->id;
+		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
 
 		$country_info = get_post_meta($post_id, 'vat_compliance_country_info', true);
 
