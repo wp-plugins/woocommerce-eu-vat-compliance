@@ -11,21 +11,31 @@ Assists with EU VAT compliance for WooCommerce, for the new VAT regime beginning
 
 == Description ==
 
-From January 1st 2015, all digital goods sold to EU consumers are liable under EU law to EU VAT (a.k.a. IVA) charged in the country of *purchase*, at the VAT rate in that country (background information: http://www.telegraph.co.uk/finance/businessclub/11254829/New-EU-VAT-rules-threaten-to-kill-UK-micro-firms.html).
+From January 1st 2015, all digital goods (including electronic, telecommunications, software, ebook and broadcast services) sold across EU borders are liable under EU law to EU VAT (a.k.a. IVA) charged in the country of *purchase*, at the VAT rate in that country (background information: http://www2.deloitte.com/global/en/pages/tax/articles/eu-2015-place-of-supply-changes-mini-one-stop-shop.html).
 
-This applies even if the seller is not based in the EU, and there is no minimum threshold - 100% of sales to EU customers are liable to these per-country taxes. (Whether you think the EU can enforce the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers).
+This applies even if the seller is not based in the EU, and there is no minimum threshold - 100% of sales to EU customers are liable to these per-country taxes. (Whether you think the EU's treaties with other jurisdictions will lead to success in enforcing the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers!).
 
 This WooCommerce plugin provides features to assist with EU VAT law compliance from January 1st 2015. Currently, those features include:
 
 - A facility to automatically configure all current EU reduced and standard VAT rates in your WooCommerce tax tables. Much better than typing in approximately 30 different country codes and VAT rates by hand.
 
-- Records information required to verify the customer's region: the region data associated with the customer's IP is recorded (via a geographical IP lookup), and so is the country which WooCommerce used for the tax calculation (according to your settings).
+- Records information required to verify the customer's region: the region data associated with the customer's IP is recorded (via a geographical IP lookup), and so is the country which WooCommerce used for the tax calculation (according to your WooCommerce settings - billing country or shipping country).
 
 - Displays VAT information in the admin order display: shows the VAT paid, the country used to calculate tax, and the geographical IP information.
 
 - Can distinguish VAT from other taxes, in case you need to charge multiple taxes.
 
-- More features (including reporting) will be added later; some will be available only in a premium version; the premium version, when it is available, <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">will be on sale at this link, here</a>.
+A Premium version, which <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">will be on sale at this link, when it has finished testing</a>, is being developed, and currently has these *additional* features ready:
+
+- The ability to allow the customer to enter their VAT number, have it validated (via an online service), and be exempted from VAT (optionally, if they are not in the shop's base country). (i.e. Allow "B2B" transactions to be exempt from VAT).
+
+- Additional option to allow the country used by WooCommerce for tax collections to be the country of visitor's IP address, or, if it conflicts with the billing/shipping address, to allow the customer to self-certify to tie-break the conflict. (In some jurisdictions, the tax man may require this information in order to have two non-contradictory pieces of information for the customer's location).
+
+- Compatibility with <a href="http://aelia.co/shop/currency-switcher-woocommerce/">the excellent WooCommerce currency switcher plugin by Aelia</a>.
+
+- Not yet finished: Advanced reporting features (some reporting features will probably be added to the free version too)
+
+Other features are still being weighed up and considered. It is believed (but not legally guaranteed), that armed with the above capabilities, a WooCommerce shop owner will be in a position to fulfil all the requirements of the EU VAT law: identifying the customer's location and collecting multiple pieces of evidence, applying the correct VAT rate, validating VAT numbers for B2B transactions, and having the data needed to create returns. (If in the EU, then you will also need to make sure that you are issuing your customers with VAT invoices containing the information required in your jurisdiction, via a suitable WooCommerce invoice plugin).
 
 Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT regime will continue to operate.
 
