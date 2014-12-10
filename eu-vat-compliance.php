@@ -3,7 +3,7 @@
 Plugin Name: WooCommerce EU VAT Compliance
 Plugin URI: https://www.simbahosting.co.uk/shop/woocommerce-eu-vat-compliance
 Description: Provides features to assist WooCommerce with EU VAT compliance
-Version: 1.1
+Version: 1.1.2
 Author: David Anderson
 Author URI: http://www.simbahosting.co.uk/s3/shop/
 Requires at least: 3.1
@@ -112,7 +112,7 @@ foreach ($classes_to_activate as $cl) {
 	}
 }
 
-function WooCommerce_EU_VAT_Compliance() {
+function WooCommerce_EU_VAT_Compliance($class = 'WC_EU_VAT_Compliance') {
 	global $woocommerce_eu_vat_compliance_classes;
-	return $woocommerce_eu_vat_compliance_classes['WC_EU_VAT_Compliance'];
+	return $woocommerce_eu_vat_compliance_classes[$class];
 }

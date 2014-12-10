@@ -217,8 +217,8 @@ class WC_EU_VAT_Compliance_Rates {
 			case 'UK' :
 				$iso_code = 'GB';
 			break;
-			case 'FR' :
-				$iso_code = 'MC';
+// 			case 'FR' :
+// 				$iso_code = 'MC';
 			break;
 		}
 
@@ -265,7 +265,9 @@ class WC_EU_VAT_Compliance_Rates {
 				$iso = $this->get_iso_code($country);
 				$corrected_rates[$iso] = $rate;
 			}
-			set_site_transient('wc_euvatrates_rates_byiso', $corrected_rates, 86400);
+			// Add in Monaco
+			if (isset($corrected_rates['FR'])) $corrected_rates['MC'] = $corrected_rates['FR'];
+			set_site_transient('wc_euvatrates_rates_byiso', $corrected_rates, 43200);
 			$this->rates = $corrected_rates;
 		}
 

@@ -2,11 +2,9 @@
 
 if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 
-// Function: record the GeoIP information for the order, at order time. This module uses either the CloudFlare header (if available - https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-), or requires http://wordpress.org/plugins/geoip-detect/. It will always record something, even if the something is the information that nothing could be worked out.
+// Function: record the GeoIP information for the order, at order time. This module uses either the CloudFlare header (if available - https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-), or requires http://wordpress.org/plugins/geoip-detect/. Or, you can hook into it and use something else. It will always record something, even if the something is the information that nothing could be worked out.
 
 // The information is stored as order meta, with key: update_post_meta
-
-// TODO: Need to display refund information (which differs from WC 2.2 onwards)
 
 class WC_EU_VAT_Compliance_Record_Order_Country {
 
@@ -159,16 +157,13 @@ Array
 
 */
 
-
 	}
 
 	// Show recorded information on the admin page
 	public function woocommerce_admin_order_data_after_shipping_address($order) {
 
 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
-
 		$country_info = get_post_meta($post_id, 'vat_compliance_country_info', true);
-
 		echo '<p id="wc_eu_vat_compliance_countryinfo">';
 
 		echo '<strong>'.__("EU VAT Compliance Information", 'wc_eu_vat_compliance').':</strong><br>';
@@ -191,9 +186,6 @@ Array
 			echo __("VAT paid:", 'wc_eu_vat_compliance').' ';
 
 			$paid = get_woocommerce_currency_symbol($vat_paid['currency']).' '.sprintf('%.02f', $vat_paid['total']);
-			if ($vat_paid['base_currency'] != $vat_paid['currency']) {
-				$paid .= ' ('.get_woocommerce_currency_symbol($vat_paid['base_currency']).' '.sprintf('%.02f', $vat_paid['total_base_currency']).')';
-			}
 
 			// Allow filtering - since for some shops using a multi-currency plugin, the VAT currency is neither the base nor necessarily the purchase currency.
 			echo apply_filters('wc_eu_vat_compliance_show_vat_paid', $paid, $vat_paid);
@@ -320,7 +312,8 @@ array (size=3)
 	// Here's where the hard work is done - where we get the information on the visitor's country and how it was discerned
 	// Returns an array
 	public function get_visitor_country_info() {
-		$ip = null;
+
+		$ip = $this->get_visitor_ip_address();
 		$info = null;
 
 		// If CloudFlare has already done the hard work, return their result (which is probably more accurate)
@@ -339,7 +332,6 @@ array (size=3)
 
 		// Get the GeoIP info even if CloudFlare has a country - store it
 		if (function_exists('geoip_detect_get_info_from_ip')) {
-			$ip = $this->get_visitor_ip_address();
 			if (isset($country_info)) {
 				$country_info_geoip = $this->construct_country_info($ip);
 				if (is_array($country_info_geoip) && isset($country_info_geoip['meta'])) $country_info['meta'] = $country_info_geoip['meta'];
@@ -352,6 +344,7 @@ array (size=3)
 		return apply_filters('wc_eu_vat_compliance_get_visitor_country_info', $country_info, $info, $ip);
 	}
 
+	// Make sure that function_exists('geoip_detect_get_info_from_ip') before calling this
 	private function construct_country_info($ip) {
 		$info = geoip_detect_get_info_from_ip($ip);
 		if (!is_object($info) || empty($info->country_code)) {

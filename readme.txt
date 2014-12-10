@@ -2,8 +2,8 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.0
-Stable tag: 1.1.1
-Tags: woocommerce, eu vat, vat compliance, moss, vat rates, eu tax, hmrc, woocommerce taxes
+Stable tag: 1.1.2
+Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
 
@@ -11,7 +11,7 @@ Assists with EU VAT compliance for WooCommerce, for the new VAT regime beginning
 
 == Description ==
 
-From January 1st 2015, all digital goods sold to EU consumers are liable to EU VAT charged in the country of *purchase*, at the VAT rate in that country (background information: http://www.telegraph.co.uk/finance/businessclub/11254829/New-EU-VAT-rules-threaten-to-kill-UK-micro-firms.html).
+From January 1st 2015, all digital goods sold to EU consumers are liable under EU law to EU VAT (a.k.a. IVA) charged in the country of *purchase*, at the VAT rate in that country (background information: http://www.telegraph.co.uk/finance/businessclub/11254829/New-EU-VAT-rules-threaten-to-kill-UK-micro-firms.html).
 
 This applies even if the seller is not based in the EU, and there is no minimum threshold - 100% of sales to EU customers are liable to these per-country taxes. (Whether you think the EU can enforce the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers).
 
@@ -25,7 +25,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - Can distinguish VAT from other taxes, in case you need to charge multiple taxes.
 
-- More features (including reporting) will be added later; some will be available only in a premium version; when the premium version is ready for sale, a link will appear here.
+- More features (including reporting) will be added later; some will be available only in a premium version; the premium version, when it is available, <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">will be on sale at this link, here</a>.
 
 Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT regime will continue to operate.
 
@@ -69,6 +69,11 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Changelog ==
 
+= 1.1.2 - 2014-12-10 =
+
+* Fix bug which prevented France (FR) being entered into the rates table. You will need to either wait 24 hours before pressing the button to update rates since you last did so, or to clear your transients, or enter French VAT (20% / 10%) manually into the tax table.
+* Reduce time which current rates are cached for to 12 hours
+
 = 1.1.1 - 2014-12-09 =
 
 * Fix bug with display of info in admin area in WooCommerce 2.2
@@ -105,4 +110,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.1.1 : Fix bug with display of country info in admin area in WC 2.2
+* 1.1.2 : Fix bug which prevented France (FR) being entered into the rates table
