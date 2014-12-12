@@ -4,6 +4,7 @@ if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 
 // Purpose: have up-to-date VAT rates
 
+if (class_exists('WC_EU_VAT_Compliance_Rates')) return;
 class WC_EU_VAT_Compliance_Rates {
 
 	private $rates = array();

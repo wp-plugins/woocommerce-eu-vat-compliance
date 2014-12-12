@@ -6,6 +6,7 @@ if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 
 // The information is stored as order meta, with key: update_post_meta
 
+if (class_exists('WC_EU_VAT_Compliance_Record_Order_Country')) return;
 class WC_EU_VAT_Compliance_Record_Order_Country {
 
 	private $wc;
