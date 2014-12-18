@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -27,6 +27,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
+- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. Currently WooCommerce 2.0 and 2.1 are supported and a report broken down by country and currency can be generated, with 2.2 support and support for downloading a full spreadsheet on every transaction to be added soon.
+
 - <strong>Distinguish VAT from other taxes:</strong> if you are in a jurisdiction where you have to apply other taxes also, then this plugin can handle that: it knows which taxes are VAT, and which are not.
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">A Premium version is on sale at this link</a>, and currently has these *additional* features ready:
@@ -38,8 +40,6 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
 - <strong>Multi-currency compatible:</strong> if you are using the <a href="http://aelia.co/shop/currency-switcher-woocommerce/">"WooCommerce currency switcher"</a> plugin to sell in multiple currencies, then this plugin will maintain and provide its data for each order in both your shop's base currency and the order currency (if it differs).
-
-- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. Currently WooCommerce 2.0 and 2.1 are supported and a report broken down by country and currency can be generated, with 2.2 support and support for downloading a full spreadsheet on every transaction to be added very soon. (Some reporting features will possibly/probably be added to the free version too.)
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">Read more about the Premium version of this plugin at this link.</a>
 
@@ -86,6 +86,11 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 (None yet)
 
 == Changelog ==
+
+= 1.3.1 - 2014-12-18 =
+
+* FEATURE: Reports have now been added to the free version. So far, this is still WC 2.0 and 2.1 only - 2.2 is not yet finished.
+* FIX: Reporting in 1.3.0 was omitting orders with order statuses failed/cancelled/processing, even if the user included them
 
 = 1.3.0 - 2014-12-18 =
 
@@ -148,4 +153,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.3.0 : First implementaton of reports (WC 2.0, 2.1 - not yet 2.2). Important update to make sure order meta-data is stored efficiently.
+* 1.3.1 : First implementaton of reports (WC 2.0, 2.1 - not yet 2.2). Important update to make sure order meta-data is stored efficiently.
