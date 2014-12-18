@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -21,6 +21,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Identify your customers' location:</strong> this plugin will record evidence of your customer's location, using their billing or shipping address, and their IP address (via a GeoIP lookup).
 
+- <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out.
+
 - <strong>Evidence is recorded, ready for audit:</strong> full information that was used to calculate VAT is displayed in the WooCommerce order screen in the back-end.
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
@@ -31,11 +33,13 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained.
 
+- <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.
+
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
 - <strong>Multi-currency compatible:</strong> if you are using the <a href="http://aelia.co/shop/currency-switcher-woocommerce/">"WooCommerce currency switcher"</a> plugin to sell in multiple currencies, then this plugin will maintain and provide its data for each order in both your shop's base currency and the order currency (if it differs).
 
-- <strong>Reporting:</strong> This feature is not yet part of this plugin, but will be available as an update to all Premium customers before any quarterly VAT reports are due in 2015: advanced reporting capabilities, allowing you to extract all the information needed to make a MOSS (mini one-stop shop) VAT report. Some reporting features will probably be added to the free version too.
+- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. Currently WooCommerce 2.0 and 2.1 are supported and a report broken down by country and currency can be generated, with 2.2 support and support for downloading a full spreadsheet on every transaction to be added very soon. (Some reporting features will possibly/probably be added to the free version too.)
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">Read more about the Premium version of this plugin at this link.</a>
 
@@ -83,6 +87,12 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Changelog ==
 
+= 1.3.0 - 2014-12-18 =
+
+* FEATURE: Premium version now shows per-country VAT reports on WooCommerce 2.0 and 2.1 (2.2 to follow). Which reporting features will or won't go into the free version is still to-be decided.
+* FIX: The value of the "Phrase matches used to identify VAT taxes" setting was reverting to default - please update it again if you had attempted to change it (after updating to this version)
+* IMPORTANT TWEAK: Order VAT is now computed and stored at order time, to spare the computational expense of calculating it, order-by-order, when reporting. You should apply this update asap: orders made before you upgrade to it will not be tracked in your report. (Note also that reporting features are still under development, in case you're wondering where they are - they're not technically needed until the 1st quarter of 2015 ends, and only need to cover from 1st Jan 2015 onwards). 
+
 = 1.2.0 - 2014-12-12 =
 
 * COMPATIBILITY: Tested on WordPress 4.1
@@ -119,6 +129,8 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 2. VAT information being shown in the order details page
 
+3. Per-country VAT reports (more features currently being worked on)
+
 == License ==
 
     This program is free software; you can redistribute it and/or modify
@@ -136,4 +148,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.2.0 : Tested on WP 4.1. Re-factor some code + update readme.txt with current state information
+* 1.3.0 : First implementaton of reports (WC 2.0, 2.1 - not yet 2.2). Important update to make sure order meta-data is stored efficiently.

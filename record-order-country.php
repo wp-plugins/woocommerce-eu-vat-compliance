@@ -14,6 +14,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	public function __construct() {
 		add_action('woocommerce_checkout_update_order_meta', array($this, 'woocommerce_checkout_update_order_meta'));
 		add_action('woocommerce_admin_order_data_after_shipping_address', array($this, 'woocommerce_admin_order_data_after_shipping_address'));
+		add_action('woocommerce_checkout_order_processed', array($this, 'woocommerce_checkout_order_processed'));
 
 		// Display a notice if there's no means of detecting the country
 		add_action('plugins_loaded', array($this, 'plugins_loaded'));
@@ -38,126 +39,14 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		$country_info['taxable_address'] = $taxable_address;
 
 		update_post_meta($order_id, 'vat_compliance_country_info', apply_filters('wc_eu_vat_compliance_meta_country_info', $country_info));
+
 	}
 
-	private function get_vat_paid($order) {
-
-		$taxes = $order->get_taxes();
-
-		if (!is_array($taxes)) return false;
-		if (empty($taxes)) return 0;
-
-		// Get an array of matches
-		$vat_strings = $this->compliance->get_vat_matches('regex');
-
-		// Not get_woocommerce_currency(), as currency switcher plugins filter that.
-		$base_currency = get_option('woocommerce_currency');
-		// WC 2.0 did not store order currencies.
-		$currency = method_exists($order, 'get_order_currency') ? $order->get_order_currency() : $base_currency;
-
-		$vat_total = 0;
-		$vat_shipping_total = 0;
-		$vat_total_base_currency = 0;
-		$vat_shipping_total_base_currency = 0;
-		$base_currency_totals_are_reliable = true;
-
-		foreach ($taxes as $tax) {
-			if (!is_array($tax) || !isset($tax['label'])) continue;
-			if (!preg_match($vat_strings, $tax['label'])) continue;
-
-			if (!empty($tax['tax_amount'])) $vat_total += $tax['tax_amount'];
-			if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total += $tax['shipping_tax_amount'];
-
-			if ($currency != $base_currency) {
-				if (empty($tax['tax_amount_base_currency'])) {
-					// This will be wrong, of course, unless your conversion rate is 1:1
-					if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount'];
-					if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount'];
-					$base_currency_totals_are_reliable = false;
-				} else {
-					if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount_base_currency'];
-					if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount_base_currency'];
-				}
-			} else {
-				$vat_total_base_currency = $vat_total;
-				$vat_shipping_total_base_currency = $vat_shipping_total;
-			}
-
-		}
-
-		// We may as well return the kitchen sink, since we've spent the cycles on getting it.
-		return apply_filters('wc_eu_vat_compliance_get_vat_paid', array(
-			'items_total' => $vat_total,
-			'shipping_total' => $vat_shipping_total,
-			'total' => $vat_total + $vat_shipping_total,
-			'currency' => $currency,
-			'base_currency' => $base_currency,
-			'items_total_base_currency' => $vat_total_base_currency,
-			'shipping_total_base_currency' => $vat_shipping_total_base_currency,
-			'total_base_currency' => $vat_total_base_currency + $vat_shipping_total_base_currency,
-			'base_currency_totals_are_reliable' => $base_currency_totals_are_reliable
-		), $order, $taxes, $currency, $base_currency);
-
-/*
-e.g. (and remember, there may be other elements which are not VAT).
-
-Array
-(
-    [62] => Array
-        (
-            [name] => GB-VAT (UNITED KINGDOM)-1
-            [type] => tax
-            [item_meta] => Array
-                (
-                    [rate_id] => Array
-                        (
-                            [0] => 28
-                        )
-
-                    [label] => Array
-                        (
-                            [0] => VAT (United Kingdom)
-                        )
-
-                    [compound] => Array
-                        (
-                            [0] => 1
-                        )
-
-                    [tax_amount_base_currency] => Array
-                        (
-                            [0] => 2
-                        )
-
-                    [tax_amount] => Array
-                        (
-                            [0] => 3.134
-                        )
-
-                    [shipping_tax_amount_base_currency] => Array
-                        (
-                            [0] => 2.8
-                        )
-
-                    [shipping_tax_amount] => Array
-                        (
-                            [0] => 4.39
-                        )
-
-                )
-
-            [rate_id] => 28
-            [label] => VAT (United Kingdom)
-            [compound] => 1
-            [tax_amount_base_currency] => 2
-            [tax_amount] => 3.134
-            [shipping_tax_amount_base_currency] => 2.8
-            [shipping_tax_amount] => 4.39
-        )
-
-
-*/
-
+	public function woocommerce_checkout_order_processed($order_id) {
+		$vat_paid = WooCommerce_EU_VAT_Compliance()->get_vat_paid($order_id);
+		$order = WooCommerce_EU_VAT_Compliance()->get_order($order_id);
+		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
+		update_post_meta($post_id, 'vat_compliance_vat_paid', apply_filters('wc_eu_vat_compliance_vat_paid', $vat_paid, $order));
 	}
 
 	// Show recorded information on the admin page
@@ -165,6 +54,7 @@ Array
 
 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
 		$country_info = get_post_meta($post_id, 'vat_compliance_country_info', true);
+
 		echo '<p id="wc_eu_vat_compliance_countryinfo">';
 
 		echo '<strong>'.__("EU VAT Compliance Information", 'wc_eu_vat_compliance').':</strong><br>';
@@ -181,7 +71,7 @@ Array
 		}
 
 		// Relevant function: get_woocommerce_currency_symbol($currency = '')
-		$vat_paid = $this->get_vat_paid($order);
+		$vat_paid = WooCommerce_EU_VAT_Compliance()->get_vat_paid($order, true, true);
 
 		if (is_array($vat_paid)) {
 			echo __("VAT paid:", 'wc_eu_vat_compliance').' ';

@@ -230,13 +230,13 @@ class WC_EU_VAT_Compliance_Rates {
 	// Available rates: standard_rate, reduced_rate (super_reduced_rate, parking_rate)
 	public function get_vat_rate_for_country($country_code, $rate = 'standard_rate') {
 		$rates = $this->get_vat_rates();
-		if (empty($rates) || !is_array($rates) || !isset($rates['rates']) || !isset($rates['rates'][$country_code])) return false;
-		if (!isset($rates['rates'][$country_code][$rate])) return false;
-		return $rates['rates'][$country_code][$rate];
+		if (empty($rates) || !is_array($rates) || !isset($rates[$country_code])) return false;
+		if (!isset($rates[$country_code][$rate])) return false;
+		return $rates[$country_code][$rate];
 	}
 
 	public function get_vat_rates() {
-		if (!empty($this->rates)) return $rates;
+		if (!empty($this->rates)) return $this->rates;
 		$rates = get_site_transient('wc_euvatrates_rates_byiso');
 		if (is_array($rates) && !empty($rates)) {
 			$new_rates = $rates;
@@ -271,7 +271,6 @@ class WC_EU_VAT_Compliance_Rates {
 			set_site_transient('wc_euvatrates_rates_byiso', $corrected_rates, 43200);
 			$this->rates = $corrected_rates;
 		}
-
 		return $this->rates;
 	}
 
