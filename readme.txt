@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -87,6 +87,11 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Changelog ==
 
+= 1.4.0 - 2014-12-19 =
+
+* FEATURE: Beginnings of a control centre, where all functions are brought together in a single location, for ease of access (in the dashboard menu, WooCommerce -> EU Vat Compliance)
+* TRANSLATIONS: A POT file is available for translators to use - http://plugins.svn.wordpress.org/woocommerce-eu-vat-compliance/trunk/languages/wc_eu_vat_compliance.pot
+
 = 1.3.1 - 2014-12-18 =
 
 * FEATURE: Reports have now been added to the free version. So far, this is still WC 2.0 and 2.1 only - 2.2 is not yet finished.
@@ -128,9 +133,8 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Screenshots ==
 
-<em>Note: Screenshots are included below from <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">the Premium version</a>. Please check the feature list for this plugin to clarify which features are available in which version.</em>
 
-1. A button is added to allow you to enter all EU VAT rates with one click.
+1. A button is added to allow you to enter all EU VAT rates with one click. <em>Note: Screenshots are included below from <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">the Premium version</a>. Please check the feature list for this plugin to clarify which features are available in which version.</em>
 
 2. VAT information being shown in the order details page
 
@@ -153,4 +157,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.3.1 : First implementaton of reports (WC 2.0, 2.1 - not yet 2.2). Important update to make sure order meta-data is stored efficiently.
+* 1.4.0 : Beginnings of a new control centre, to bring access to all functions into one place. Translation file available for translators.

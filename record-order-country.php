@@ -167,39 +167,14 @@ array (size=3)
 		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;
 
 		if (!function_exists('geoip_detect_get_info_from_ip')) {
-			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
+			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array(WooCommerce_EU_VAT_Compliance(), 'admin_notice_no_geoip_plugin'));
 		}
 
 		if (function_exists('geoip_detect_get_database_upload_filename')) {
 			$filename = geoip_detect_get_database_upload_filename();
-			if (!file_exists($filename)) add_action('admin_notices', array($this, 'admin_notice_no_geoip_database'));
+			if (!file_exists($filename)) add_action('admin_notices', array(WooCommerce_EU_VAT_Compliance(), 'admin_notice_no_geoip_database'));
 		}
 	}
-
-	public function admin_notice_no_geoip_database() {
-		echo '<div class="error">';
-		echo '<h4 style="margin: 1em 0 0 0">'.__('GeoIP database not found', 'wc_eu_vat_compliance').'</h4><p>';
-		echo __('You have the GeoIP plugin installed, but it has not yet downloaded its database. This is needed for country pre-selection to work.', 'wc_eu_vat_compliance');
-		echo '<a href="'.admin_url('tools.php?page=geoip-detect/geoip-detect.php').'"> '.__('Follow this link and press the Update Now button to download it', 'wcpreselectdefaultcountry').'</a>';
-		echo '</p></div>';
-	}
-
-	public function admin_notice_no_geoip_plugin() {
-		echo '<div class="error">';
-		echo '<h4 style="margin: 1em 0 0 0">'.__('Required Plugin Not Found', 'wc_eu_vat_compliance').'</h4><p>';
-		echo __('For the WooCommerce EU VAT compliance module to be able to record the country that a customer is ordering from, the (free) GeoIP Detection plugin must be installed and activated.', 'wc_eu_vat_compliance').' ';
-
-		if (current_user_can('install_plugins')) {
-			if (!file_exists(WP_PLUGIN_DIR.'/geoip-detect')) {
-				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
-			} elseif (file_exists(WP_PLUGIN_DIR.'/geoip-detect/geoip-detect.php')) {
-				echo '<a href="'.esc_url(wp_nonce_url(self_admin_url('plugins.php?action=activate&plugin=geoip-detect/geoip-detect.php'), 'activate-plugin_geoip-detect/geoip-detect.php')).'">'.__('Follow this link to activate it.', 'wc_eu_vat_compliance').'</a>';
-			}
-		}
-
-		echo '</p></div>';
-	}
-
 	// Here's where the hard work is done - where we get the information on the visitor's country and how it was discerned
 	// Returns an array
 	public function get_visitor_country_info() {

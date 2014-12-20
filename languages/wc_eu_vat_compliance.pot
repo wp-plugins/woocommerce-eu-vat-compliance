@@ -1,0 +1,499 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce EU Vat Compliance\n"
+"POT-Creation-Date: 2014-12-20 20:46+0100\n"
+"PO-Revision-Date: 2014-12-20 20:46+0100\n"
+"Last-Translator: David Anderson <contact@updraftplus.com>\n"
+"Language-Team:  <contact@simbahosting.co.uk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_x\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: /home/david/MissionaryHosting/UpdraftPlus/tmp-"
+"testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium\n"
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/premium.php:34
+msgid "Force VAT display on product pages for EU visitors"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/premium.php:35
+msgid ""
+"EU regulations require EU customers to be shown prices inclusive of VAT. "
+"Select this option to use geo-location (based upon the visitor's IP address) "
+"to enforce this requirement."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/premium.php:78
+msgid ""
+"You can delete the free version of the WooCommerce EU VAT Compliance plugin"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/premium.php:79
+msgid "all of its features are part of the premium version."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/premium.php:102
+msgid "Date range:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/premium.php:105
+msgid "to"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/premium.php:108
+msgid "Go"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:22
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:36
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:45
+msgid "EU VAT Report"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:246
+msgid "Notes:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:248
+msgid ""
+"This is the first release of reporting; more features (including downloading "
+"comprehensive order-by-order data, and making the tables sortable) are being "
+"worked on."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:249
+msgid ""
+"When you change which order statuses are shown, the totals will "
+"automatically update. You can use this to retrieve information about your "
+"refunds. If you change dates, you will need to press the \"Go\" button."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:250
+msgid ""
+"The report below indicates the taxes actually charged on orders, when they "
+"were processed: it does not ."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:251
+msgid ""
+"The sales total below includes shipping, if there was any; similarly, the "
+"VAT shown includes VAT charged upon shipping, if there was any."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:274
+msgid "Statuses:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:307
+msgid ""
+"Currently, reports are only supported on WooCommerce versions earlier than "
+"the 2.2 series. This is being worked on!"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:411
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:338
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:213
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:86
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:103
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:105
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:107
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:115
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:119
+msgid "Unknown"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:468
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:483
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:542
+msgid "Grand Total"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:468
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:483
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:542
+msgid "orders"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:569
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:580
+msgid "Order Status"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:570
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:581
+msgid "Country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:571
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:582
+msgid "VAT rate (standard)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:572
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:583
+msgid "VAT rate (reduced)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:573
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:584
+msgid "Sales (without VAT)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:574
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:585
+msgid "VAT"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:575
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/reports.php:586
+msgid "Total paid"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:57
+msgid "Phrase matches used to identify VAT taxes"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:58
+msgid ""
+"A comma-separated (optional spaces) list of strings (phrases) used to "
+"identify taxes which are EU VAT taxes. One of these strings must be used in "
+"your tax name labels (i.e. the names used in your tax tables) if you wish "
+"the tax to be identified as EU VAT."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:304
+msgid "WooCommerce Tax Settings"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:307
+msgid "Premium Version"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:325
+msgid "Pending Payment"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:326
+msgid "Processing"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:327
+msgid "On Hold"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:328
+msgid "Completed"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:329
+msgid "Cancelled"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:330
+msgid "Refunded"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/bootstrap.php:331
+msgid "Failed"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:43
+msgid "EU VAT Title"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:44
+msgid "The title that appears at checkout above the VAT Number box."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:49
+msgid "EU VAT Message"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:50
+msgid "The message that appears at checkout above the VAT Number box."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:56
+msgid "Show field for base country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:57
+msgid "Show the VAT field even when the customer is in your base country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:62
+msgid "Deduct VAT for base country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:63
+msgid ""
+"Deduct the VAT even when the customer is in your base country and has a "
+"valid number"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:68
+msgid "Store non-valid numbers"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:69
+msgid ""
+"Enable this option to store numbers which don't pass validation, rather than "
+"reject them. Tax will not be made exempt."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:74
+msgid "Resolving conflicting VAT data"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:75
+msgid ""
+"This option determines what will happen if the customer's apparent country "
+"(according to their IP address) conflicts with the country used to determine "
+"their taxes (i.e. shipping or billing country, depending upon the setting "
+"further up this page)."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:75
+msgid ""
+"Which is the correct option for you depends upon the particular evidence "
+"your local taxman is happy with to verify the country of purchase."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:79
+msgid ""
+"Require the customer to indicate the correct country when there is a conflict"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:80
+msgid "Always show the customer the VAT country, even if there was no conflict"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:81
+msgid ""
+"Always use the WooCommerce tax settings to indicate the country (never ask "
+"the customer)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:88
+msgid "EU VAT Number (if any)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:89
+msgid ""
+"If you are in the EU and have a valid EU VAT registration number please "
+"enter it below."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:140
+msgid ""
+"N.B. The final country used may be modified according to your EU VAT "
+"settings, further down this page."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:203
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:204
+msgid "VAT Number"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:220
+#, php-format
+msgid "%s (detected)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:225
+msgid "Billing country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:228
+msgid "Shipping country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:232
+msgid ""
+"For the correct calculation of VAT, please confirm the country which you are "
+"currently located in:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:277
+msgid "billing country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:317
+msgid "shipping country"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:514
+#, php-format
+msgid ""
+"You cannot use a VAT number since your country (%s) is outside of the EU."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:576
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/vat-number.php:605
+#, php-format
+msgid "You have entered an invalid VAT number (%s) for your country."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/rates.php:59
+msgid "Add / Update EU VAT Rates (Reduced)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/rates.php:59
+msgid "Add / Update EU VAT Rates (Standard)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/rates.php:158
+msgid ""
+"Note: for any tax you enter below to be recognised as VAT for EU VAT "
+"purposes, its name will need to contain one of the following words or "
+"phrases:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/rates.php:158
+msgid "You can configure this list in the tax options."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/rates.php:176
+msgid "reduced rate"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:32
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:33
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:64
+msgid "EU VAT Compliance"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:43
+msgid "General"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:44
+msgid "Settings"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:45
+msgid "Reports"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:46
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:67
+msgid "Premium"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:59
+msgid "(premium)"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:64
+msgid "for WooCommerce"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:65
+msgid "Support"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:69
+msgid "More plugins"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:71
+msgid "Lead developer's homepage"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:73
+msgid "Version"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:104
+msgid "Current status"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/control-centre.php:107
+msgid ""
+"N.B. It is not yet the 1st of January 2015; so, you may not want to act on "
+"all the items mentioned below yet."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:25
+msgid "CloudFlare Geo-Location"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:26
+msgid "MaxMind GeoIP database was not installed"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:27
+msgid "MaxMind GeoIP database"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:60
+msgid "EU VAT Compliance Information"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:63
+msgid ""
+"No further information recorded (the EU VAT Compliance plugin was not active "
+"when this order was made)."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:67
+msgid ""
+"The following information is based upon looking up the customer's IP address "
+"now."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:77
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:86
+msgid "VAT paid:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:109
+msgid "Raw information:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:117
+msgid "Country used to calculate tax:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:128
+msgid "IP Country:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:129
+msgid "Source:"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:181
+msgid "GeoIP database not found"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:182
+msgid ""
+"You have the GeoIP plugin installed, but it has not yet downloaded its "
+"database. This is needed for country pre-selection to work."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:183
+msgid "Follow this link and press the Update Now button to download it"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:189
+msgid "Required Plugin Not Found"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:190
+msgid ""
+"For the WooCommerce EU VAT compliance module to be able to record the "
+"country that a customer is ordering from, the (free) GeoIP Detection plugin "
+"must be installed and activated."
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:194
+msgid "Follow this link to install it"
+msgstr ""
+
+#: /home/david/MissionaryHosting/UpdraftPlus/tmp-testpluginsselling/wp-content/plugins/woocommerce-eu-vat-compliance-premium/record-order-country.php:196
+msgid "Follow this link to activate it."
+msgstr ""

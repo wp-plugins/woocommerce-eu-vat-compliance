@@ -1,6 +1,6 @@
 <?php
 
-// Purpose boot-strap plugin
+// Purpose boot-strap plugin. Also contains the main class.
 
 if (!defined('ABSPATH')) die('Access denied.');
 
@@ -20,6 +20,7 @@ if (!in_array('woocommerce/woocommerce.php', $active_plugins ) && !array_key_exi
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/record-order-country.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/rates.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/premium.php');
+@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/control-centre.php');
 
 // Though the code is separated, some pieces are inter-dependent; the order also matters. So, don't assume you can just change this arbitrarily.
 $classes_to_activate = apply_filters('woocommerce_eu_vat_compliance_classes', array(
@@ -29,6 +30,7 @@ $classes_to_activate = apply_filters('woocommerce_eu_vat_compliance_classes', ar
 	'WC_EU_VAT_Compliance_Record_Order_Country',
 	'WC_EU_VAT_Compliance_Rates',
 	'WC_EU_VAT_Compliance_Premium',
+	'WC_EU_VAT_Control_Centre'
 ));
 
 if (!class_exists('WC_EU_VAT_Compliance')):
@@ -36,6 +38,86 @@ class WC_EU_VAT_Compliance {
 
 	private $default_vat_matches = 'VAT, V.A.T, IVA, I.V.A., Value Added Tax';
 	public $wc;
+
+	public function __construct() {
+		add_action('plugins_loaded', array($this, 'plugins_loaded'));
+
+		add_action( 'woocommerce_settings_tax_options_end', array($this, 'woocommerce_settings_tax_options_end'));
+		add_action( 'woocommerce_update_options_tax', array( $this, 'woocommerce_update_options_tax'));
+
+		add_action('woocommerce_checkout_process', array($this, 'woocommerce_checkout_process'));
+
+		add_filter('network_admin_plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
+		add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
+
+		add_option('woocommerce_eu_vat_compliance_vat_match', $this->default_vat_matches);
+
+		$this->settings = array(
+			array(
+				'name' 		=> __( 'Phrase matches used to identify VAT taxes', 'wc_eu_vat_compliance' ),
+				'desc' 		=> __( 'A comma-separated (optional spaces) list of strings (phrases) used to identify taxes which are EU VAT taxes. One of these strings must be used in your tax name labels (i.e. the names used in your tax tables) if you wish the tax to be identified as EU VAT.', 'wc_eu_vat_compliance' ),
+				'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
+				'type' 		=> 'text',
+				'default'		=> $this->default_vat_matches
+			)
+		);
+
+	}
+
+	public function woocommerce_checkout_process() {
+
+		return;
+
+		$classes = get_option('woocommerce_eu_vat_compliance_restricted_classes');
+		if (empty($classes) || !is_array($classes)) return;
+
+		// TODO: Finish this
+		$relevant_products_found = false;
+		$cart = $this->wc->cart->get_cart();
+		foreach ($cart as $item) {
+			$_product = $item['data'];
+			$shipping_class = $_product->get_shipping_class_id();
+			if (!empty($shipping_class) && in_array($shipping_class, $classes)) {
+				$relevant_products_found = true;
+				break;
+			}
+		}
+		if (!$relevant_products_found) return;
+
+		# TODO: Check the country. Call $this->add_wc_error() if checkout needs to be halted.
+		# TODO: Also put up a warning at the cart stage. That is done via simply echoing:
+		/*
+e.g.
+echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filters('openinghours_frontendtext_currentlyclosedinfo', __('We are currently closed; but you will be able to choose a time for later delivery.', 'openinghours'))."</p>";
+		*/
+
+	}
+
+	public function get_version() {
+
+		if (!empty($this->version)) return $this->version;
+
+		$file = (file_exists(WC_EU_VAT_COMPLIANCE_DIR.'/eu-vat-compliance-premium.php')) ? WC_EU_VAT_COMPLIANCE_DIR.'/eu-vat-compliance-premium.php' : WC_EU_VAT_COMPLIANCE_DIR.'/eu-vat-compliance.php';
+
+		if ($fp = fopen($file, 'r')) {
+			$file_data = fread($fp, 1024);
+			if (preg_match("/Version: ([\d\.]+)(\r|\n)/", $file_data, $matches)) {
+				$this->version = $matches[1];
+			}
+			fclose($fp);
+		}
+
+		return $this->version;
+	}
+
+	public function add_wc_error($msg) {
+		if (function_exists('wc_add_notice')) {
+			wc_add_notice($msg, 'error');
+		} else {
+			# For pre-2.1
+			$this->wc->add_error($msg);
+		}
+	}
 
 	// Returns normalised data
 	public function get_vat_matches($format = 'array') {
@@ -63,29 +145,6 @@ class WC_EU_VAT_Compliance {
 			return $ret;
 		}
 		return $arr;
-	}
-
-	public function __construct() {
-		add_action('plugins_loaded', array($this, 'plugins_loaded'));
-
-		add_action( 'woocommerce_settings_tax_options_end', array($this, 'woocommerce_settings_tax_options_end'));
-		add_action( 'woocommerce_update_options_tax', array( $this, 'woocommerce_update_options_tax'));
-
-		add_filter('network_admin_plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
-		add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
-
-		add_option('woocommerce_eu_vat_compliance_vat_match', $this->default_vat_matches);
-
-		$this->settings = array(
-			array(
-				'name' 		=> __( 'Phrase matches used to identify VAT taxes', 'wc_eu_vat_compliance' ),
-				'desc' 		=> __( 'A comma-separated (optional spaces) list of strings (phrases) used to identify taxes which are EU VAT taxes. One of these strings must be used in your tax name labels (i.e. the names used in your tax tables) if you wish the tax to be identified as EU VAT.', 'wc_eu_vat_compliance' ),
-				'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
-				'type' 		=> 'text',
-				'default'		=> $this->default_vat_matches
-			)
-		);
-
 	}
 
 	public function get_order($order_id) {
@@ -288,13 +347,41 @@ Array
 			$this->wc = WC();
 		}
 	}
+
+	public function admin_notice_no_geoip_database() {
+		echo '<div class="error">';
+		echo '<h4 style="margin: 1em 0 0 0">'.__('GeoIP database not found', 'wc_eu_vat_compliance').'</h4><p>';
+		echo __('You have the GeoIP plugin installed, but it has not yet downloaded its database. This is needed for country detection to work.', 'wc_eu_vat_compliance');
+		echo '<a href="'.admin_url('tools.php?page=geoip-detect/geoip-detect.php').'"> '.__('Follow this link and press the Update Now button to download it', 'wcpreselectdefaultcountry').'</a>';
+		echo '</p></div>';
+	}
+
+	public function admin_notice_no_geoip_plugin() {
+		echo '<div class="error">';
+		echo '<h4 style="margin: 1em 0 0 0">'.__('Required Plugin Not Found', 'wc_eu_vat_compliance').'</h4><p>';
+		echo __('For the WooCommerce EU VAT compliance module to be able to record the country that a customer is ordering from, the (free) GeoIP Detection plugin must be installed and activated.', 'wc_eu_vat_compliance').' ';
+
+		if (current_user_can('install_plugins')) {
+			if (!file_exists(WP_PLUGIN_DIR.'/geoip-detect')) {
+				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
+			} elseif (file_exists(WP_PLUGIN_DIR.'/geoip-detect/geoip-detect.php')) {
+				echo '<a href="'.esc_url(wp_nonce_url(self_admin_url('plugins.php?action=activate&plugin=geoip-detect/geoip-detect.php'), 'activate-plugin_geoip-detect/geoip-detect.php')).'">'.__('Follow this link to activate it.', 'wc_eu_vat_compliance').'</a>';
+			}
+		}
+		echo '</p></div>';
+	}
+
+	public function is_premium() {
+		$premium = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Premium');
+		return is_object($premium);
+	}
 }
 endif;
 
 if (!function_exists('WooCommerce_EU_VAT_Compliance')):
 function WooCommerce_EU_VAT_Compliance($class = 'WC_EU_VAT_Compliance') {
 	global $woocommerce_eu_vat_compliance_classes;
-	return $woocommerce_eu_vat_compliance_classes[$class];
+	return (is_object($woocommerce_eu_vat_compliance_classes[$class])) ? $woocommerce_eu_vat_compliance_classes[$class] : false;
 }
 endif;
 

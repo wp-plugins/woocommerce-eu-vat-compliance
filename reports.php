@@ -14,6 +14,13 @@ class WC_EU_VAT_Compliance_Reports {
 
 	public function __construct() {
 		add_filter('admin_init', array($this, 'admin_init'));
+		add_action('wc_eu_vat_compliance_cc_tab_reports', array($this, 'wc_eu_vat_compliance_cc_tab_reports'));
+	}
+
+	// Hook into control centre
+	public function wc_eu_vat_compliance_cc_tab_reports() {
+		echo '<h2>'.__('EU VAT Report', 'wc_eu_vat_compliance').'</h2>';
+		$this->wc_eu_vat_compliance_report();
 	}
 
 	public function admin_init() {
@@ -28,7 +35,7 @@ class WC_EU_VAT_Compliance_Reports {
 		$charts['sales']['charts']['eu_vat_report'] = array(
 			'title'       => __('EU VAT Report', 'wc_eu_vat_compliance'),
 			'description' => '',
-			'function'    => array($this, 'wc_country_sales')
+			'function'    => array($this, 'wc_eu_vat_compliance_report')
 		);
 		return $charts;
 	}
@@ -38,7 +45,7 @@ class WC_EU_VAT_Compliance_Reports {
 			'title'       => __('EU VAT Report', 'wc_eu_vat_compliance'),
 			'description' => '',
 			'hide_title'  => false,
-			'callback'    => array($this, 'wc_country_sales')
+			'callback'    => array($this, 'wc_eu_vat_compliance_report')
 		);
 		return $reports;
 	}
@@ -234,7 +241,7 @@ class WC_EU_VAT_Compliance_Reports {
 
 	}
 
-	public function wc_country_sales() {
+	public function wc_eu_vat_compliance_report() {
 
 		echo '<p><strong>'.__('Notes:', 'wc_eu_vat_compliance').'</strong></p>';
 		echo "<ul style=\"max-width: 800px;list-style-type: disc; list-style-position: inside;\">";
@@ -297,7 +304,7 @@ class WC_EU_VAT_Compliance_Reports {
 // TODO: Test. Test refunds.
 
 		if (defined('WOOCOMMERCE_VERSION') && !version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) {
-			echo __('Currently, reports are only supported on WooCommerce versions earlier than the 2.2 series. This is being worked on!', 'wc_eu_vat_compliance');
+			echo '<strong>'.__('Currently, reports are only supported on WooCommerce versions earlier than the 2.2 series. This is being worked on!', 'wc_eu_vat_compliance').'</strong>';
 			return;
 		}
 
