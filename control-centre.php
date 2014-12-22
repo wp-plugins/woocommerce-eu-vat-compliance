@@ -163,7 +163,7 @@ class WC_EU_VAT_Control_Centre {
 
 		echo '<h3>'.__('Set up standard-rate tax tables', 'wc_eu_vat_compliance').'</h3><p><a href="'.$tax_settings_link.'&section=standard">'.__('Follow this link.', 'wc_eu_vat_compliance').'</a></p>';
 
-		echo '<h3>'.__('Set up reduced-rate-rate tax tables', 'wc_eu_vat_compliance').'</h3><p><a href="'.$tax_settings_link.'&section=reduced-rate">'.__('Follow this link.', 'wc_eu_vat_compliance').'</a></p>';
+		echo '<h3>'.__('Set up reduced-rate tax tables', 'wc_eu_vat_compliance').'</h3><p><a href="'.$tax_settings_link.'&section=reduced-rate">'.__('Follow this link.', 'wc_eu_vat_compliance').'</a></p>';
 
 	}
 
