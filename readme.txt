@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.4.1
+Stable tag: 1.4.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -37,7 +37,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.
 
-<li><strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).</li>
+- <strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).
 
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
@@ -149,8 +149,6 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 3. Per-country VAT reports (more features currently being worked on)
 
-4. Downloading a CSV report with all compliance information
-
 == License ==
 
     This program is free software; you can redistribute it and/or modify
@@ -168,4 +166,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.4.1 : WC 2.2 now supported for reports. Reports now sortable. Date ranges now supported. Premium: CSV download
+* 1.4.0 : Beginnings of a new control centre, to bring access to all functions into one place. Translation file available for translators.
