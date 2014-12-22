@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -35,7 +35,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained.
 
-- <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.
+- <strong>Forbid EU sales for VAT-paying customers only (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.
 
 - <strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).
 
@@ -147,7 +147,9 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 2. VAT information being shown in the order details page
 
-3. Per-country VAT reports (more features currently being worked on)
+3. Per-country VAT reports
+
+4. Download all compliance information in a spreadsheet.
 
 == License ==
 
@@ -166,4 +168,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.4.0 : Beginnings of a new control centre, to bring access to all functions into one place. Translation file available for translators.
+* 1.4.1 : Dashboard reports now for all supported WooCommerce versions. Date ranges added. Report sortable. Premium: all compliance data downloadable as CSV.
