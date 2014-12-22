@@ -7,6 +7,7 @@ if (!defined('ABSPATH')) die('Access denied.');
 if (class_exists('WC_EU_VAT_Compliance')) return;
 
 define('WC_EU_VAT_COMPLIANCE_DIR', dirname(__FILE__));
+define('WC_EU_VAT_COMPLIANCE_URL', plugins_url('', __FILE__));
 
 $active_plugins = (array) get_option( 'active_plugins', array() );
 if (is_multisite()) $active_plugins = array_merge($active_plugins, get_site_option('active_sitewide_plugins', array()));
@@ -91,6 +92,12 @@ e.g.
 echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filters('openinghours_frontendtext_currentlyclosedinfo', __('We are currently closed; but you will be able to choose a time for later delivery.', 'openinghours'))."</p>";
 		*/
 
+	}
+
+	public function enqueue_jquery_ui_style() {
+		global $wp_scripts;
+		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
+		wp_enqueue_style( 'jquery-ui-style', '//ajax.googleapis.com/ajax/libs/jqueryui/' . $jquery_version . '/themes/smoothness/jquery-ui.css', array(), WC_VERSION );
 	}
 
 	public function get_version() {
@@ -381,7 +388,7 @@ endif;
 if (!function_exists('WooCommerce_EU_VAT_Compliance')):
 function WooCommerce_EU_VAT_Compliance($class = 'WC_EU_VAT_Compliance') {
 	global $woocommerce_eu_vat_compliance_classes;
-	return (is_object($woocommerce_eu_vat_compliance_classes[$class])) ? $woocommerce_eu_vat_compliance_classes[$class] : false;
+	return (!empty($woocommerce_eu_vat_compliance_classes[$class]) && is_object($woocommerce_eu_vat_compliance_classes[$class])) ? $woocommerce_eu_vat_compliance_classes[$class] : false;
 }
 endif;
 

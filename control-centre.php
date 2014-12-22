@@ -41,7 +41,7 @@ class WC_EU_VAT_Control_Centre {
 
 	public function settings_page() {
 
-		$tabs = apply_filters('wcx_eu_vat_compliance_cc_tabs', array(
+		$tabs = apply_filters('wc_eu_vat_compliance_cc_tabs', array(
 // 			'general' => __('General', 'wc_eu_vat_compliance'),
 			'settings' => __('Settings', 'wc_eu_vat_compliance'),
 			'reports' => __('Reports', 'wc_eu_vat_compliance'),
@@ -117,6 +117,8 @@ class WC_EU_VAT_Control_Centre {
 <!-- <li><strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.</li> -->
 
 <li><strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).</li>
+
+<li><strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).</li>
 
 <li><strong>Multi-currency compatible:</strong> if you are using the <a href="http://aelia.co/shop/currency-switcher-woocommerce/">"WooCommerce currency switcher"</a> plugin to sell in multiple currencies, then this plugin will maintain and provide its data for each order in both your shop's base currency and the order currency (if it differs).</li>
 </ul>

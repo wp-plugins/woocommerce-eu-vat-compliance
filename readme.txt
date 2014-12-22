@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -27,7 +27,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
-- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. Currently WooCommerce 2.0 and 2.1 are supported and a report broken down by country and currency can be generated, with 2.2 support and support for downloading a full spreadsheet on every transaction to be added soon.
+- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, currency and order status.
 
 - <strong>Distinguish VAT from other taxes:</strong> if you are in a jurisdiction where you have to apply other taxes also, then this plugin can handle that: it knows which taxes are VAT, and which are not.
 
@@ -36,6 +36,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 - <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained.
 
 - <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.
+
+<li><strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).</li>
 
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
@@ -86,6 +88,13 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 (None yet)
 
 == Changelog ==
+
+= 1.4.1 - 2014-12-22 =
+
+* FEATURE: Dashboard reports are now available on WooCommerce 2.2, with full functionality (so, now available on WC 2.0 to 2.2)
+* FEATURE: All versions of the plugin can now select date ranges for reports
+* FEATURE: Download all VAT compliance data in CSV format (Premium version)
+* TWEAK: Report tables are now sortable via clicking the column headers
 
 = 1.4.0 - 2014-12-19 =
 
@@ -140,6 +149,8 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 3. Per-country VAT reports (more features currently being worked on)
 
+4. Downloading a CSV report with all compliance information
+
 == License ==
 
     This program is free software; you can redistribute it and/or modify
@@ -157,4 +168,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.4.0 : Beginnings of a new control centre, to bring access to all functions into one place. Translation file available for translators.
+* 1.4.1 : WC 2.2 now supported for reports. Reports now sortable. Date ranges now supported. Premium: CSV download

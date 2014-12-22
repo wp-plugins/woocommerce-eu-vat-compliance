@@ -11,6 +11,8 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 	private $wc;
 
+	public $data_sources = array();
+
 	public function __construct() {
 		add_action('woocommerce_checkout_update_order_meta', array($this, 'woocommerce_checkout_update_order_meta'));
 		add_action('woocommerce_admin_order_data_after_shipping_address', array($this, 'woocommerce_admin_order_data_after_shipping_address'));
@@ -123,7 +125,6 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			echo "$calculated_country_name ($calculated_country_code)";
 
 			echo "</span><br>";
-
 
 			echo __('IP Country:', 'wc_eu_vat_compliance')." $country_name ($country_code)<br>";
 			echo '<span title="'.esc_attr($source).'">'.__('Source:', 'wc_eu_vat_compliance')." ".htmlspecialchars($source_description)."</span><br>";
