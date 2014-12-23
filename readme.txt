@@ -155,6 +155,8 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 4. Download all compliance information in a spreadsheet.
 
+5. Compliance dashboard, bringing all settings and information into one place
+
 == License ==
 
     This program is free software; you can redistribute it and/or modify
