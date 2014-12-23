@@ -39,6 +39,7 @@ class WC_EU_VAT_Compliance {
 
 	private $default_vat_matches = 'VAT, V.A.T, IVA, I.V.A., Value Added Tax';
 	public $wc;
+	public $settings;
 
 	public function __construct() {
 		add_action('plugins_loaded', array($this, 'plugins_loaded'));
@@ -307,8 +308,10 @@ Array
 
 	public function plugin_action_links($links, $file) {
 		if (is_array($links) && strpos($file, basename(WC_EU_VAT_COMPLIANCE_DIR).'/eu-vat-compliance') !== false) {
-			$page = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) ? 'woocommerce_settings' : 'wc-settings';
-			$settings_link = '<a href="'.admin_url('admin.php').'?page='.$page.'&tab=tax">'.__("WooCommerce Tax Settings", "wc_eu_vat_compliance").'</a>';
+// 			$page = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) ? 'woocommerce_settings' : 'wc-settings';
+// &tab=tax
+			$page = 'wc_eu_vat_compliance';
+			$settings_link = '<a href="'.admin_url('admin.php').'?page='.$page.'">'.__("EU VAT Compliance Dashboard", "wc_eu_vat_compliance").'</a>';
 			array_unshift($links, $settings_link);
 			if (false === strpos($file, 'premium')) {
 				$settings_link = '<a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">'.__("Premium Version", "wc_eu_vat_compliance").'</a>';

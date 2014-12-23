@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -89,6 +89,10 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Changelog ==
 
+= 1.4.2 -2014-12-23 =
+
+* FEATURE: Control centre now contains relevant WooCommerce settings, and links to tax tables, for quick access
+
 = 1.4.1 - 2014-12-22 =
 
 * FEATURE: Dashboard reports are now available on WooCommerce 2.2, with full functionality (so, now available on WC 2.0 to 2.2)
@@ -168,4 +172,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.4.1 : Dashboard reports now for all supported WooCommerce versions. Date ranges added. Report sortable. Premium: all compliance data downloadable as CSV.
+* 1.4.2 : Control centre now includes all relevant settings gathered into one place.
