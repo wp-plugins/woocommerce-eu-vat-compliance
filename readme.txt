@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -24,6 +24,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 - <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out.
 
 - <strong>Evidence is recorded, ready for audit:</strong> full information that was used to calculate VAT is displayed in the WooCommerce order screen in the back-end.
+
+- <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. 
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
@@ -61,6 +63,8 @@ Please make sure that you review this plugin's installation instructions and hav
 
 Whether you think the EU's treaties with other jurisdictions will lead to success in enforcing the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers!
 
+Many thanks to Diego Zanella, for various ideas we have swapped whilst working on these issues.
+
 = Other information =
 
 - Some other WooCommerce plugins you may be interested in: https://www.simbahosting.co.uk/s3/shop/
@@ -90,6 +94,10 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 (None yet)
 
 == Changelog ==
+
+= 1.5.0 - 2014-12-24 =
+
+* FEATURE: Currency conversion: if your shop sells in a different currency than you are required to make VAT reports in, then you can now record currency conversion data with each order. Currently, the official rates of HM Revenue & Customs (UK) are used; more providers will be added.
 
 = 1.4.2 -2014-12-23 =
 
@@ -176,4 +184,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.4.2 : Control centre now includes all relevant settings gathered into one place.
+* 1.5.0 : Currency conversion - if you must report VAT in a different country to one that you sell in, then conversion information is now recorded with the order. HMRC provider provided (more to come).

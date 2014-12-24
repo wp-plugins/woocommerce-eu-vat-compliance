@@ -305,12 +305,32 @@ Array
 
 	}
 
+	public function get_rate_providers() {
+		$provider_dirs = apply_filters('wc_eu_vat_rate_provider_dirs', array(WC_EU_VAT_COMPLIANCE_DIR.'/rate-providers'));
+		$classes = array();
+		foreach ($provider_dirs as $dir) {
+			$providers = apply_filters('wc_eu_vat_rate_providers_from_dir', false, $dir);
+			if (false === $providers) {
+				$providers = scandir($dir);
+				foreach ($providers as $k => $file) {
+					if ('.' == $file || '..' == $file || '.php' != strtolower(substr($file, -4, 4)) || !is_file($dir.'/'.$file)) unset($providers[$k]);
+				}
+			}
+			foreach ($providers as $file) {
+				$key = str_replace('-', '_', sanitize_title(basename(strtolower($file), '.php')));
+				$class_name = 'WC_EU_VAT_Compliance_Rate_Provider_'.$key;
+				if (!class_exists($class_name)) include_once($dir.'/'.$file);
+				if (class_exists($class_name)) $classes[$key] = new $class_name;
+			}
+		}
+		return $classes;
+	}
 
 	public function plugin_action_links($links, $file) {
 		if (is_array($links) && strpos($file, basename(WC_EU_VAT_COMPLIANCE_DIR).'/eu-vat-compliance') !== false) {
 // 			$page = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) ? 'woocommerce_settings' : 'wc-settings';
 // &tab=tax
-			$page = 'wc_eu_vat_compliance';
+			$page = 'wc_eu_vat_compliance_cc';
 			$settings_link = '<a href="'.admin_url('admin.php').'?page='.$page.'">'.__("EU VAT Compliance Dashboard", "wc_eu_vat_compliance").'</a>';
 			array_unshift($links, $settings_link);
 			if (false === strpos($file, 'premium')) {

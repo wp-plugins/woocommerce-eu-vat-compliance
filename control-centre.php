@@ -18,7 +18,7 @@ Components to have:
 - Add FAQ link at the top, if/when there are some
 */
 
-// TODO: Test on WC 2.0
+// TODO: Test some more on WC 2.0
 // TODO: Link to documentation, when written
 
 class WC_EU_VAT_Control_Centre {
@@ -28,70 +28,116 @@ class WC_EU_VAT_Control_Centre {
 // 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 		add_filter('woocommerce_screen_ids', array($this, 'woocommerce_screen_ids'));
 		add_action('wp_ajax_wc_eu_vat_cc', array($this, 'ajax'));
-
 	}
 
 	public function ajax() {
 
 		if (empty($_POST) || empty($_POST['subaction']) || !isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'wc_eu_vat_nonce')) die('Security check');
 
-		if ('savesettings' != $_POST['subaction']) die;
+		if ('savesettings' == $_POST['subaction']) {
 
-		if (empty($_POST['settings']) || !is_string($_POST['settings'])) die;
+			if (empty($_POST['settings']) || !is_string($_POST['settings'])) die;
 
-		parse_str($_POST['settings'], $posted_settings);
+			parse_str($_POST['settings'], $posted_settings);
 
-		$vat_settings = $this->get_settings_vat();
-		$tax_settings = $this->get_settings_tax();
+			$vat_settings = $this->get_settings_vat();
+			$tax_settings = $this->get_settings_tax();
 
-		$all_settings = array_merge($vat_settings, $tax_settings);
+			$exchange_rate_providers = WooCommerce_EU_VAT_Compliance()->get_rate_providers();
 
-		$any_found = false;
+			$exchange_rate_settings = $this->get_settings();
 
-		// Save settings
-		// If this gets more complex, we should instead use WC_Admin_Settings::save_fields()
-		foreach ($all_settings as $setting) {
-			if (!is_array($setting) || empty($setting['id'])) continue;
-			if ($setting['type'] == 'euvat_tax_options_section' || $setting['type'] == 'sectionend') continue;
-
-			if (!isset($posted_settings[$setting['id']])) {
-// 				error_log("NOT FOUND: ".$setting['id']);
-				continue;
+			if (!empty($exchange_rate_providers) && is_array($exchange_rate_providers)) {
+				foreach ($exchange_rate_providers as $key => $provider) {
+					$settings = method_exists($provider, 'settings_fields') ? $provider->settings_fields() : false;
+					if (!is_string($settings) && !is_array($settings)) continue;
+					if (is_array($settings)) {
+						$exchange_rate_settings[] = $settings;
+					}
+				}
 			}
 
-			$value = null;
+			$all_settings = array_merge($vat_settings, $tax_settings, $exchange_rate_settings);
 
-// error_log_v($posted_settings[$setting['id']]);
-// error_log($setting['id'].": ".$setting['type']);
+			$any_found = false;
 
-			switch ($setting['type']) {
-				case 'text';
-				case 'radio';
-				case 'select';
-				$value = $posted_settings[$setting['id']];
-				break;
-				case 'textarea';
-				$value = wp_kses_post( trim( $posted_settings[$setting['id']] ) );
-				break;
-				case 'checkbox';
-				$value = empty($posted_settings[$setting['id']]) ? 'no' : 'yes';
-				break;
+			// Save settings
+			// If this gets more complex, we should instead use WC_Admin_Settings::save_fields()
+			foreach ($all_settings as $setting) {
+				if (!is_array($setting) || empty($setting['id'])) continue;
+				if ($setting['type'] == 'euvat_tax_options_section' || $setting['type'] == 'sectionend') continue;
+
+				if (!isset($posted_settings[$setting['id']])) {
+	// 				error_log("NOT FOUND: ".$setting['id']);
+					continue;
+				}
+
+				$value = null;
+
+	// error_log_v($posted_settings[$setting['id']]);
+	// error_log($setting['id'].": ".$setting['type']);
+
+				switch ($setting['type']) {
+					case 'text';
+					case 'radio';
+					case 'select';
+					$value = $posted_settings[$setting['id']];
+					break;
+					case 'textarea';
+					$value = wp_kses_post( trim( $posted_settings[$setting['id']] ) );
+					break;
+					case 'checkbox';
+					$value = empty($posted_settings[$setting['id']]) ? 'no' : 'yes';
+					break;
+				}
+
+				if (!is_null($value)) {
+					$any_found = true;
+					update_option($setting['id'], $value);
+				}
+
+	// 			error_log($setting['id'].": ".serialize($value)." - GO");
 			}
 
-			if (!is_null($value)) {
-				$any_found = true;
-				update_option($setting['id'], $value);
+			if (!$any_found) {
+				echo json_encode(array('result' => 'no options found'));
+				die;
 			}
 
-// 			error_log($setting['id'].": ".serialize($value)." - GO");
+			echo json_encode(array('result' => 'ok'));
+		} elseif ('testprovider' == $_POST['subaction'] && !empty($_POST['key']) && !empty($_POST['tocurrency'])) {
+
+			$providers = WooCommerce_EU_VAT_Compliance()->get_rate_providers();
+
+			$to_currency = $_POST['tocurrency'];
+			// Base currency
+			$from_currency = get_option('woocommerce_currency');
+
+			if (!is_array($providers) || empty($providers[$_POST['key']])) {
+				echo json_encode(array('response' => 'Error: provider not found'));
+				die;
+			}
+
+			$provider = $providers[$_POST['key']];
+
+			$result = $provider->convert($from_currency, $to_currency, 10);
+
+			$currency_code_options = get_woocommerce_currencies();
+
+			$from_currency_label = $from_currency;
+			if (isset($currency_code_options[$from_currency])) $from_currency_label = $currency_code_options[$from_currency]." - $from_currency";
+
+			$to_currency_label = $to_currency;
+			if (isset($currency_code_options[$to_currency])) $to_currency_label = $currency_code_options[$to_currency]." - $to_currency";
+
+			if (false === $result) {
+				echo json_encode(array('response' => __('Failed: The currency conversion failed. Please check the settings and the outgoing network connectivity from your webserver.', 'wc_eu_vat_compliance')));
+				die;
+			}
+
+			echo json_encode(array('response' => sprintf(__('Success: %s currency units in your shop base currency (%s) are worth %s currency units in your chosen VAT reporting currency (%s)', 'wc_eu_vat_compliance'), '10.00', $from_currency_label, $result, $to_currency_label)));
+
 		}
-
-		if (!$any_found) {
-			echo json_encode(array('result' => 'no options found'));
-			die;
-		}
-
-		echo json_encode(array('result' => 'ok'));
 
 		die;
 
@@ -391,10 +437,18 @@ class WC_EU_VAT_Control_Centre {
 			if (!function_exists('woocommerce_admin_fields')) include_once(  $this->compliance->wc->plugin_path().'/admin/woocommerce-admin-settings.php' );
 		}
 
+		// VAT settings
 		woocommerce_admin_fields($vat_settings);
 
+		// Currency conversion
+		echo '<h3>'.__('VAT reporting currency', 'wc_eu_vat_compliance').'</h3><div>';
+		$this->currency_conversion_section();
+		echo '</div>';
+
+		// Other WC tax settings
 		woocommerce_admin_fields($tax_settings);
 
+		// Tax tables
 		echo '<h3>'.__('Tax tables (set up tax rates for each country)', 'wc_eu_vat_compliance').'</h3>';
 
 		echo '<div><h4>'.__('Standard-rate tax table', 'wc_eu_vat_compliance').'</h4><p><a href="'.$tax_settings_link.'&section=standard">'.__('Follow this link.', 'wc_eu_vat_compliance').'</a></p>';
@@ -476,6 +530,100 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		echo '';
 // 		echo "</p>";
 
+	}
+
+	private function get_settings() {
+
+		$base_currency = get_option('woocommerce_currency');
+		$base_currency_symbol = get_woocommerce_currency_symbol($base_currency);
+
+		$currency_code_options = get_woocommerce_currencies();
+
+		$currency_label = $base_currency;
+		if (isset($currency_code_options[$base_currency])) $currency_label = $currency_code_options[$base_currency]." ($base_currency)";
+
+		foreach ( $currency_code_options as $code => $name ) {
+			$currency_code_options[ $code ] = $name;
+			$symbol = get_woocommerce_currency_symbol( $code );
+			if ($symbol) $currency_code_options[$code] .= ' (' . get_woocommerce_currency_symbol( $code ) . ')';
+		}
+
+		$exchange_rate_providers = WooCommerce_EU_VAT_Compliance()->get_rate_providers();
+
+		$exchange_rate_options = array();
+		foreach ($exchange_rate_providers as $key => $provider) {
+			$info = $provider->info();
+			$exchange_rate_options[$key] = $info['title'];
+		}
+
+		return array(
+			array(
+				'title'    => __( 'Currency', 'woocommerce' ),
+				'desc'     => __( "When an order is made, exchange rate information will be added to the order, allowing all amounts to be converted into the currency chosen here. This is necessary if orders may be made in a different currency than the currency you are required to report VAT in.", 'wc_eu_vat_compliance' ),
+				'id'       => 'woocommerce_eu_vat_compliance_vat_recording_currency',
+				'css'      => 'min-width:350px;',
+				'default'  => $base_currency,
+				'type'     => 'select',
+				'class'    => 'chosen_select',
+				'desc_tip' =>  true,
+				'options'  => $currency_code_options
+			),
+
+			array(
+				'title'    => __( 'Exchange rate provider', 'wc_eu_vat_compliance' ),
+				'id'       => 'woocommerce_eu_vat_compliance_exchange_rate_provider',
+				'css'      => 'min-width:350px;',
+// 				'default'  => $base_currency,
+				'type'     => 'select',
+				'class'    => 'chosen_select',
+				'desc_tip' =>  true,
+				'options'  => $exchange_rate_options
+			),
+		);
+	}
+
+	public function currency_conversion_section() {
+
+		$base_currency = get_option('woocommerce_currency');
+		$base_currency_symbol = get_woocommerce_currency_symbol($base_currency);
+		$currency_code_options = get_woocommerce_currencies();
+		$currency_label = $base_currency;
+		if (isset($currency_code_options[$base_currency])) $currency_label = $currency_code_options[$base_currency]." ($base_currency)";
+
+		echo '<p>'.sprintf(__('Set the currency that you have to use when making VAT reports. If this is not the same as your base currency (%s), then when orders are placed, the exchange rate will be recorded as part of the order information, allowing accurate VAT reports to be made.', 'wc_eu_vat_compliance'), $currency_label).' '.__('If using a currency other than your base currency, then you must configure an exchange rate provider.', 'wc_eu_vat_compliance').'</p>';
+
+		// TODO
+		echo '<p>N.B. More currency conversion providers are currently being coded - but if you have a specific need that you need to commission, then please get in touch.</p>';
+
+		echo '<table class="form-table">'. "\n\n";
+
+		$currency_settings = $this->get_settings();
+
+		woocommerce_admin_fields($currency_settings);
+
+		echo '</table>';
+
+		$exchange_rate_providers = WooCommerce_EU_VAT_Compliance()->get_rate_providers();
+
+		foreach ($exchange_rate_providers as $key => $provider) {
+			$settings = method_exists($provider, 'settings_fields') ? $provider->settings_fields() : false;
+			if (!is_string($settings) && !is_array($settings)) continue;
+			$info = $provider->info();
+			echo '<div id="wceuvat-rate-provider_container_'.$key.'" class="wceuvat-rate-provider_container wceuvat-rate-provider_container_'.$key.'">';
+			echo '<h4 style="padding-bottom:0px; margin-bottom:0px;">'.__('Configure exchange rate provider', 'wc_eu_vat_compliance').': '.htmlspecialchars($info['title']).'</h4>';
+			echo '<p style="padding-top:0px; margin-top:0px;">'.htmlspecialchars($info['description']);
+			if (!empty($info['url'])) echo ' <a href="'.$info['url'].'">'.__('Follow this link for more information.', 'wc_eu_vat_compliance').'</a>';
+			echo '</p>';
+			echo '<table class="form-table" style="">'. "\n\n";
+			if (is_string($settings)) {
+				echo "<tr><td>$settings</td></tr>";
+			} elseif (is_array($settings)) {
+				woocommerce_admin_fields($settings);
+			}
+			echo '</table>';
+			echo "<div id=\"wc_eu_vat_test_provider_$key\"></div><button id=\"wc_eu_vat_test_provider_button_$key\" onclick=\"test_provider('".$key."')\" class=\"button wc_eu_vat_test_provider_button\">".__('Test Provider', 'wc_eu_vat_compliance')."</button>";
+			echo '</div>';
+		}
 
 	}
 
@@ -509,17 +657,41 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 	public function admin_footer() {
 		$text = esc_attr(__('N.B. The final country used may be modified according to your EU VAT settings.', 'wc_eu_vat_compliance'));
+		$testing = esc_js(__('Testing...', 'wc_eu_vat_compliance'));
+		$test = esc_js(__('Test Provider', 'wc_eu_vat_compliance'));
+		$nonce = wp_create_nonce("wc_eu_vat_nonce");
+		$response = esc_js(__('Response:', 'wc_eu_vat_compliance'));
 		echo <<<ENDHERE
 		<script>
-			jQuery(document).ready(function() {
-				jQuery('#woocommerce_tax_based_on').after('<br><em>$text</em>');
-				jQuery('#wceuvat_tabs a.nav-tab').click(function() {
-					jQuery('#wceuvat_tabs a.nav-tab').removeClass('nav-tab-active');
-					jQuery(this).addClass('nav-tab-active');
-					var id = jQuery(this).attr('id');
+			function test_provider(key) {
+				jQuery('#wc_eu_vat_test_provider_button_'+key).html('$testing');
+				jQuery.post(ajaxurl, {
+					action: "wc_eu_vat_cc",
+					subaction: "testprovider",
+					tocurrency: jQuery('#woocommerce_eu_vat_compliance_vat_recording_currency').val(),
+					key: key,
+					_wpnonce: "$nonce"
+				}, function(response) {
+					try {
+						resp = jQuery.parseJSON(response);
+						jQuery('#wc_eu_vat_test_provider_'+key).html('<p>'+resp.response+'</p>');
+					} catch(err) {
+						alert('$response '+response);
+						console.log(response);
+						console.log(err);
+					}
+				});
+				jQuery('#wc_eu_vat_test_provider_button_'+key).html('$test');
+			}
+			jQuery(document).ready(function($) {
+				$('#woocommerce_tax_based_on').after('<br><em>$text</em>');
+				$('#wceuvat_tabs a.nav-tab').click(function() {
+					$('#wceuvat_tabs a.nav-tab').removeClass('nav-tab-active');
+					$(this).addClass('nav-tab-active');
+					var id = $(this).attr('id');
 					if ('wceuvat-navtab-' == id.substring(0, 15)) {
-						jQuery('div.wceuvat-navtab-content').hide();
-						jQuery('#wceuvat-navtab-'+id.substring(15)+'-content').show();
+						$('div.wceuvat-navtab-content').hide();
+						$('#wceuvat-navtab-'+id.substring(15)+'-content').show();
 					}
 					return false;
 				});

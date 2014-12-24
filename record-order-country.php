@@ -36,12 +36,41 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 		$country_info = $this->get_visitor_country_info();
 
-		$taxable_address = WooCommerce_EU_VAT_Compliance()->wc->customer->get_taxable_address();
+		$compliance = WooCommerce_EU_VAT_Compliance();
+
+		$taxable_address = $compliance->wc->customer->get_taxable_address();
 
 		$country_info['taxable_address'] = $taxable_address;
 
 		update_post_meta($order_id, 'vat_compliance_country_info', apply_filters('wc_eu_vat_compliance_meta_country_info', $country_info));
 
+		$conversion_provider = get_option('woocommerce_eu_vat_compliance_exchange_rate_provider');
+
+		$providers = $compliance->get_rate_providers();
+		if (!is_array($providers) || !isset($providers[$conversion_provider])) return;
+		$provider = $providers[$conversion_provider];
+
+		$record_currencies = apply_filters('wc_eu_vat_vat_recording_currencies', get_option('woocommerce_eu_vat_compliance_vat_recording_currency'));
+
+		if (!is_array($conversion_provider)) $record_currencies = array($record_currencies);
+
+		$order = WooCommerce_EU_VAT_Compliance()->get_order($order_id);
+		$order_time = strtotime($order->order_date);
+		if (method_exists($order, 'get_order_currency')) {
+			$order_currency = $order->get_order_currency();
+		} else {
+			$order_currency = get_option('woocommerce_currency');
+		}
+
+		foreach ($record_currencies as $vat_currency) {
+			if (!is_string($vat_currency) || $order_currency == $vat_currency) continue;
+			// Returns the conversion for 1 unit of the order currency.
+			$result = $provider->convert($order_currency, $vat_currency, 1);
+			if ($result) update_post_meta($order_id, 'wceuvat_conversion_rate_'.$order_currency.'_'.$vat_currency, $result);
+		}
+
+
+	
 	}
 
 	public function woocommerce_checkout_order_processed($order_id) {
