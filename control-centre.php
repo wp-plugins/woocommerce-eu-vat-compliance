@@ -592,8 +592,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 		echo '<p>'.sprintf(__('Set the currency that you have to use when making VAT reports. If this is not the same as your base currency (%s), then when orders are placed, the exchange rate will be recorded as part of the order information, allowing accurate VAT reports to be made.', 'wc_eu_vat_compliance'), $currency_label).' '.__('If using a currency other than your base currency, then you must configure an exchange rate provider.', 'wc_eu_vat_compliance').'</p>';
 
-		// TODO
-		echo '<p>N.B. More currency conversion providers are currently being coded - but if you have a specific need that you need to commission, then please get in touch.</p>';
+		echo '<p>'.__('N.B. If you have a need for a specific provider, then please let us know.', 'wc_eu_vat_compliance').'</p>';
 
 		echo '<table class="form-table">'. "\n\n";
 
@@ -684,6 +683,15 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 				jQuery('#wc_eu_vat_test_provider_button_'+key).html('$test');
 			}
 			jQuery(document).ready(function($) {
+				function show_correct_provider() {
+					var provider = $('#woocommerce_eu_vat_compliance_exchange_rate_provider').val();
+					$('.wceuvat-rate-provider_container').hide();
+					$('#wceuvat-rate-provider_container_'+provider).show();
+				}
+				show_correct_provider();
+				$('#woocommerce_eu_vat_compliance_exchange_rate_provider').change(function() {
+					show_correct_provider();
+				});
 				$('#woocommerce_tax_based_on').after('<br><em>$text</em>');
 				$('#wceuvat_tabs a.nav-tab').click(function() {
 					$('#wceuvat_tabs a.nav-tab').removeClass('nav-tab-active');

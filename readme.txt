@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -19,13 +19,13 @@ From January 1st 2015, all digital goods (including electronic, telecommunicatio
 
 This WooCommerce plugin provides features to assist with EU VAT law compliance from January 1st 2015. Currently, those features include:
 
-- <strong>Identify your customers' location:</strong> this plugin will record evidence of your customer's location, using their billing or shipping address, and their IP address (via a GeoIP lookup).
+- <strong>Identify your customers' locations:</strong> this plugin will record evidence of your customer's location, using their billing or shipping address, and their IP address (via a GeoIP lookup).
 
 - <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out.
 
 - <strong>Evidence is recorded, ready for audit:</strong> full information that was used to calculate VAT is displayed in the WooCommerce order screen in the back-end.
 
-- <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. 
+- <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. Currently, two official sources of exchange rates are available: the European Central Bank (ECB), and HM Revenue & Customs (UK).
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
@@ -94,6 +94,9 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 (None yet)
 
 == Changelog ==
+
+= 1.5.1 - 2014-12-24 =
+* FEATURE: Added the European Central Bank's exchange rates as a source of exchange rates
 
 = 1.5.0 - 2014-12-24 =
 
@@ -186,4 +189,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.5.0 : Currency conversion - if you must report VAT in a different country to one that you sell in, then conversion information is now recorded with the order. HMRC provider provided (more to come).
+* 1.5.1 : Added the European Central Bank's exchange rates as a source of exchange rates
