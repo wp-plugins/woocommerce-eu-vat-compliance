@@ -131,7 +131,7 @@ class WC_EU_VAT_Control_Centre {
 			if (isset($currency_code_options[$to_currency])) $to_currency_label = $currency_code_options[$to_currency]." - $to_currency";
 
 			if (false === $result) {
-				echo json_encode(array('response' => __('Failed: The currency conversion failed. Please check the settings and the outgoing network connectivity from your webserver.', 'wc_eu_vat_compliance')));
+				echo json_encode(array('response' => __('Failed: The currency conversion failed. Please check the settings, that the chosen provider provides exchange rates for your chosen currencies, and the outgoing network connectivity from your webserver.', 'wc_eu_vat_compliance')));
 				die;
 			}
 

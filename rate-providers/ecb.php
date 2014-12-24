@@ -16,8 +16,9 @@ class WC_EU_VAT_Compliance_Rate_Provider_ecb extends WC_EU_VAT_Compliance_Rate_P
 	protected $getbase = 'http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
 
 	protected $rate_base_currency = 'EUR';
-	# The rates change daily, so it is pointless to keep the transient longer than that.
-	protected $transient_expiry = 86400;
+
+	# The rates change daily, and are published at approx 3pm CET. Setting something less than 9 hours ensures that we will get the latest rates before the end of the day. 21600 = 6 hours.
+	protected $force_refresh_rates_every = 21600;
 
 	protected $key = 'ecb';
 
@@ -31,27 +32,12 @@ class WC_EU_VAT_Compliance_Rate_Provider_ecb extends WC_EU_VAT_Compliance_Rate_P
 
 	public function get_current_conversion_rate_from_time($currency, $the_time = false) {
 
-		$mon = gmdate('m', $the_time);
-		$yer = gmdate('y', $the_time);
-		$day = gmdate('d', $the_time);
-		$day_yesterday = gmdate('d', $the_time-86400);
-
-		// Approx. 35 characters long
-		$convert_key = "wcev_xml_".$this->key."_rate_".$this->rate_base_currency."_".$currency."_$day$mon$yer";
-
-		$value = get_site_transient($convert_key);
-		if (!empty($value)) return $value;
-
-		$convert_key_yesterday = "wcev_xml_".$this->key."_rate_".$this->rate_base_currency."_".$currency."_".$day_yesterday."$mon$yer";
-		$value = get_site_transient($convert_key_yesterday);
-
-		$parsed = $this->populate_rates_parsed_xml($the_time, true);
+		$parsed = $this->populate_rates_parsed_xml($the_time);
 		if (empty($parsed)) return (!empty($value)) ? $value : false;
 
 		if (is_object($parsed) && isset($parsed->Cube) && isset($parsed->Cube->Cube) && isset($parsed->Cube->Cube->Cube)) {
 			foreach ($parsed->Cube->Cube->Cube as $cur){
 				if (isset($cur['currency']) && $currency == $cur['currency'] && isset($cur['rate'])) {
-					set_site_transient($convert_key, (float)$cur['rate'], $this->transient_expiry);
 					return (float)$cur['rate'];
 				}
 			} 

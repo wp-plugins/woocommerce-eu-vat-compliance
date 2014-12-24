@@ -16,8 +16,10 @@ class WC_EU_VAT_Compliance_Rate_Provider_hmrc_uk extends WC_EU_VAT_Compliance_Ra
 	protected $getbase = 'http://www.hmrc.gov.uk/softwaredevelopers/rates/';
 
 	protected $rate_base_currency = 'GBP';
-	# The rates change monthly, so it is pointless to keep the transient longer than that
-	protected $transient_expiry = 2678400;
+
+	# The rates change monthly
+	protected $force_refresh_rates_every = 2678400;
+	protected $force_refresh_on_new_month = true;
 
 	protected $key = 'hmrc_uk';
 
@@ -40,21 +42,11 @@ class WC_EU_VAT_Compliance_Rate_Provider_hmrc_uk extends WC_EU_VAT_Compliance_Ra
 
 	public function get_current_conversion_rate_from_time($currency, $the_time = false) {
 
-		$mon = gmdate('m', $the_time);
-		$yer = gmdate('y', $the_time);
-
-		// Approx. 35 characters long
-		$convert_key = "wcev_xml_".$this->key."_rate_".$this->rate_base_currency."_".$currency."_$mon$yer";
-
-		$value = get_site_transient($convert_key);
-		if (!empty($value)) return $value;
-
 		$parsed = $this->populate_rates_parsed_xml($the_time);
 		if (empty($parsed)) return false;
 
 		foreach ($parsed as $cur) {
 			if (isset($cur->currencyCode) && $currency == $cur->currencyCode && isset($cur->rateNew)) {
-				set_site_transient($convert_key, (float)$cur->rateNew, $this->transient_expiry);
 				return (float)$cur->rateNew;
 			}
 		}
