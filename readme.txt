@@ -167,6 +167,8 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 5. Compliance dashboard, bringing all settings and information into one place
 
+6. Currency conversions, if you sell and report VAT in different currencies.
+
 == License ==
 
     This program is free software; you can redistribute it and/or modify
