@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -94,6 +94,10 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 (None yet)
 
 == Changelog ==
+
+= 1.5.3 - 2014-12-26 =
+
+* FIX: Add missing file to release (exchange rate providers were not working properly without it)
 
 = 1.5.2 - 2014-12-24 =
 
@@ -194,4 +198,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.5.2 : Added the European Central Bank's exchange rates as a source of exchange rates, and re-worked cacheing algorithm for maximum opportunity of obtaining an exchange rate
+* 1.5.3 : Bug-fix: Add missing (in 1.5.2) file to SVN that prevented exchange rates from working
