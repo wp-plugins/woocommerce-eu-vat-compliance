@@ -184,7 +184,7 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		$taxes = $order->get_taxes();
 
 		if (!is_array($taxes)) return false;
-		if (empty($taxes)) return 0;
+		if (empty($taxes)) $taxes = array();
 
 		// Get an array of matches
 		$vat_strings = $this->get_vat_matches('regex');
@@ -313,7 +313,7 @@ Array
 			if (false === $providers) {
 				$providers = scandir($dir);
 				foreach ($providers as $k => $file) {
-					if ('.' == $file || '..' == $file || '.php' != strtolower(substr($file, -4, 4)) || !is_file($dir.'/'.$file)) unset($providers[$k]);
+					if ('.' == $file || '..' == $file || '.php' != strtolower(substr($file, -4, 4)) || 'base-' == strtolower(substr($file, 0, 5)) || !is_file($dir.'/'.$file)) unset($providers[$k]);
 				}
 			}
 			foreach ($providers as $file) {

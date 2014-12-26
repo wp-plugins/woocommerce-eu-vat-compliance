@@ -478,8 +478,22 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 		echo '<button style="margin-left: 4px;" id="wc_euvat_cc_settings_save" class="button button-primary">'.__('Save Settings', 'wc_eu_vat_compliance').'</button>
 		<script>
+
+			var wceuvat_query_leaving = false;
+
+			window.onbeforeunload = function(e) {
+				if (wceuvat_query_leaving) {
+					var ask = "'.esc_js('You have unsaved settings.', 'wc_eu_vat_compliance').'";
+					e.returnValue = ask;
+					return ask;
+				}
+			}
+
 			jQuery(document).ready(function($) {
-				$("#wceuvat_settings_accordion").accordion({collapsible: true, active:false, heightStyle: content, animate: 100 });
+				$("#wceuvat_settings_accordion").accordion({collapsible: true, active:false, animate: 100 });
+				$("#wceuvat_settings_accordion input, #wceuvat_settings_accordion textarea, #wceuvat_settings_accordion select").change(function() {
+					wceuvat_query_leaving = true;
+				});
 				$("#wc_euvat_cc_settings_save").click(function() {
 					$.blockUI({ message: "<h1>'.__('Saving...', 'wc_eu_vat_compliance').'</h1>" });
 
@@ -509,6 +523,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 							resp = $.parseJSON(response);
 							if (resp.result == "ok") {
 // 								alert("'.esc_js(__('Settings Saved.', 'wc_eu_vat_compliance')).'");
+								wceuvat_query_leaving = false;
 							} else {
 								alert("'.esc_js(__('Response:', 'wc_eu_vat_compliance')).' "+resp.result);
 							}

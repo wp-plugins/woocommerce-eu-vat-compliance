@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -95,9 +95,11 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Changelog ==
 
-= 1.5.3 - 2014-12-26 =
-
-* FIX: Add missing file to release (exchange rate providers were not working properly without it)
+= 1.5.4 - 2014-12-26 =
+ 
+* FIX: Back-end order page now shows the VAT paid as 0.00 instead of 'Unknown', if a valid VAT number was entered. The VAT number is also shown more prominently.
+* FIX: Add missing file to 1.5.2 release (exchange rate providers were not working properly without it)
+* TWEAK: Settings page will now require the user to confirm that they wish to leave, if they have unsaved changes
 
 = 1.5.2 - 2014-12-24 =
 
@@ -198,4 +200,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.5.3 : Bug-fix: Add missing (in 1.5.2) file to SVN that prevented exchange rates from working
+* 1.5.4 : Fix missing file in 1.5.2 release. Query before leaving saved settings. Show VAT exempt purchases correctly in dashboard.

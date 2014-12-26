@@ -112,6 +112,14 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			// Allow filtering - since for some shops using a multi-currency plugin, the VAT currency is neither the base nor necessarily the purchase currency.
 			echo apply_filters('wc_eu_vat_compliance_show_vat_paid', $paid, $vat_paid);
 
+			$valid_eu_vat_number = get_post_meta($post_id, 'Valid EU VAT Number', true);
+			$vat_number_validated = get_post_meta($post_id, 'VAT number validated', true);
+			$vat_number = get_post_meta($post_id, 'VAT Number', true);
+
+			if ($valid_eu_vat_number && $vat_number_validated && 0 == $vat_paid['total']) {
+				echo '<br>'.sprintf(__('Validated VAT number: %s', 'wc_eu_vat_compliance'), $vat_number);
+			}
+
 			echo '<br>';
 		} else {
 			echo __("VAT paid:", 'wc_eu_vat_compliance').' '.__('Unknown', 'wc_eu_vat_compliance')."<br>";
