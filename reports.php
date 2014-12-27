@@ -265,7 +265,8 @@ class WC_EU_VAT_Compliance_Reports {
 				}
 
 				if (!isset($res['vat_paid'])) {
-					$normalised_results[$order_status][$order_id]['vat_paid'] = WooCommerce_EU_VAT_Compliance()->get_vat_paid($order_id, true, true);
+					// This is not good for performance
+// 					$normalised_results[$order_status][$order_id]['vat_paid'] = WooCommerce_EU_VAT_Compliance()->get_vat_paid($order_id, true, true, true);
 				}
 
 				// N.B. Use of empty() means that those with zero VAT are also excluded at this point
@@ -524,8 +525,8 @@ class WC_EU_VAT_Compliance_Reports {
 		</tbody>
 
 		<?php
-			// Though printing the tables is harmless (and useful if jQuery is broken), some strange jQuery or tablesort bug results in double-rows. Something doesn't like having two <tbody> sections.
-			if (1==1) {
+			// TODO: Where is $currency coming from, below? This code has got out of kilter.
+			if (0==1) {
 			?>
 			<tbody class="avoid-sort wc_eu_vat_compliance_totals">
 			<tr class="wc_eu_vat_compliance_total" id="wc_eu_vat_compliance_total_<?php echo $currency;?>">

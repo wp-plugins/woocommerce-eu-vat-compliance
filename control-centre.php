@@ -571,7 +571,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 			$exchange_rate_options[$key] = $info['title'];
 		}
 
-		return array(
+		return apply_filters('wc_euvat_compliance_exchange_settings', array(
 			array(
 				'title'    => __( 'Currency', 'woocommerce' ),
 				'desc'     => __( "When an order is made, exchange rate information will be added to the order, allowing all amounts to be converted into the currency chosen here. This is necessary if orders may be made in a different currency than the currency you are required to report VAT in.", 'wc_eu_vat_compliance' ),
@@ -594,7 +594,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 				'desc_tip' =>  true,
 				'options'  => $exchange_rate_options
 			),
-		);
+		));
 	}
 
 	public function currency_conversion_section() {

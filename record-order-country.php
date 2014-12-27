@@ -110,8 +110,10 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	// Show recorded information on the admin page
 	private function print_order_vat_info($post_id) {
 
+		$compliance = WooCommerce_EU_VAT_Compliance();
+
 // 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
-		$order = WooCommerce_EU_VAT_Compliance()->get_order($post_id);
+		$order = $compliance->get_order($post_id);
 		$country_info = get_post_meta($post_id, 'vat_compliance_country_info', true);
 
 		echo '<p id="wc_eu_vat_compliance_countryinfo">';
@@ -168,11 +170,11 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 			foreach ($vat_paid['by_rates'] as $vat) {
 
-				$items = $this->get_amount_in_conversion_currencies($vat['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$items = $compliance->get_amount_in_conversion_currencies($vat['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
-				$shipping = $this->get_amount_in_conversion_currencies($vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$shipping = $compliance->get_amount_in_conversion_currencies($vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
-				$total = $this->get_amount_in_conversion_currencies($vat['items_total']+$vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$total = $compliance->get_amount_in_conversion_currencies($vat['items_total']+$vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
 				echo '<strong>'.$vat['name'].' ('.sprintf('%0.2f', $vat['rate']).' %)</strong><br>';
 				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';
@@ -180,20 +182,18 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 				echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
 
 			}
+
 			if (count($vat_paid['by_rates']) > 1) {
-				$items = $this->get_amount_in_conversion_currencies($vat_paid['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$items = $compliance->get_amount_in_conversion_currencies($vat_paid['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
-				$shipping = $this->get_amount_in_conversion_currencies($vat_paid['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$shipping = $compliance->get_amount_in_conversion_currencies($vat_paid['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
-				$total = $this->get_amount_in_conversion_currencies($vat_paid['total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$total = $compliance->get_amount_in_conversion_currencies($vat_paid['total'], $conversion_currencies, $conversion_rates, $order_currency);
 
 				echo '<strong>'.__('All VAT charges', 'wc_eu_vat_compliance').'</strong><br>';
 				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';
 				echo __('Shipping', 'wc_eu_vat_compliance').': '.$shipping.'<br>';
 				echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
-
-
-
 			}
 
 	
@@ -289,19 +289,6 @@ array (size=3)
 		// $time
 		echo "</p>";
 
-	}
-
-	protected function get_amount_in_conversion_currencies($amount, $conversion_currencies, $conversion_rates, $order_currency) {
-		$paid = '';
-		foreach ($conversion_currencies as $currency) {
-			$rate = ($currency == $order_currency) ? 1 : (isset($conversion_rates['rates'][$currency]) ? $conversion_rates['rates'][$currency] : '??');
-
-			if ('??' == $rate) continue;
-
-			if ($paid) $paid .= ' / ';
-			$paid .= get_woocommerce_currency_symbol($currency).' '.sprintf('%.02f', $amount * $rate);
-		}
-		return $paid;
 	}
 
 	public function plugins_loaded() {

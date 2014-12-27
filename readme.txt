@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.5.5
+Stable tag: 1.5.6
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -45,7 +45,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
-- <strong>Multi-currency compatible:</strong> if you are using the <a href="http://aelia.co/shop/currency-switcher-woocommerce/">"WooCommerce currency switcher"</a> plugin to sell in multiple currencies, then this plugin will maintain and provide its data for each order in both your shop's base currency and the order currency (if it differs).
+- <strong>Show multiple currencies for VAT taxes on PDF invoices produced by <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>.
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">Read more about the Premium version of this plugin at this link.</a>
 
@@ -94,6 +94,13 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 (None yet)
 
 == Changelog ==
+
+= 1.5.6 - 2014-12-27 =
+
+* FEATURE (Premium): Option to display converted amounts for VAT taxes on invoices produced by the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">WooCommerce PDF invoices and packing slips plugin</a>.
+* TWEAK: Prevent many useless database queries for reports when handling orders made before the plugin was active
+* TWEAK: Prevent a PHP notice on WC < 2.2 for the VAT number field at the checkout
+* FIX: Prevent PHP notices + missing data for some currency combinations in the CSV spreadsheet download
 
 = 1.5.5 - 2014-12-26 =
 
@@ -209,4 +216,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.5.5 : Recommended update for all. Records order info in more detail. Moves VAT info to meta box. Fixes failure to include Monaco + Isle of Man in reports, and failure to include Isle of Man in VAT rates table.
+* 1.5.6 : Recommended update for all. Improves performance + fixes PHP notices + pollution of CSV download. Adds ability to have simple multi-currency display on PDF invoice.

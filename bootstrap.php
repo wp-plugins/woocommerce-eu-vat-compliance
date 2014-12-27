@@ -171,8 +171,24 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		return $order;
 	}
 
+	public function get_amount_in_conversion_currencies($amount, $conversion_currencies, $conversion_rates, $order_currency, $paid = false) {
+		foreach ($conversion_currencies as $currency) {
+			$rate = ($currency == $order_currency) ? 1 : (isset($conversion_rates['rates'][$currency]) ? $conversion_rates['rates'][$currency] : '??');
+
+			if ('??' == $rate) continue;
+
+			if ($paid !== false) {
+				$paid .= ' / ';
+			} else {
+				$paid = '';
+			}
+			$paid .= get_woocommerce_currency_symbol($currency).' '.sprintf('%.02f', $amount * $rate);
+		}
+		return $paid;
+	}
+
 	// Pass in a WC_Order object, or an order number
-	public function get_vat_paid($order, $allow_quick = false, $set_on_quick = false) {
+	public function get_vat_paid($order, $allow_quick = false, $set_on_quick = false, $quick_only = false) {
 
 		if (!is_a($order, 'WC_Order') && is_numeric($order)) {
 			$order = $this->get_order($order);
@@ -187,6 +203,7 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 				// If by_rates is not set, then we need to update the version of the data by including that data asap
 				if (isset($vat_paid['by_rates'])) return $vat_paid;
 			}
+			if ($quick_only) return false;
 		}
 
 		$taxes = $order->get_taxes();
