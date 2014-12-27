@@ -98,6 +98,7 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 = 1.5.5 - 2014-12-26 =
 
 * FIX: Monaco and the Isle of Man were previously being erroneously omitted from reports, despite being part of the EU for VAT purposes
+* FIX: The Isle of Man was being missed from the
 * FEATURE: If the customer added a VAT number for VAT exemption (Premium), then it will be appended to the billing address, where relevant (e.g. email order summary, PDF invoices). Credit to Diego Zanella for the idea and modified code.
 * FEATURE: Rate information is now saved at order time in more detail, and displayed by rate; this is important data, especially if you sell goods which are not all in the same VAT band (i.e. different VAT bands in the same country, e.g. standard rate and reduced rate)
 * TWEAK: Move compliance information on the order screen into its own meta box
@@ -208,4 +209,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.5.5 : Recommended update for all. Records order info in more detail. Moves VAT info to meta box. Fixes failure to include Monaco + Isle of Man in reports.
+* 1.5.5 : Recommended update for all. Records order info in more detail. Moves VAT info to meta box. Fixes failure to include Monaco + Isle of Man in reports, and failure to include Isle of Man in VAT rates table.
