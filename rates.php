@@ -268,6 +268,11 @@ class WC_EU_VAT_Compliance_Rates {
 			}
 			// Add in Monaco
 			if (isset($corrected_rates['FR'])) $corrected_rates['MC'] = $corrected_rates['FR'];
+			// Add the Isle of Man
+			if (isset($corrected_rates['GB'])) {
+				$corrected_rates['IM'] = $corrected_rates['GB'];
+				$corrected_rates['IM']['country'] = __( 'Isle of Man', 'woocommerce' );
+			}
 			set_site_transient('wc_euvatrates_rates_byiso', $corrected_rates, 43200);
 			$this->rates = $corrected_rates;
 		}
