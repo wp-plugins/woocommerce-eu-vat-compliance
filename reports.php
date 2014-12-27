@@ -146,7 +146,7 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$sql_vat_matches = $compliance->get_vat_matches('sqlregex');
 
-		$eu_countries = $compliance->wc->countries->get_european_union_countries();
+		$eu_countries = $compliance->get_european_union_vat_countries();
 
 		$page = 0;
 		$page_size = 1000;
@@ -379,6 +379,8 @@ class WC_EU_VAT_Compliance_Reports {
 		$base_currency = get_option('woocommerce_currency');
 		$base_currency_symbol = get_woocommerce_currency_symbol($base_currency);
 
+// echo print_r_pre($results);
+
 		foreach ($results as $order_status => $result_set) {
 			foreach ($result_set as $res) {
 				if (!is_array($res) || empty($res['taxable_country']) || empty($res['vat_paid']) || !is_array($res['vat_paid']) || empty($res['vat_paid']['total'])) continue;
@@ -426,7 +428,7 @@ class WC_EU_VAT_Compliance_Reports {
 		$countries = $compliance->wc->countries;
 
 		$all_countries = $countries->countries;
-		$eu_countries = $countries->get_european_union_countries();
+		$eu_countries = $compliance->get_european_union_vat_countries();
 
 // 		var_dump($tabulated_results);
 

@@ -21,7 +21,7 @@ Components to have:
 // TODO: Test some more on WC 2.0
 // TODO: Link to documentation, when written
 
-class WC_EU_VAT_Control_Centre {
+class WC_EU_VAT_Compliance_Control_Centre {
 
 	public function __construct() {
 		add_action('admin_menu', array($this, 'admin_menu'));
@@ -490,7 +490,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 			}
 
 			jQuery(document).ready(function($) {
-				$("#wceuvat_settings_accordion").accordion({collapsible: true, active:false, animate: 100 });
+				$("#wceuvat_settings_accordion").accordion({collapsible: true, active: false, animate: 100, heightStyle: "content" });
 				$("#wceuvat_settings_accordion input, #wceuvat_settings_accordion textarea, #wceuvat_settings_accordion select").change(function() {
 					wceuvat_query_leaving = true;
 				});

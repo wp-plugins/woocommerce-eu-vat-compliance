@@ -15,8 +15,12 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 	public function __construct() {
 		add_action('woocommerce_checkout_update_order_meta', array($this, 'woocommerce_checkout_update_order_meta'));
-		add_action('woocommerce_admin_order_data_after_shipping_address', array($this, 'woocommerce_admin_order_data_after_shipping_address'));
+
+//		add_action('woocommerce_admin_order_data_after_shipping_address', array($this, 'woocommerce_admin_order_data_after_shipping_address'));
+
 		add_action('woocommerce_checkout_order_processed', array($this, 'woocommerce_checkout_order_processed'));
+
+		add_action('add_meta_boxes_shop_order', array($this, 'add_meta_boxes_shop_order'));
 
 		// Display a notice if there's no means of detecting the country
 		add_action('plugins_loaded', array($this, 'plugins_loaded'));
@@ -29,6 +33,21 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			'geoip_detect_get_info_from_ip' => __('MaxMind GeoIP database', 'wc_eu_vat_compliance'),
 		);
 
+	}
+
+	public function add_meta_boxes_shop_order() {
+		add_meta_box('wc_eu_vat_vat_meta',
+			__('EU VAT compliance information', 'wc_eu_vat_compliance'),
+			array($this, 'meta_box_shop_order'),
+			'shop_order',
+			'side',
+			'default'
+		);
+	}
+
+	public function meta_box_shop_order() {
+		global $post;
+		$this->print_order_vat_info($post->ID);
 	}
 
 	public function woocommerce_checkout_update_order_meta($order_id) {
@@ -51,8 +70,8 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		$provider = $providers[$conversion_provider];
 
 		$record_currencies = apply_filters('wc_eu_vat_vat_recording_currencies', get_option('woocommerce_eu_vat_compliance_vat_recording_currency'));
-
-		if (!is_array($conversion_provider)) $record_currencies = array($record_currencies);
+		if (empty($record_currencies)) $record_currencies = array();
+		if (!is_array($record_currencies)) $record_currencies = array($record_currencies);
 
 		$order = WooCommerce_EU_VAT_Compliance()->get_order($order_id);
 		$order_time = strtotime($order->order_date);
@@ -62,33 +81,42 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			$order_currency = get_option('woocommerce_currency');
 		}
 
+		$conversion_rates = array('meta' => array('order_currency' => $order_currency), 'rates' => array());
+
 		foreach ($record_currencies as $vat_currency) {
 			if (!is_string($vat_currency) || $order_currency == $vat_currency) continue;
 			// Returns the conversion for 1 unit of the order currency.
 			$result = $provider->convert($order_currency, $vat_currency, 1);
-			if ($result) update_post_meta($order_id, 'wceuvat_conversion_rate_'.$order_currency.'_'.$vat_currency, $result);
+			// Legacy
+// 			if ($result) update_post_meta($order_id, 'wceuvat_conversion_rate_'.$order_currency.'_'.$vat_currency, $result);
+			if ($result) $conversion_rates['rates'][$vat_currency] = $result;
 		}
 
+		update_post_meta($order_id, 'wceuvat_conversion_rates', $conversion_rates);
 
-	
 	}
 
 	public function woocommerce_checkout_order_processed($order_id) {
-		$vat_paid = WooCommerce_EU_VAT_Compliance()->get_vat_paid($order_id);
-		$order = WooCommerce_EU_VAT_Compliance()->get_order($order_id);
+
+		$compliance = WooCommerce_EU_VAT_Compliance();
+		$vat_paid = $compliance->get_vat_paid($order_id);
+
+		$order = $compliance->get_order($order_id);
 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
+
 		update_post_meta($post_id, 'vat_compliance_vat_paid', apply_filters('wc_eu_vat_compliance_vat_paid', $vat_paid, $order));
 	}
 
 	// Show recorded information on the admin page
-	public function woocommerce_admin_order_data_after_shipping_address($order) {
+	private function print_order_vat_info($post_id) {
 
-		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
+// 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
+		$order = WooCommerce_EU_VAT_Compliance()->get_order($post_id);
 		$country_info = get_post_meta($post_id, 'vat_compliance_country_info', true);
 
 		echo '<p id="wc_eu_vat_compliance_countryinfo">';
 
-		echo '<strong>'.__("EU VAT Compliance Information", 'wc_eu_vat_compliance').':</strong><br>';
+//		echo '<strong>'.__("EU VAT Compliance Information", 'wc_eu_vat_compliance').':</strong><br>';
 
 		if (empty($country_info) || !is_array($country_info)) {
 			echo '<em>'.__('No further information recorded (the EU VAT Compliance plugin was not active when this order was made).', 'wc_eu_vat_compliance').'</em>';
@@ -105,12 +133,74 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		$vat_paid = WooCommerce_EU_VAT_Compliance()->get_vat_paid($order, true, true);
 
 		if (is_array($vat_paid)) {
-			echo __("VAT paid:", 'wc_eu_vat_compliance').' ';
 
-			$paid = get_woocommerce_currency_symbol($vat_paid['currency']).' '.sprintf('%.02f', $vat_paid['total']);
+			$order_currency = isset($vat_paid['currency']) ? $vat_paid['currency'] : (method_exists($order, 'get_order_currency') ? $order->get_order_currency() : get_option('woocommerce_currency'));
+
+			// This should not be possible - but, it is best to err on the side of caution
+			if (!isset($vat_paid['by_rates'])) $vat_paid['by_rates'] = array(array('items_total' => $vat_paid['items_total'], 'shipping_total' => $vat_paid['shipping_total'], 'rate' => '??', 'name' => __('VAT', 'wc_eu_vat_compliance')));
+
+			// What currencies is VAT meant to be reported in?
+			$conversion_rates =  get_post_meta($post_id, 'wceuvat_conversion_rates', true);
+
+			if (is_array($conversion_rates) && isset($conversion_rates['rates'])) {
+				$conversion_currencies = array_keys($conversion_rates['rates']);
+			} else {
+				$conversion_currencies = array();
+				# Convert from legacy format - only existed for 2 days from 24-Dec-2014; can be removed later.
+				$record_currencies = apply_filters('wc_eu_vat_vat_recording_currencies', get_option('woocommerce_eu_vat_compliance_vat_recording_currency'));
+				if (empty($record_currencies)) $record_currencies = array();
+				if (!is_array($record_currencies)) $record_currencies = array($record_currencies);
+				if (count($record_currencies) == 1) {
+					$try_currency = array_shift($record_currencies);
+					$conversion_rate = get_post_meta($post_id, 'wceuvat_conversion_rate_'.$order_currency.'_'.$try_currency, true);
+					if (!empty($conversion_rate)) {
+						$conversion_rates = array('order_currency' => $order_currency, 'rates' => array($try_currency => $conversion_rate));
+						$conversion_currencies = array($try_currency);
+						update_post_meta($post_id, 'wceuvat_conversion_rates', $conversion_rates);
+					}
+				}
+			}
+
+			// A default - redundant
+// 			if (empty($conversion_currencies)) $conversion_currencies = array($order_currency);
+
+			if (!in_array($order_currency, $conversion_currencies)) $conversion_currencies[] = $order_currency;
+
+			foreach ($vat_paid['by_rates'] as $vat) {
+
+				$items = $this->get_amount_in_conversion_currencies($vat['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
+
+				$shipping = $this->get_amount_in_conversion_currencies($vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
+
+				$total = $this->get_amount_in_conversion_currencies($vat['items_total']+$vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
+
+				echo '<strong>'.$vat['name'].' ('.sprintf('%0.2f', $vat['rate']).' %)</strong><br>';
+				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';
+				echo __('Shipping', 'wc_eu_vat_compliance').': '.$shipping.'<br>';
+				echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
+
+			}
+			if (count($vat_paid['by_rates']) > 1) {
+				$items = $this->get_amount_in_conversion_currencies($vat_paid['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
+
+				$shipping = $this->get_amount_in_conversion_currencies($vat_paid['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
+
+				$total = $this->get_amount_in_conversion_currencies($vat_paid['total'], $conversion_currencies, $conversion_rates, $order_currency);
+
+				echo '<strong>'.__('All VAT charges', 'wc_eu_vat_compliance').'</strong><br>';
+				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';
+				echo __('Shipping', 'wc_eu_vat_compliance').': '.$shipping.'<br>';
+				echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
+
+
+
+			}
+
+	
+// 			if (!in_array($order_currency, $conversion_currencies)) $paid_in_order_currency = get_woocommerce_currency_symbol($vat_paid['currency']).' '.sprintf('%.02f', $vat_paid['total']);
 
 			// Allow filtering - since for some shops using a multi-currency plugin, the VAT currency is neither the base nor necessarily the purchase currency.
-			echo apply_filters('wc_eu_vat_compliance_show_vat_paid', $paid, $vat_paid);
+// 			echo apply_filters('wc_eu_vat_compliance_show_vat_paid', $paid, $vat_paid);
 
 			$valid_eu_vat_number = get_post_meta($post_id, 'Valid EU VAT Number', true);
 			$vat_number_validated = get_post_meta($post_id, 'VAT number validated', true);
@@ -199,6 +289,19 @@ array (size=3)
 		// $time
 		echo "</p>";
 
+	}
+
+	protected function get_amount_in_conversion_currencies($amount, $conversion_currencies, $conversion_rates, $order_currency) {
+		$paid = '';
+		foreach ($conversion_currencies as $currency) {
+			$rate = ($currency == $order_currency) ? 1 : (isset($conversion_rates['rates'][$currency]) ? $conversion_rates['rates'][$currency] : '??');
+
+			if ('??' == $rate) continue;
+
+			if ($paid) $paid .= ' / ';
+			$paid .= get_woocommerce_currency_symbol($currency).' '.sprintf('%.02f', $amount * $rate);
+		}
+		return $paid;
 	}
 
 	public function plugins_loaded() {

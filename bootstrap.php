@@ -31,7 +31,7 @@ $classes_to_activate = apply_filters('woocommerce_eu_vat_compliance_classes', ar
 	'WC_EU_VAT_Compliance_Record_Order_Country',
 	'WC_EU_VAT_Compliance_Rates',
 	'WC_EU_VAT_Compliance_Premium',
-	'WC_EU_VAT_Control_Centre'
+	'WC_EU_VAT_Compliance_Control_Centre'
 ));
 
 if (!class_exists('WC_EU_VAT_Compliance')):
@@ -64,6 +64,12 @@ class WC_EU_VAT_Compliance {
 			)
 		);
 
+	}
+
+	public function get_european_union_vat_countries() {
+		$eu_countries = $this->wc->countries->get_european_union_countries();
+		$extra_countries = array('MC', 'IM');
+		return array_merge($eu_countries, $extra_countries);
 	}
 
 	public function woocommerce_checkout_process() {
@@ -177,7 +183,9 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		if ($allow_quick) {
 			$vat_paid = get_post_meta($post_id, 'vat_compliance_vat_paid', true);
 			if (!empty($vat_paid)) {
-				return maybe_unserialize($vat_paid);
+				$vat_paid = maybe_unserialize($vat_paid);
+				// If by_rates is not set, then we need to update the version of the data by including that data asap
+				if (isset($vat_paid['by_rates'])) return $vat_paid;
 			}
 		}
 
@@ -200,14 +208,33 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		$vat_shipping_total_base_currency = 0;
 		$base_currency_totals_are_reliable = true;
 
+		// Add extra information
+		$taxes = $this->add_tax_rates_details($taxes);
+
+		$by_rates = array();
+
+		// Some ammendments here in versions 1.5.5+ inspired by Diego Zanella
 		foreach ($taxes as $tax) {
-			if (!is_array($tax) || !isset($tax['label'])) continue;
-			if (!preg_match($vat_strings, $tax['label'])) continue;
+			if (!is_array($tax) || !isset($tax['label']) || !preg_match($vat_strings, $tax['label'])) continue;
+
+			$tax_rate_id = $tax['rate_id'];
 
 			if (!empty($tax['tax_amount'])) $vat_total += $tax['tax_amount'];
 			if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total += $tax['shipping_tax_amount'];
 
+			if(!isset($by_rates[$tax_rate_id])) {
+				$by_rates[$tax_rate_id] = array(
+					'items_total' => 0,
+					'shipping_total' => 0,
+				);
+				$by_rates[$tax_rate_id]['rate'] = $tax['tax_rate'];
+				$by_rates[$tax_rate_id]['name'] = $tax['tax_rate_name'];
+			}
 
+			if (!empty($tax['tax_amount'])) $by_rates[$tax_rate_id]['items_total'] += $tax['tax_amount'];
+			if (!empty($tax['shipping_tax_amount'])) $by_rates[$tax_rate_id]['shipping_total'] += $tax['shipping_tax_amount'];
+
+			// TODO: Remove all base_currency stuff from here - instead, we are using conversions at reporting time
 			if ($currency != $base_currency) {
 				if (empty($tax['tax_amount_base_currency'])) {
 					// This will be wrong, of course, unless your conversion rate is 1:1
@@ -222,11 +249,11 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 				$vat_total_base_currency = $vat_total;
 				$vat_shipping_total_base_currency = $vat_shipping_total;
 			}
-
 		}
 
 		// We may as well return the kitchen sink, since we've spent the cycles on getting it.
 		$vat_paid = apply_filters('wc_eu_vat_compliance_get_vat_paid', array(
+			'by_rates' => $by_rates,
 			'items_total' => $vat_total,
 			'shipping_total' => $vat_shipping_total,
 			'total' => $vat_total + $vat_shipping_total,
@@ -303,6 +330,55 @@ Array
 
 		return $vat_paid;
 
+	}
+
+	// This function lightly adapted from the work of Diego Zanella
+	protected function add_tax_rates_details($taxes) {
+		global $wpdb, $table_prefix;
+
+		if(empty($taxes) || !is_array($taxes)) return $taxes;
+
+		$tax_rate_ids = array();
+		foreach($taxes as $order_tax_id => $tax) {
+			// Keep track of which tax ID corresponds to which ID within the order.
+			// This information will be used to add the new information to the correct
+			// elements in the $taxes array
+			$tax_rate_ids[(int)$tax['rate_id']] = $order_tax_id;
+		}
+
+// No reason to record these here
+// 				,TR.tax_rate_country
+// 				,TR.tax_rate_state
+		$SQL = "
+			SELECT
+				TR.tax_rate_id
+				,TR.tax_rate
+				,TR.tax_rate_class
+				,TR.tax_rate_name
+			FROM
+				".$table_prefix."woocommerce_tax_rates TR
+			WHERE
+				(TR.tax_rate_id IN (%s))
+		";
+		// We cannot use $wpdb::prepare(). We need the result of the implode()
+		// call to be injected as is, while the prepare() method would wrap it in quotes.
+		$SQL = sprintf($SQL, implode(',', array_keys($tax_rate_ids)));
+
+		// Populate the original tax array with the tax details
+		$tax_rates_info = $wpdb->get_results($SQL, ARRAY_A);
+		foreach ($tax_rates_info as $tax_rate_info) {
+			// Find to which item the details belong, amongst the order taxes
+			$order_tax_id = (int)$tax_rate_ids[$tax_rate_info['tax_rate_id']];
+			$taxes[$order_tax_id]['tax_rate'] = $tax_rate_info['tax_rate'];
+			$taxes[$order_tax_id]['tax_rate_name'] = $tax_rate_info['tax_rate_name'];
+// 			$taxes[$order_tax_id]['tax_rate_country'] = $tax_rate_info['tax_rate_country'];
+// 			$taxes[$order_tax_id]['tax_rate_state'] = $tax_rate_info['tax_rate_state'];
+
+			// Attach the rest tax information to the original array, for convenience
+			$taxes[$order_tax_id]['tax_info'] = $tax_rate_info;
+		}
+
+		return $taxes;
 	}
 
 	public function get_rate_providers() {
