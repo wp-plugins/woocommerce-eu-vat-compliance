@@ -97,7 +97,6 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	}
 
 	public function woocommerce_checkout_order_processed($order_id) {
-
 		$compliance = WooCommerce_EU_VAT_Compliance();
 		$vat_paid = $compliance->get_vat_paid($order_id);
 

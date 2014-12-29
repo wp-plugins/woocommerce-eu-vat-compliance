@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -35,9 +35,11 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Distinguish VAT from other taxes:</strong> if you are in a jurisdiction where you have to apply other taxes also, then this plugin can handle that: it knows which taxes are VAT, and which are not.
 
+- <strong>Add line to invoices:</strong> If VAT was paid on the order, then an extra, configurable line can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
+
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">A Premium version is on sale at this link</a>, and currently has these *additional* features ready:
 
-- <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained. The customer's VAT number will be appended to the billing address where shown (e.g. order summary email, PDF invoices).
+- <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained. The customer's VAT number will be appended to the billing address where shown (e.g. order summary email, PDF invoices). An extra, configurable line specific to this situation can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
 
 - <strong>Forbid EU sales for VAT-paying customers only (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.
 
@@ -69,7 +71,7 @@ Many thanks to Diego Zanella, for various ideas we have swapped whilst working o
 
 - Some other WooCommerce plugins you may be interested in: https://www.simbahosting.co.uk/s3/shop/
 
-- This plugin is ready for translations, and we would welcome new translations (please post them in the support forum)
+- This plugin is ready for translations (English and German (partial) are currently available), and we would welcome new translations (please post them in the support forum)
 
 == Installation ==
 
@@ -94,6 +96,11 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 (None yet)
 
 == Changelog ==
+
+= 1.5.7 - 2014-12-29 =
+
+* FEATURE: Add the option to add configurable footer text to invoices produced by the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">WooCommerce PDF invoices and packing slips plugin</a>, if VAT was paid; or a different message is a valid VAT number was added and VAT was removed.
+* FEATURE: New German translation, courtesy of Gunther Wegner
 
 = 1.5.6 - 2014-12-27 =
 
@@ -216,4 +223,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.5.6 : Recommended update for all. Improves performance + fixes PHP notices + pollution of CSV download. Adds ability to have simple multi-currency display on PDF invoice.
+* 1.5.7 : Added ability to add footer lines to invoice, with variable text depending on the VAT status. Added German translation.

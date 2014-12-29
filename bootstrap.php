@@ -41,6 +41,8 @@ class WC_EU_VAT_Compliance {
 	public $wc;
 	public $settings;
 
+	private $wcpdf_order_id;
+
 	public function __construct() {
 		add_action('plugins_loaded', array($this, 'plugins_loaded'));
 
@@ -52,7 +54,11 @@ class WC_EU_VAT_Compliance {
 		add_filter('network_admin_plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 		add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 
-		add_option('woocommerce_eu_vat_compliance_vat_match', $this->default_vat_matches);
+// 		add_option('woocommerce_eu_vat_compliance_vat_match', $this->default_vat_matches);
+
+		add_action('wpo_wcpdf_process_template_order', array($this, 'wpo_wcpdf_process_template_order'), 10, 2);
+
+		add_action('wpo_wcpdf_footer', array($this, 'wpo_wcpdf_footer'));
 
 		$this->settings = array(
 			array(
@@ -61,9 +67,63 @@ class WC_EU_VAT_Compliance {
 				'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
 				'type' 		=> 'text',
 				'default'		=> $this->default_vat_matches
-			)
+			),
+
+			array(
+				'name' 		=> __( 'Invoice footer text (B2C)', 'wc_eu_vat_compliance' ),
+				'desc' 		=> __( "Text to prepend to the footer of your PDF invoice for transactions with VAT paid and non-zero (for supported PDF invoicing plugins)", 'wc_eu_vat_compliance' ),
+				'id' 		=> 'woocommerce_eu_vat_compliance_pdf_footer_b2c',
+				'type' 		=> 'textarea',
+				'css'		=> 'width:100%; height: 100px;'
+			),
 		);
 
+	}
+
+	public function wpo_wcpdf_footer($footer) {
+
+		$valid_eu_vat_number = null;
+		$vat_number_validated = null;
+		$vat_number = null;
+		$vat_paid = array();
+		$new_footer = $footer;
+		$text = '';
+		$order = null;
+
+		$order_id = $this->wcpdf_order_id;
+
+		if (!empty($order_id)) {
+
+			$order = $this->get_order($order_id);
+
+			if (is_a($order, 'WC_Order')) {
+
+				$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
+
+				$vat_paid = $this->get_vat_paid($order, true, true);
+
+				$valid_eu_vat_number = get_post_meta($post_id, 'Valid EU VAT Number', true);
+				$vat_number_validated = get_post_meta($post_id, 'VAT number validated', true);
+				$vat_number = get_post_meta($post_id, 'VAT Number', true);
+
+				// !empty used, because this is only for non-zero VAT
+				if (is_array($vat_paid) && !empty($vat_paid['total'])) {
+					$text = get_option('woocommerce_eu_vat_compliance_pdf_footer_b2c');
+
+					if (!empty($text)) {
+						$new_footer = wpautop( wptexturize( $text ) ) . $footer;
+					}
+				}
+
+			}
+
+		}
+
+		return apply_filters('wc_euvat_compliance_wpo_wcpdf_footer', $new_footer, $footer, $text, $vat_paid, $vat_number, $valid_eu_vat_number, $vat_number_validated, $order);
+	}
+
+	public function wpo_wcpdf_process_template_order($template_id, $order_id) {
+		$this->wcpdf_order_id = $order_id;
 	}
 
 	public function get_european_union_vat_countries() {
@@ -197,7 +257,12 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
 
 		if ($allow_quick) {
-			$vat_paid = get_post_meta($post_id, 'vat_compliance_vat_paid', true);
+
+			if (!empty($this->vat_paid_post_id) && $this->vat_paid_post_id == $post_id && !empty($this->vat_paid_info)) {
+				$vat_paid = $this->vat_paid_info;
+			} else {
+				$vat_paid = get_post_meta($post_id, 'vat_compliance_vat_paid', true);
+			}
 			if (!empty($vat_paid)) {
 				$vat_paid = maybe_unserialize($vat_paid);
 				// If by_rates is not set, then we need to update the version of the data by including that data asap
@@ -344,6 +409,9 @@ Array
 		if ($set_on_quick) {
 			update_post_meta($post_id, 'vat_compliance_vat_paid', apply_filters('wc_eu_vat_compliance_vat_paid', $vat_paid, $order));
 		}
+
+		$this->vat_paid_post_id = $post_id;
+		$this->vat_paid_info = $vat_paid;
 
 		return $vat_paid;
 
