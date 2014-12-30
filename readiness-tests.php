@@ -54,7 +54,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 		if ($result) {
 			$info = sprintf(__('Your WooCommerce version (%s) is high enough to support all features of this plugin.', 'wc_eu_vat_compliance'), WOOCOMMERCE_VERSION);
 		} else {
-			$info = sprintf(__('Your WooCommerce version (%s) is lower than %s - as a result, all features are supported, except for the ability to allow the customer to see exact taxes for their location before the cartor checkout.', 'wc_eu_vat_compliance'), WOOCOMMERCE_VERSION, '2.2.9');
+			$info = sprintf(__('Your WooCommerce version (%s) is lower than %s - as a result, all features are supported, except for the ability to allow the customer to see exact taxes for their location before the cart or checkout.', 'wc_eu_vat_compliance'), WOOCOMMERCE_VERSION, '2.2.9');
 		}
 		return $this->res($result, $info);
 	}
