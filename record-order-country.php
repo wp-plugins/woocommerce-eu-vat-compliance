@@ -42,7 +42,6 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	public function woocommerce_checkout_update_order_meta($order_id) {
 		// Note: whilst this records the country via GeoIP resolution, that does not indicate which tax WooCommerce applies - that will be determined by the user's WooCommerce settings. The GeoIP data is recorded for compliance purposes.
 
-error_log("UPDATE: $order_id");
 		$compliance = WooCommerce_EU_VAT_Compliance();
 
 		$country_info = $compliance->get_visitor_country_info();
@@ -55,8 +54,6 @@ error_log("UPDATE: $order_id");
 		}
 
 		$country_info['taxable_address'] = $taxable_address;
-error_log("UPDATE....");
-error_log_v($country_info);
 		update_post_meta($order_id, 'vat_compliance_country_info', apply_filters('wc_eu_vat_compliance_meta_country_info', $country_info));
 
 		$this->record_conversion_rates($order_id);
