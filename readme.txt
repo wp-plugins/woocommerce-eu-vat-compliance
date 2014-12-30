@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -105,9 +105,10 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 
 == Changelog ==
 
-= 1.6.1 - 2014-12-30 =
+= 1.6.2 - 2014-12-30 =
 
 * FIX: Remove debugging code that was inadvertantly left in 1.6.0
+* FIX: Fix fatal PHP error in admin products display (since 1.6.0)
 
 = 1.6.0 - 2014-12-30 =
 
@@ -246,4 +247,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.1 : Detect visitor's country and display prices accordingly (requires WC 2.2.9). Option to forbid VAT-liable check-outs (Premium). Begin readiness report. Full German translation. Supports subscriptions add-on. Remove debugging code left in 1.6.0.
+* 1.6.2 : Fix fatal PHP error (since 1.6.0) in admin products display

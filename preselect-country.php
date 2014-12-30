@@ -46,7 +46,13 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 // 		$postcode = $address[2];
 // 		$city = $address[3];
 
-		$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state');
+		if (is_admin() && !defined('DOING_AJAX')) return $address;
+
+		if (isset($this->compliance->wc->session) && is_object($this->compliance->wc->session)) {
+			$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state');
+		} else {
+			$eu_vat_state = '';
+		}
 
 		// Checkout/cart - get from session only
 		if ( (function_exists('is_checkout') && is_checkout()) || (function_exists('is_cart') && is_cart()) || defined('WOOCOMMERCE_CHECKOUT') || defined('WOOCOMMERCE_CART') ) {
