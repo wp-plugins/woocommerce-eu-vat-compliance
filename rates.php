@@ -254,7 +254,7 @@ class WC_EU_VAT_Compliance_Rates {
 				$new_rates = $rates['rates'];
 			}
 		}
-		if (empty($new_rates) && (false != ($rates_from_file = file_get_contents(WC_EU_VAT_COMPLIANCE_DIR.'/rates.json')))) {
+		if (empty($new_rates) && (false != ($rates_from_file = file_get_contents(WC_EU_VAT_COMPLIANCE_DIR.'/data/rates.json')))) {
 			$rates = json_decode($rates_from_file, true);
 			if (!empty($rates) && isset($rates['rates'])) $new_rates = $rates['rates'];
 		}

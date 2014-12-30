@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.5.7
+Stable tag: 1.6.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -25,6 +25,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Evidence is recorded, ready for audit:</strong> full information that was used to calculate VAT is displayed in the WooCommerce order screen in the back-end.
 
+- <strong>Display prices including correct VAT from the first page:</strong> GeoIP information is also used to show the correct VAT from the first time a customer sees a product. A widget and shortcode are also provided allowing the customer to set their own country (whole feature requires WooCommerce 2.2.9 or later).
+
 - <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. Currently, two official sources of exchange rates are available: the European Central Bank (ECB), and HM Revenue & Customs (UK).
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
@@ -41,13 +43,15 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained. The customer's VAT number will be appended to the billing address where shown (e.g. order summary email, PDF invoices). An extra, configurable line specific to this situation can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
 
-- <strong>Forbid EU sales for VAT-paying customers only (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.
+- <strong>Optionally allow B2B sales only</strong> - for shop owners who wish to only make sales that are VAT-exempt (i.e. B2B sales only), you can require that any EU customers enter a valid EU VAT number at the check-out.
 
 - <strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).
 
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
 - <strong>Show multiple currencies for VAT taxes on PDF invoices produced by <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>.
+
+- <strong>Support for the WooCommerce subscriptions extension</strong>
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">Read more about the Premium version of this plugin at this link.</a>
 
@@ -71,7 +75,7 @@ Many thanks to Diego Zanella, for various ideas we have swapped whilst working o
 
 - Some other WooCommerce plugins you may be interested in: https://www.simbahosting.co.uk/s3/shop/
 
-- This plugin is ready for translations (English and German (partial) are currently available), and we would welcome new translations (please post them in the support forum)
+- This plugin is ready for translations (English and German are currently available), and we would welcome new translations (please post them in the support forum; <a href="http://plugins.svn.wordpress.org/woocommerce-eu-vat-compliance/trunk/languages/">the POT file is here</a>, or you can contact us and ask for a web-based login for our translation website).
 
 == Installation ==
 
@@ -93,9 +97,22 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 == Frequently Asked Questions ==
 
-(None yet)
+= How can I display a widget allowing a visitor to pre-select their country, when viewing products (and thus set VAT accordingly)? =
+
+There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.6.0 - 2014-12-29 =
+
+* FEATURE: Detect visitor's country and display prices accordingly on all shop pages from their first access (requires WooCommerce 2.2.9 or later; as noted in the WooCommerce changelog - https://wordpress.org/plugins/woocommerce/changelog/ - that is the first version that allows the taxable country to be changed at this stage). This feature also pre-sets the billing country on the check-out page.
+* FEATURE: Option to make entry of VAT number for VAT exemption either optional, mandatory, or not possible. (Previously, only 'optional' was available). This means that store owners can decide to always charge VAT, or to not take orders from EU customers who are not VAT exempt. (Non-EU customers can still make orders; if you do not wish that to be possible, then there are existing WooCommerce settings for that). (This option is only relevant to the premium version, as the free version has no facility for entering VAT numbers).
+* FEATURE: Support for WooCommerce subscriptions (Premium)
+* TWEAK: Self-certification option now asks for 'country of residence', rather than of current location; to comply with our updated understanding of what the user should be asked to do. (But note that the message was, and continues to be, over-ridable via the wc_eu_vat_certify_message filter).
+* TWEAK: Make it possible (via a filter, wc_eu_vat_certify_form_field) to not pre-select any option for the self-certified VAT country. If your view is no option should be pre-selected, then you can use this filter. (We offer you no legal or taxation advice - you are responsible to consult your own local resources).
+* TWEAK: First beginnings of the readiness report: will now examine your WC version and "tax based on" setting.
+* TWEAK: EU VAT report now moved to the 'Taxes' tab of the WooCommerce reports (from 'Orders')
+* TRANSLATION: German translation is now complete, courtesy of Gunther Wegner. POT file updated.
 
 = 1.5.7 - 2014-12-29 =
 
@@ -223,4 +240,4 @@ You must remember, of course, to make sure that a) your WooCommerce installation
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.5.7 : Added ability to add footer lines to invoice, with variable text depending on the VAT status. Added German translation.
+* 1.6.0 : Detect visitor's country and display prices accordingly (requires WC 2.2.9). Option to forbid VAT-liable check-outs (Premium). Begin readiness report. Full German translation. Supports subscriptions add-on.

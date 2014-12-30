@@ -233,15 +233,19 @@ class WC_EU_VAT_Compliance_Control_Centre {
 ?>
 <h3>Current additional features</h3>
 <ul style="max-width: 800px;list-style-type: disc; list-style-position: inside;">
-<li><strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained.</li>
 
-<!-- <li><strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers who would be liable to VAT (i.e. those without a VAT number) to purchase.</li> -->
 
-<li><strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).</li>
+<li><strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained. The customer's VAT number will be appended to the billing address where shown (e.g. order summary email, PDF invoices). An extra, configurable line specific to this situation can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).</li>
+
+<li><strong>Optionally allow B2B sales only</strong> - for shop owners who wish to only make sales that are VAT-exempt (i.e. B2B sales only), you can require that any EU customers enter a valid EU VAT number at the check-out.</li>
 
 <li><strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).</li>
 
-<li><strong>Multi-currency compatible:</strong> if you are using the <a href="http://aelia.co/shop/currency-switcher-woocommerce/">"WooCommerce currency switcher"</a> plugin to sell in multiple currencies, then this plugin will maintain and provide its data for each order in both your shop's base currency and the order currency (if it differs).</li>
+<li><strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).</li>
+
+<li><strong>Show multiple currencies for VAT taxes on PDF invoices produced by <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>.</li>
+
+
 </ul>
 <?php
 
@@ -411,7 +415,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 		echo '<p><em>'.__('This control panel is under rapid development. Please make sure you keep this plugin up-to-date with any available updates that WordPress tells you are available.', 'wc_eu_vat_compliance').'</em></p>';
 
-		echo '<p><em>'.__('All settings below can also be found in other parts of your WordPress dashboard; they are brought together here also for convenience.', 'wc_eu_vat_compliance').'</em></p>';
+		echo '<p><em>'.__('Many settings below can also be found in other parts of your WordPress dashboard; they are brought together here also for convenience.', 'wc_eu_vat_compliance').'</em></p>';
 
 		$tax_settings_link = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) ? admin_url('admin.php?page=woocommerce_settings&tab=tax') : admin_url('admin.php?page=wc-settings&tab=tax');
 
@@ -654,14 +658,43 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		}
 
 		// TODO
-		echo __('Please come back here after your next plugin update, to see what has been added - this feature is still under development. When done, it will advise you on which of your WooCommerce and other settings may need adjusting for EU VAT compliance.', 'wc_eu_vat_compliance');
+		echo '<p>'.__('Please come back here after your next plugin update, to see what has been added - this feature is still under development. When done, it will advise you on which of your WooCommerce and other settings may need adjusting for EU VAT compliance.', 'wc_eu_vat_compliance').'</p>';
 
-// 		if (!class_exists('WC_EU_VAT_Compliance_Readiness_Tests')) require_once(WC_EU_VAT_COMPLIANCE_DIR.'/readiness-tests.php');
-// 		$test = new WC_EU_VAT_Compliance_Readiness_Tests();
-// 		$results = $test->get_results();
+		if (!class_exists('WC_EU_VAT_Compliance_Readiness_Tests')) require_once(WC_EU_VAT_COMPLIANCE_DIR.'/readiness-tests.php');
+		$test = new WC_EU_VAT_Compliance_Readiness_Tests();
+		$results = $test->get_results();
 
-// 		foreach ($results as $res) {
-// 		}
+		$result_descriptions = $test->result_descriptions();
+
+		?>
+		<table>
+		<thead>
+			<tr>
+				<th style="text-align:left;"><?php _e('Test', 'wc_eu_vat_compliance');?></th>
+				<th style="text-align:left; min-width:60px;"><?php _e('Result', 'wc_eu_vat_compliance');?></th>
+				<th style="text-align:left;"><?php _e('Futher information', 'wc_eu_vat_compliance');?></th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php
+
+		foreach ($results as $id => $res) {
+			if (!is_array($res)) continue;
+			// result, label, info
+			$row_bg = ($res['result'] == 'fail') ? 'color:red;' : ($res['result'] == 'warning' ? 'color:orange' : 'color:green;');
+			?>
+			<tr style="<?php echo $row_bg;?>">
+				<td><?php echo $res['label'];?></td>
+				<td><?php echo $result_descriptions[$res['result']];?></td>
+				<td><?php echo $res['info'];?></td>
+			</tr>
+			<?php
+		}
+
+		?>
+		</tbody>
+		</table>
+		<?php
 
 		// TODO: Links to the other stuff
 

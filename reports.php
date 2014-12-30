@@ -11,7 +11,7 @@ if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 class WC_EU_VAT_Compliance_Reports {
 
 	public function __construct() {
-		add_filter('admin_init', array($this, 'admin_init'));
+		add_action('admin_init', array($this, 'admin_init'));
 		add_action('wc_eu_vat_compliance_cc_tab_reports', array($this, 'wc_eu_vat_compliance_cc_tab_reports'));
 		add_action('wc_eu_vat_report_begin', array($this, 'wc_eu_vat_report_begin'), 10, 2);
 	}
@@ -58,12 +58,14 @@ class WC_EU_VAT_Compliance_Reports {
 	}
 
 	public function eu_vat_report($reports) {
-		$reports['orders']['reports']['eu_vat_report'] = array(
-			'title'       => __('EU VAT Report', 'wc_eu_vat_compliance'),
-			'description' => '',
-			'hide_title'  => false,
-			'callback'    => array($this, 'wc_eu_vat_compliance_report')
-		);
+		if (isset($reports['taxes'])) {
+			$reports['taxes']['reports']['eu_vat_report'] = array(
+				'title'       => __('EU VAT Report', 'wc_eu_vat_compliance'),
+				'description' => '',
+				'hide_title'  => false,
+				'callback'    => array($this, 'wc_eu_vat_compliance_report')
+			);
+		}
 		return $reports;
 	}
 
@@ -320,7 +322,7 @@ class WC_EU_VAT_Compliance_Reports {
 		?>
 
 		<form id="wceuvat_report_form" method="post" style="padding-bottom:8px;">
-			<input type="hidden" name="tab" value="reports">
+			<input type="hidden" name="tab" value="taxes">
 			<?php
 				$print_fields = array('page', 'tab', 'report', 'chart');
 				foreach ($print_fields as $field) {

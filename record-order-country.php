@@ -11,8 +11,6 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 	private $wc;
 
-	public $data_sources = array();
-
 	public function __construct() {
 		add_action('woocommerce_checkout_update_order_meta', array($this, 'woocommerce_checkout_update_order_meta'));
 
@@ -22,16 +20,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 		add_action('add_meta_boxes_shop_order', array($this, 'add_meta_boxes_shop_order'));
 
-		// Display a notice if there's no means of detecting the country
-		add_action('plugins_loaded', array($this, 'plugins_loaded'));
-
 		$this->compliance = WooCommerce_EU_VAT_Compliance();
-
-		$this->data_sources = array(
-			'HTTP_CF_IPCOUNTRY' => __('CloudFlare Geo-Location', 'wc_eu_vat_compliance'),
-			'geoip_detect_get_info_from_ip_function_not_available' => __('MaxMind GeoIP database was not installed', 'wc_eu_vat_compliance'),
-			'geoip_detect_get_info_from_ip' => __('MaxMind GeoIP database', 'wc_eu_vat_compliance'),
-		);
 
 	}
 
@@ -53,15 +42,29 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	public function woocommerce_checkout_update_order_meta($order_id) {
 		// Note: whilst this records the country via GeoIP resolution, that does not indicate which tax WooCommerce applies - that will be determined by the user's WooCommerce settings. The GeoIP data is recorded for compliance purposes.
 
-		$country_info = $this->get_visitor_country_info();
-
+error_log("UPDATE: $order_id");
 		$compliance = WooCommerce_EU_VAT_Compliance();
 
-		$taxable_address = $compliance->wc->customer->get_taxable_address();
+		$country_info = $compliance->get_visitor_country_info();
+
+		$tax = $compliance->wc->cart->tax;
+		if (method_exists($tax, 'get_tax_location')) {
+			$taxable_address = $tax->get_tax_location();
+		} else {
+			$taxable_address = $tax->get_taxable_address();
+		}
 
 		$country_info['taxable_address'] = $taxable_address;
-
+error_log("UPDATE....");
+error_log_v($country_info);
 		update_post_meta($order_id, 'vat_compliance_country_info', apply_filters('wc_eu_vat_compliance_meta_country_info', $country_info));
+
+		$this->record_conversion_rates($order_id);
+
+	}
+
+	public function record_conversion_rates($order_id) {
+		$compliance = WooCommerce_EU_VAT_Compliance();
 
 		$conversion_provider = get_option('woocommerce_eu_vat_compliance_exchange_rate_provider');
 
@@ -73,7 +76,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		if (empty($record_currencies)) $record_currencies = array();
 		if (!is_array($record_currencies)) $record_currencies = array($record_currencies);
 
-		$order = WooCommerce_EU_VAT_Compliance()->get_order($order_id);
+		$order = $compliance->get_order($order_id);
 		$order_time = strtotime($order->order_date);
 		if (method_exists($order, 'get_order_currency')) {
 			$order_currency = $order->get_order_currency();
@@ -93,16 +96,18 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		}
 
 		update_post_meta($order_id, 'wceuvat_conversion_rates', $conversion_rates);
-
 	}
 
+
 	public function woocommerce_checkout_order_processed($order_id) {
+		$this->record_meta_vat_paid($order_id);
+	}
+
+	public function record_meta_vat_paid($order_id) {
 		$compliance = WooCommerce_EU_VAT_Compliance();
 		$vat_paid = $compliance->get_vat_paid($order_id);
-
 		$order = $compliance->get_order($order_id);
 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
-
 		update_post_meta($post_id, 'vat_compliance_vat_paid', apply_filters('wc_eu_vat_compliance_vat_paid', $vat_paid, $order));
 	}
 
@@ -122,7 +127,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		if (empty($country_info) || !is_array($country_info)) {
 			echo '<em>'.__('No further information recorded (the EU VAT Compliance plugin was not active when this order was made).', 'wc_eu_vat_compliance').'</em>';
 			if (function_exists('geoip_detect_get_info_from_ip') && $ip = get_post_meta($post_id, '_customer_ip_address', true)) {
-				$country_info = $this->construct_country_info($ip);
+				$country_info = $compliance->construct_country_info($ip);
 				if (!empty($country_info) && is_array($country_info)) {
 					echo ' '.__("The following information is based upon looking up the customer's IP address now.", 'wc_eu_vat_compliance');
 				}
@@ -131,7 +136,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		}
 
 		// Relevant function: get_woocommerce_currency_symbol($currency = '')
-		$vat_paid = WooCommerce_EU_VAT_Compliance()->get_vat_paid($order, true, true);
+		$vat_paid = $compliance->get_vat_paid($order, true, true);
 
 		if (is_array($vat_paid)) {
 
@@ -232,11 +237,11 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 			$source = !empty($country_info['source']) ? $country_info['source'] :  __('Unknown', 'wc_eu_vat_compliance');
 
-			$source_description = (isset($this->data_sources[$source])) ? $this->data_sources[$source] : __('Unknown', 'wc_eu_vat_compliance');
+			$source_description = (isset($compliance->data_sources[$source])) ? $compliance->data_sources[$source] : __('Unknown', 'wc_eu_vat_compliance');
 
 			echo '<span title="'.esc_attr(__('Raw information:', 'wc_eu_vat_compliance').': '.print_r($country_info, true)).'">';
 
-			$countries = WooCommerce_EU_VAT_Compliance()->wc->countries->countries;
+			$countries = $compliance->wc->countries->countries;
 
 			$country_name = isset($countries[$country_code]) ? $countries[$country_code] : '??';
 
@@ -289,91 +294,5 @@ array (size=3)
 		echo "</p>";
 
 	}
-
-	public function plugins_loaded() {
-		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;
-
-		if (!function_exists('geoip_detect_get_info_from_ip')) {
-			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array(WooCommerce_EU_VAT_Compliance(), 'admin_notice_no_geoip_plugin'));
-		}
-
-		if (function_exists('geoip_detect_get_database_upload_filename')) {
-			$filename = geoip_detect_get_database_upload_filename();
-			if (!file_exists($filename)) add_action('admin_notices', array(WooCommerce_EU_VAT_Compliance(), 'admin_notice_no_geoip_database'));
-		}
-	}
-	// Here's where the hard work is done - where we get the information on the visitor's country and how it was discerned
-	// Returns an array
-	public function get_visitor_country_info() {
-
-		$ip = $this->get_visitor_ip_address();
-		$info = null;
-
-		// If CloudFlare has already done the hard work, return their result (which is probably more accurate)
-		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"])) {
-			$info = null;
-			$country_info = array(
-				'source' => 'HTTP_CF_IPCOUNTRY',
-				'data' => $_SERVER["HTTP_CF_IPCOUNTRY"]
-			);
-		} elseif (!function_exists('geoip_detect_get_info_from_ip')) {
-			$country_info = array(
-				'source' => 'geoip_detect_get_info_from_ip_function_not_available',
-				'data' => false
-			);
-		}
-
-		// Get the GeoIP info even if CloudFlare has a country - store it
-		if (function_exists('geoip_detect_get_info_from_ip')) {
-			if (isset($country_info)) {
-				$country_info_geoip = $this->construct_country_info($ip);
-				if (is_array($country_info_geoip) && isset($country_info_geoip['meta'])) $country_info['meta'] = $country_info_geoip['meta'];
-			} else {
-				$country_info = $this->construct_country_info($ip);
-			}
-
-		}
-
-		return apply_filters('wc_eu_vat_compliance_get_visitor_country_info', $country_info, $info, $ip);
-	}
-
-	// Make sure that function_exists('geoip_detect_get_info_from_ip') before calling this
-	private function construct_country_info($ip) {
-		$info = geoip_detect_get_info_from_ip($ip);
-		if (!is_object($info) || empty($info->country_code)) {
-			$country_info = array(
-				'source' => 'geoip_detect_get_info_from_ip',
-				'data' => false,
-				'meta' => array('ip' => $ip, 'reason' => 'geoip_detect_get_info_from_ip failed')
-			);
-		} else {
-			$country_info = array(
-				'source' => 'geoip_detect_get_info_from_ip',
-				'data' => $info->country_code,
-				'meta' => array('ip' => $ip, 'info' => $info)
-			);
-		}
-		return $country_info;
-	}
-
-	# Function adapted from Aelia Currency Switcher under the GPLv3 (http://dev.pathtoenlightenment.net)
-	private function get_visitor_ip_address() {
-
-		$forwarded_for = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-
-		// Field HTTP_X_FORWARDED_FOR may contain multiple addresses, separated by a
-		// comma. The first one is the real client, followed by intermediate proxy
-		// servers
-
-		$ff = explode(',', $forwarded_for);
-
-		$forwarded_for = array_shift($ff);
-
-		$visitor_ip = trim($forwarded_for);
-
-		# The filter makes it easier to test without having to visit another country. ;-)
-		return apply_filters('wc_eu_vat_compliance_visitor_ip', $visitor_ip, $forwarded_for);
-	}
-
 
 }

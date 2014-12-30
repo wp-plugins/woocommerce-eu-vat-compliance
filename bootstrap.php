@@ -20,6 +20,7 @@ if (!in_array('woocommerce/woocommerce.php', $active_plugins ) && !array_key_exi
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/reports.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/record-order-country.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/rates.php');
+@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/preselect-country.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/premium.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/control-centre.php');
 
@@ -30,6 +31,7 @@ $classes_to_activate = apply_filters('woocommerce_eu_vat_compliance_classes', ar
 	'WC_EU_VAT_Compliance_Reports',
 	'WC_EU_VAT_Compliance_Record_Order_Country',
 	'WC_EU_VAT_Compliance_Rates',
+	'WC_EU_VAT_Compliance_Preselect_Country',
 	'WC_EU_VAT_Compliance_Premium',
 	'WC_EU_VAT_Compliance_Control_Centre'
 ));
@@ -43,7 +45,17 @@ class WC_EU_VAT_Compliance {
 
 	private $wcpdf_order_id;
 
+	public $data_sources = array();
+
 	public function __construct() {
+
+		$this->data_sources = array(
+			'HTTP_CF_IPCOUNTRY' => __('CloudFlare Geo-Location', 'wc_eu_vat_compliance'),
+			'geoip_detect_get_info_from_ip_function_not_available' => __('MaxMind GeoIP database was not installed', 'wc_eu_vat_compliance'),
+			'geoip_detect_get_info_from_ip' => __('MaxMind GeoIP database', 'wc_eu_vat_compliance'),
+		);
+
+		add_action('before_woocommerce_init', array($this, 'before_woocommerce_init'), 1, 1);
 		add_action('plugins_loaded', array($this, 'plugins_loaded'));
 
 		add_action( 'woocommerce_settings_tax_options_end', array($this, 'woocommerce_settings_tax_options_end'));
@@ -529,14 +541,101 @@ Array
 		return (isset($order_statuses[$status])) ? $order_statuses[$status] : __('Unknown', 'wc_eu_vat_compliance').' ('.substr($status, 3).')';
 	}
 
-	public function plugins_loaded() {
-		load_plugin_textdomain('wc_eu_vat_compliance', false, basename(WC_EU_VAT_COMPLIANCE_DIR).'/languages');
+	public function before_woocommerce_init() {
 		if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) {
 			global $woocommerce;
 			$this->wc = $woocommerce;
 		} elseif (function_exists('WC')) {
 			$this->wc = WC();
 		}
+	}
+
+	public function plugins_loaded() {
+		load_plugin_textdomain('wc_eu_vat_compliance', false, basename(WC_EU_VAT_COMPLIANCE_DIR).'/languages');
+
+		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;
+
+		if (!function_exists('geoip_detect_get_info_from_ip')) {
+			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
+		}
+
+		if (function_exists('geoip_detect_get_database_upload_filename')) {
+			$filename = geoip_detect_get_database_upload_filename();
+			if (!file_exists($filename)) add_action('admin_notices', array($this, 'admin_notice_no_geoip_database'));
+		}
+	}
+
+	# Function adapted from Aelia Currency Switcher under the GPLv3 (http://aelia.co)
+	private function get_visitor_ip_address() {
+
+		$forwarded_for = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+
+		// Field HTTP_X_FORWARDED_FOR may contain multiple addresses, separated by a
+		// comma. The first one is the real client, followed by intermediate proxy
+		// servers
+
+		$ff = explode(',', $forwarded_for);
+
+		$forwarded_for = array_shift($ff);
+
+		$visitor_ip = trim($forwarded_for);
+
+		# The filter makes it easier to test without having to visit another country. ;-)
+		return apply_filters('wc_eu_vat_compliance_visitor_ip', $visitor_ip, $forwarded_for);
+	}
+
+	// Here's where the hard work is done - where we get the information on the visitor's country and how it was discerned
+	// Returns an array
+	public function get_visitor_country_info() {
+
+		$ip = $this->get_visitor_ip_address();
+		$info = null;
+
+		// If CloudFlare has already done the hard work, return their result (which is probably more accurate)
+		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"])) {
+			$info = null;
+			$country_info = array(
+				'source' => 'HTTP_CF_IPCOUNTRY',
+				'data' => $_SERVER["HTTP_CF_IPCOUNTRY"]
+			);
+		} elseif (!function_exists('geoip_detect_get_info_from_ip')) {
+			$country_info = array(
+				'source' => 'geoip_detect_get_info_from_ip_function_not_available',
+				'data' => false
+			);
+		}
+
+		// Get the GeoIP info even if CloudFlare has a country - store it
+		if (function_exists('geoip_detect_get_info_from_ip')) {
+			if (isset($country_info)) {
+				$country_info_geoip = $this->construct_country_info($ip);
+				if (is_array($country_info_geoip) && isset($country_info_geoip['meta'])) $country_info['meta'] = $country_info_geoip['meta'];
+			} else {
+				$country_info = $this->construct_country_info($ip);
+			}
+
+		}
+
+		return apply_filters('wc_eu_vat_compliance_get_visitor_country_info', $country_info, $info, $ip);
+	}
+
+	// Make sure that function_exists('geoip_detect_get_info_from_ip') before calling this
+	public function construct_country_info($ip) {
+		$info = geoip_detect_get_info_from_ip($ip);
+		if (!is_object($info) || empty($info->country_code)) {
+			$country_info = array(
+				'source' => 'geoip_detect_get_info_from_ip',
+				'data' => false,
+				'meta' => array('ip' => $ip, 'reason' => 'geoip_detect_get_info_from_ip failed')
+			);
+		} else {
+			$country_info = array(
+				'source' => 'geoip_detect_get_info_from_ip',
+				'data' => $info->country_code,
+				'meta' => array('ip' => $ip, 'info' => $info)
+			);
+		}
+		return $country_info;
 	}
 
 	public function admin_notice_no_geoip_database() {
