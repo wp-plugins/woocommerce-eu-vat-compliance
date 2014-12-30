@@ -67,6 +67,8 @@ Geographical IP lookups are performed via the MaxMind GeoIP database, via the Ge
 
 Please make sure that you review this plugin's installation instructions and have not missed any important information there.
 
+Please note that, just as with WordPress and its plugins generally (including WooCommerce), this plugin comes with no warranty of any kind and you deploy it entirely at your own risk. Furthermore, nothing in this plugin (including its documentation) constitutes legal or financial or any other kind of advice of any sort. In particular, you remain completely and solely liable for your own compliance with all taxation laws and regulations at all times, including research into what you must comply with. Installing any version of this plugin does not absolve you of any legal liabilities, or transfer any liabilities of any kind to us, and we provide no guarantee that use of this plugin will cover everything that your store needs to be able to do.
+
 Whether you think the EU's treaties with other jurisdictions will lead to success in enforcing the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers!
 
 Many thanks to Diego Zanella, for various ideas we have swapped whilst working on these issues.
@@ -103,7 +105,7 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 
 == Changelog ==
 
-= 1.6.0 - 2014-12-29 =
+= 1.6.0 - 2014-12-30 =
 
 * FEATURE: Detect visitor's country and display prices accordingly on all shop pages from their first access (requires WooCommerce 2.2.9 or later; as noted in the WooCommerce changelog - https://wordpress.org/plugins/woocommerce/changelog/ - that is the first version that allows the taxable country to be changed at this stage). This feature also pre-sets the billing country on the check-out page.
 * FEATURE: Option to make entry of VAT number for VAT exemption either optional, mandatory, or not possible. (Previously, only 'optional' was available). This means that store owners can decide to always charge VAT, or to not take orders from EU customers who are not VAT exempt. (Non-EU customers can still make orders; if you do not wish that to be possible, then there are existing WooCommerce settings for that). (This option is only relevant to the premium version, as the free version has no facility for entering VAT numbers).
