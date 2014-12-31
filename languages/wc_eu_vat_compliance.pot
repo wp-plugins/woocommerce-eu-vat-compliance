@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce EU Vat Compliance\n"
-"POT-Creation-Date: 2014-12-30 01:51+0100\n"
-"PO-Revision-Date: 2014-12-30 01:52+0100\n"
+"POT-Creation-Date: 2014-12-31 14:04+0100\n"
+"PO-Revision-Date: 2014-12-31 14:04+0100\n"
 "Last-Translator: David Anderson <contact@updraftplus.com>\n"
 "Language-Team:  <contact@simbahosting.co.uk>\n"
 "MIME-Version: 1.0\n"
@@ -42,10 +42,10 @@ msgstr ""
 
 #: premium.php:250 premium.php:262 premium.php:266 premium.php:272
 #: premium.php:276 premium.php:283 reports.php:469 bootstrap.php:541
-#: vat-number.php:315 record-order-country.php:219
-#: record-order-country.php:236 record-order-country.php:238
-#: record-order-country.php:240 record-order-country.php:248
-#: record-order-country.php:252
+#: vat-number.php:315 record-order-country.php:216
+#: record-order-country.php:233 record-order-country.php:235
+#: record-order-country.php:237 record-order-country.php:245
+#: record-order-country.php:249
 msgid "Unknown"
 msgstr ""
 
@@ -141,7 +141,7 @@ msgstr ""
 msgid "Sales (without VAT)"
 msgstr ""
 
-#: reports.php:653 reports.php:664 record-order-country.php:146
+#: reports.php:653 reports.php:664 record-order-country.php:143
 msgid "VAT"
 msgstr ""
 
@@ -416,27 +416,27 @@ msgstr ""
 msgid "billing country"
 msgstr ""
 
-#: vat-number.php:419
+#: vat-number.php:422
 msgid "shipping country"
 msgstr ""
 
-#: vat-number.php:601
+#: vat-number.php:608
 msgid ""
 "This store requires all orders to be accompanied by a valid EU VAT number"
 msgstr ""
 
-#: vat-number.php:607
+#: vat-number.php:615
 msgid ""
 "You must certify your country of residence in order to complete your order."
 msgstr ""
 
-#: vat-number.php:634
+#: vat-number.php:642
 #, php-format
 msgid ""
 "You cannot use a VAT number since your country (%s) is outside of the EU."
 msgstr ""
 
-#: vat-number.php:695 vat-number.php:721
+#: vat-number.php:703 vat-number.php:729
 #, php-format
 msgid "You have entered an invalid VAT number (%s) for your country."
 msgstr ""
@@ -465,7 +465,7 @@ msgstr ""
 msgid ""
 "Your WooCommerce version (%s) is lower than %s - as a result, all features "
 "are supported, except for the ability to allow the customer to see exact "
-"taxes for their location before the cartor checkout."
+"taxes for their location before the cart or checkout."
 msgstr ""
 
 #: readiness-tests.php:66 readiness-tests.php:69
@@ -822,38 +822,38 @@ msgstr ""
 msgid "Testing..."
 msgstr ""
 
-#: preselect-country.php:94
+#: preselect-country.php:135
 msgid "Show prices without VAT"
 msgstr ""
 
-#: preselect-country.php:103
+#: preselect-country.php:144
 msgid "Change"
 msgstr ""
 
-#: preselect-country.php:230
+#: preselect-country.php:271
 msgid "Allow the visitor to set their taxation country (to show correct taxes)"
 msgstr ""
 
-#: preselect-country.php:232
+#: preselect-country.php:273
 msgid "WooCommerce Tax Country Chooser"
 msgstr ""
 
-#: preselect-country.php:262
+#: preselect-country.php:303
 #, php-format
 msgid ""
 "Due to limitations in earlier versions, this widget requires WooCommerce %s "
 "or later, and will not work on your version (%s)."
 msgstr ""
 
-#: preselect-country.php:266
+#: preselect-country.php:307
 msgid "Title:"
 msgstr ""
 
-#: preselect-country.php:268
+#: preselect-country.php:309
 msgid "Explanatory text (HTML accepted):"
 msgstr ""
 
-#: preselect-country.php:270
+#: preselect-country.php:311
 msgid "Include option for the customer to show prices with no VAT."
 msgstr ""
 
@@ -861,61 +861,69 @@ msgstr ""
 msgid "EU VAT compliance information"
 msgstr ""
 
-#: record-order-country.php:128
+#: record-order-country.php:125
 msgid ""
 "No further information recorded (the EU VAT Compliance plugin was not active "
 "when this order was made)."
 msgstr ""
 
-#: record-order-country.php:132
+#: record-order-country.php:129
 msgid ""
 "The following information is based upon looking up the customer's IP address "
 "now."
 msgstr ""
 
-#: record-order-country.php:184 record-order-country.php:198
+#: record-order-country.php:181 record-order-country.php:195
 msgid "Items"
 msgstr ""
 
-#: record-order-country.php:185 record-order-country.php:199
+#: record-order-country.php:182 record-order-country.php:196
 msgid "Shipping"
 msgstr ""
 
-#: record-order-country.php:186 record-order-country.php:200
+#: record-order-country.php:183 record-order-country.php:197
 msgid "Total"
 msgstr ""
 
-#: record-order-country.php:197
+#: record-order-country.php:194
 msgid "All VAT charges"
 msgstr ""
 
-#: record-order-country.php:214
+#: record-order-country.php:211
 #, php-format
 msgid "Validated VAT number: %s"
 msgstr ""
 
-#: record-order-country.php:219
+#: record-order-country.php:216
 msgid "VAT paid:"
 msgstr ""
 
-#: record-order-country.php:242
+#: record-order-country.php:239
 msgid "Raw information:"
 msgstr ""
 
-#: record-order-country.php:250
+#: record-order-country.php:247
 msgid "Country used to calculate tax:"
 msgstr ""
 
-#: record-order-country.php:260
+#: record-order-country.php:257
 msgid "IP Country:"
 msgstr ""
 
-#: record-order-country.php:261
+#: record-order-country.php:258
 msgid "Source:"
 msgstr ""
 
 #: rate-providers/base-xml.php:43
 msgid "Using this rates provider requires no configuration. "
+msgstr ""
+
+#: rate-providers/danishnb.php:27
+msgid "Danish National Bank"
+msgstr ""
+
+#: rate-providers/danishnb.php:29
+msgid "Official exchange rates from the Danish National Bank."
 msgstr ""
 
 #: rate-providers/hmrc-uk.php:28
