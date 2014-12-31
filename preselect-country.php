@@ -30,12 +30,47 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 		// WC 2.0 and later - this filter is used to set their taxable address when they check-out
 		add_filter('woocommerce_customer_taxable_address', array($this, 'woocommerce_customer_taxable_address'));
 
+		add_filter('woocommerce_get_price_suffix', array($this, 'woocommerce_get_price_suffix'), 10, 2);
+
 // 		add_action('woocommerce_init', array($this, 'woocommerce_init'));
 
 	}
 
 	public function widgets_init() {
 		register_widget('WC_EU_VAT_Country_PreSelect_Widget');
+	}
+
+	public function price_display_replace_callback($matches) {
+
+		if (empty($this->all_countries)) $this->all_countries = $this->compliance->wc->countries->countries;
+
+		$country = $this->get_preselect_country(true);
+
+		$search = '{country}';
+		$replace = isset($this->all_countries[$country]) ? $this->all_countries[$country] : '';
+
+		return str_replace($search, $replace, $matches[1]);
+	}
+
+	// This filter only exists on WC 2.1 and later
+	public function woocommerce_get_price_suffix($price_display_suffix, $product) {
+
+		if ($price_display_suffix && preg_match('#\{iftax\}(.*)\{\/iftax\}#', $price_display_suffix, $matches)) {
+
+			$including_tax = $product->get_price_including_tax();
+			$excluding_tax = $product->get_price_excluding_tax();
+
+			if ($including_tax != $excluding_tax) {
+				$price_display_suffix = preg_replace_callback( '#\{iftax\}(.*)\{\/iftax\}#', array($this, 'price_display_replace_callback'), $price_display_suffix );
+
+			} else {
+				$price_display_suffix = preg_replace( '#\{iftax\}(.*)\{\/iftax\}#', '', $price_display_suffix );
+			}
+
+		}
+
+		return $price_display_suffix;
+
 	}
 
 	// In WC 2.2.9, there is a filter woocommerce_get_tax_location which may a better one to use, depending on the purpose (needs verifying)

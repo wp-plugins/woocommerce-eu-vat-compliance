@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -104,6 +104,11 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.6.3 - 2014-12-30 =
+
+* FEATURE: You can now enter special values in WooCommerce's 'Price display suffix' field: anything enclosed in between {iftax} and {/iftax} will only be added if the item has taxes; and within that tag, you can use the special value {country} to show the country that tax was calculated using. Example: {iftax}incl. VAT{/iftax} More complicated example: {iftax}incl. VAT ({country}){/iftax}
+* FIX: Resolve issue that required self-certification even when none was required, if the user was adding an extra option to the self-certification field via a filter.
 
 = 1.6.2 - 2014-12-30 =
 
@@ -247,4 +252,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.2 : Fix fatal PHP error (since 1.6.0) in admin products display
+* 1.6.3 : Special {iftax}{/iftax} and {country} tags allowed in configured price suffix
