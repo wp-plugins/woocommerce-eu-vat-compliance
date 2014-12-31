@@ -375,8 +375,9 @@ class WC_EU_VAT_Compliance_Control_Centre {
 				'title'   => __( 'Price display suffix:', 'woocommerce' ),
 				'id'      => 'woocommerce_price_display_suffix',
 				'default' => '',
+				'class' => 'widefat',
 				'type'    => 'text',
-				'desc'    => __( 'Define text to show after your product prices. This could be, for example, "inc. Vat" to explain your pricing. You can also have prices substituted here using one of the following: <code>{price_including_tax}, {price_excluding_tax}</code>.', 'woocommerce' ),
+				'desc'    => __( 'Define text to show after your product prices. This could be, for example, "inc. Vat" to explain your pricing. You can also have prices substituted here using one of the following: <code>{price_including_tax}, {price_excluding_tax}</code>. Content wrapped in-between <code>{iftax}</code> and <code>{/iftax}</code> will display only if there was tax; within that, <code>{country}</code> will be replaced by the name of the country used to calculate tax.', 'woocommerce' ),
 			),
 
 			array(

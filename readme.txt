@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.4
+Stable tag: 1.6.6
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -104,6 +104,16 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.6.6 - 2014-12-31 =
+
+* FIX: Fix bug that could cause the 'Phrase matches used to identify VAT taxes' and 'Invoice footer text (B2C)' settings to be reset to default values.
+* TWEAK: Add help text to the settings in the control centre, mentioning the {iftax} and {country} tags.
+* TWEAK: Automatic entries in WooCommerce tables now show the VAT rate in the name - because compliant invoices in some states require to show the rate. It is recommended that you go and update your tables in WooCommerce -> Settings -> Tax -> (rate), if this applies to you (you may need to delete all existing rows).
+
+= 1.6.5 - 2014-12-31 =
+
+* TWEAK: Those with non-EU billing addresses (or shipping, if that's what you're using) are no longer exempted from other checks (specifically, self-certification in the case of an address/GeoIP conflict). This release is for the Premium version only (since the tweak does not affect the free version).
 
 = 1.6.4 - 2014-12-31 =
 
@@ -258,4 +268,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.4 : Support for the official exchange rates of the Danish National Bank. New French translation; updated German.
+* 1.6.6 : Fix settings saving bug; use tax rates in tax names instead of country.

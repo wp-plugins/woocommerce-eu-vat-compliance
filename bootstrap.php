@@ -519,7 +519,7 @@ Array
 	}
 
 	public function woocommerce_update_options_tax() {
-		woocommerce_update_options($this->settings);
+		if ( isset( $_POST['woocommerce_eu_vat_compliance_vat_match'] ) ) woocommerce_update_options($this->settings);
 	}
 
 	// From WC 2.2
