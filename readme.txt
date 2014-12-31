@@ -105,7 +105,7 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 
 == Changelog ==
 
-= 1.6.4 - 2014-12-13 =
+= 1.6.4 - 2014-12-31 =
 
 * FEATURE: Support official exchange rates from the Danish National Bank (https://www.nationalbanken.dk/en/statistics/exchange_rates/Pages/Default.aspx)
 * TRANSLATION: German translation is now updated, courtesy of Gunther Wegner.
