@@ -105,10 +105,12 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 
 == Changelog ==
 
-= 1.6.7 - 2014-12-31 =
+= 1.6.7 - 2015-01-01 =
 
 * TWEAK: Added a 'classes' parameter to the [euvat_country_selector] shortcode, allowing CSS classes to be added to the widget
+* TWEAK: Correct filter name in base XML provider
 * FIX: "VAT Number" heading would sometimes show at the check-out when it was not needed (Premium)
+* FIX: The HMRC (UK) decided to move their rates feed to a different URL this month, swapping hyphens for under-scores. How stupid. This fix will also be OK next month in case this was a mistake and they revert.
 
 = 1.6.6 - 2014-12-31 =
 
