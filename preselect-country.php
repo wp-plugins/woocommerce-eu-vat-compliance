@@ -115,18 +115,19 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 	public function shortcode_euvat_country_selector($atts) {
 		$atts = shortcode_atts(array(
 			'include_notaxes' => true,
+			'classes' => '',
 		), $atts, 'euvat_country_selector');
 
-		$this->render_dropdown($atts['include_notaxes']);
+		$this->render_dropdown($atts['include_notaxes'], $atts['classes']);
 	}
 
-	public function render_dropdown($include_notaxes = true) {
+	public function render_dropdown($include_notaxes = true, $classes = '') {
 
 		$all_countries = $this->compliance->wc->countries->countries;
 
 		$url = remove_query_arg('wc_country_preselect');
 
-		echo '<form action="'.esc_attr($url).'"><select name="wc_country_preselect" class="countrypreselect_chosencountry">';
+		echo '<form action="'.esc_attr($url).'"><select name="wc_country_preselect" class="countrypreselect_chosencountry '.$classes.'">';
 
 		$selected_country = $this->get_preselect_country();
 
