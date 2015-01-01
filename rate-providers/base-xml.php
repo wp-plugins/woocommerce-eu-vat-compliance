@@ -64,9 +64,17 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 		if (empty($xml_last_data) || (!empty($this->force_refresh_on_new_month) && $last_updated_month != $this_month) || $xml_last_updated + $this->force_refresh_rates_every <= time()) {
 
 			$url = $this->getbase.$this->get_leaf($the_time);
-			$fetched = wp_remote_get($url);
-			if (!is_wp_error($url)) {
-				if (!empty($fetched['response']) || $fetched['response']['code'] < 300) $new_xml = $fetched['body'];
+			if (is_string($url)) $url = array($url);
+
+			foreach ($url as $u) {
+				if (!empty($new_xml)) continue;
+				$fetched = wp_remote_get($u);
+				if (!is_wp_error($u)) {
+					if (!empty($fetched['response']) || $fetched['response']['code'] < 300) {
+						$new_xml = $fetched['body'];
+						if (strpos($new_xml, '<!DOCTYPE HTML') !== false) unset($new_xml);
+					}
+				}
 			}
 			if (empty($new_xml)) {
 				// Try yesterday, in case we have a timezone issue, or data not yet uploaded, etc.
@@ -79,7 +87,7 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 					}
 // 				}
 			}
-			if (empty($new_xml) && false != ($on_disk_file = apply_filters('wc_eu_vat_hmrc_'.$this->key.'_file', false, $the_time, $include_day_key, $include_hour_key)) && file_exists($on_disk_file)) {
+			if (empty($new_xml) && false != ($on_disk_file = apply_filters('wc_eu_vat_'.$this->key.'_file', false, $the_time, $include_day_key, $include_hour_key)) && file_exists($on_disk_file)) {
 				$new_xml = file_get_contents($on_disk_file);
 			}
 		}

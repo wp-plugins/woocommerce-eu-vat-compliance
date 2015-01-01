@@ -37,7 +37,15 @@ class WC_EU_VAT_Compliance_Rate_Provider_hmrc_uk extends WC_EU_VAT_Compliance_Ra
 		$mon = gmdate('m', $the_time);
 		$yer = gmdate('y', $the_time);
 
-		return "exrates-monthly-$mon$yer.xml";
+		if ($yer >= 2015) {
+			# Just why did they do this? Grrr...
+			return array(
+				"exrates_monthly_$mon$yer.xml",
+				"exrates-monthly-$mon$yer.xml"
+			);
+		} else {
+			return "exrates-monthly-$mon$yer.xml";
+		}
 	}
 
 	public function get_current_conversion_rate_from_time($currency, $the_time = false) {
