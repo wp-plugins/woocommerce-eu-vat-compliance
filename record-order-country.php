@@ -89,7 +89,10 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			$result = $provider->convert($order_currency, $vat_currency, 1);
 			// Legacy
 // 			if ($result) update_post_meta($order_id, 'wceuvat_conversion_rate_'.$order_currency.'_'.$vat_currency, $result);
-			if ($result) $conversion_rates['rates'][$vat_currency] = $result;
+			if ($result) {
+				$conversion_rates['rates'][$vat_currency] = $result;
+				$conversion_rates['meta']['provider'] = $conversion_provider;
+			}
 		}
 
 		update_post_meta($order_id, 'wceuvat_conversion_rates', $conversion_rates);
@@ -134,7 +137,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 		// Relevant function: get_woocommerce_currency_symbol($currency = '')
 		$vat_paid = $compliance->get_vat_paid($order, true, true);
-
+	
 		if (is_array($vat_paid)) {
 
 			$order_currency = isset($vat_paid['currency']) ? $vat_paid['currency'] : (method_exists($order, 'get_order_currency') ? $order->get_order_currency() : get_option('woocommerce_currency'));
@@ -147,6 +150,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 			if (is_array($conversion_rates) && isset($conversion_rates['rates'])) {
 				$conversion_currencies = array_keys($conversion_rates['rates']);
+				if (count($conversion_rates['rates']) > 0) $conversion_provider_key = isset($conversion_rates['meta']['provider']) ? $conversion_rates['meta']['provider'] : '??';
 			} else {
 				$conversion_currencies = array();
 				# Convert from legacy format - only existed for 2 days from 24-Dec-2014; can be removed later.
@@ -157,6 +161,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 					$try_currency = array_shift($record_currencies);
 					$conversion_rate = get_post_meta($post_id, 'wceuvat_conversion_rate_'.$order_currency.'_'.$try_currency, true);
 					if (!empty($conversion_rate)) {
+						$conversion_provider_key = '??';
 						$conversion_rates = array('order_currency' => $order_currency, 'rates' => array($try_currency => $conversion_rate));
 						$conversion_currencies = array($try_currency);
 						update_post_meta($post_id, 'wceuvat_conversion_rates', $conversion_rates);
@@ -168,6 +173,14 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 // 			if (empty($conversion_currencies)) $conversion_currencies = array($order_currency);
 
 			if (!in_array($order_currency, $conversion_currencies)) $conversion_currencies[] = $order_currency;
+
+			# Show the recorded currency conversion rate(s)
+			$currency_title = '';
+			if (isset($conversion_rates['rates']) && is_array($conversion_rates['rates'])) {
+				foreach ($conversion_rates['rates'] as $cur => $rate) {
+					$currency_title .= sprintf("1 unit %s = %s units %s\n", $order_currency, $rate, $cur);
+				}
+			}
 
 			foreach ($vat_paid['by_rates'] as $vat) {
 
@@ -211,7 +224,18 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 				echo '<br>'.sprintf(__('Validated VAT number: %s', 'wc_eu_vat_compliance'), $vat_number);
 			}
 
-			echo '<br>';
+			$conversion_provider = $compliance->get_rate_providers($conversion_provider_key);
+			if (!empty($conversion_provider_key) && !empty($conversion_provider)) {
+				$provider_info = $conversion_provider->info();
+				$provider_title = isset($provider_info['title']) ? $provider_info['title'] : $conversion_provider_key;
+				echo '<p><strong title="'.esc_attr($currency_title).'">'.__('Currency conversion source:', 'wc_eu_vat_compliance').'</strong><br>';
+				if (!empty($provider_info['url'])) echo '<a href="'.esc_attr($provider_info['url']).'">';
+				echo htmlspecialchars($provider_title);
+				if (!empty($provider_info['url'])) echo '</a>';
+				echo '</p>';
+			} else {
+				echo '<br>';
+			}
 		} else {
 			echo __("VAT paid:", 'wc_eu_vat_compliance').' '.__('Unknown', 'wc_eu_vat_compliance')."<br>";
 		}

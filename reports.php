@@ -157,7 +157,7 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$normalised_results = array();
 
-		$tax_based_on = get_option( 'woocommerce_tax_based_on' );
+		$tax_based_on = get_option('woocommerce_tax_based_on');
 
 		if ($print_as_csv) {
 			$tax_based_on_extra = ", '_billing_country', '_shipping_country', '_customer_ip_address'";

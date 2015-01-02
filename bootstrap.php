@@ -478,7 +478,7 @@ Array
 		return $taxes;
 	}
 
-	public function get_rate_providers() {
+	public function get_rate_providers($just_this_one = false) {
 		$provider_dirs = apply_filters('wc_eu_vat_rate_provider_dirs', array(WC_EU_VAT_COMPLIANCE_DIR.'/rate-providers'));
 		$classes = array();
 		foreach ($provider_dirs as $dir) {
@@ -495,6 +495,9 @@ Array
 				if (!class_exists($class_name)) include_once($dir.'/'.$file);
 				if (class_exists($class_name)) $classes[$key] = new $class_name;
 			}
+		}
+		if ($just_this_one) {
+			return (isset($classes[$just_this_one])) ? $classes[$just_this_one] : false;
 		}
 		return $classes;
 	}

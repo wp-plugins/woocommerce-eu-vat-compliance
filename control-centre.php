@@ -27,6 +27,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 		add_action('admin_menu', array($this, 'admin_menu'));
 // 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
 		add_filter('woocommerce_screen_ids', array($this, 'woocommerce_screen_ids'));
+		add_filter('woocommerce_reports_screen_ids', array($this, 'woocommerce_screen_ids'));
 		add_action('wp_ajax_wc_eu_vat_cc', array($this, 'ajax'));
 	}
 
@@ -685,8 +686,8 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 			$row_bg = ($res['result'] == 'fail') ? 'color:red;' : ($res['result'] == 'warning' ? 'color:orange' : 'color:green;');
 			?>
 			<tr style="<?php echo $row_bg;?>">
-				<td><?php echo $res['label'];?></td>
-				<td><?php echo $result_descriptions[$res['result']];?></td>
+				<td style="vertical-align:top;"><?php echo $res['label'];?></td>
+				<td style="vertical-align:top;"><?php echo $result_descriptions[$res['result']];?></td>
 				<td><?php echo $res['info'];?></td>
 			</tr>
 			<?php

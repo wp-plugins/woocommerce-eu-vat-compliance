@@ -57,8 +57,11 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 
 		if ($price_display_suffix && preg_match('#\{iftax\}(.*)\{\/iftax\}#', $price_display_suffix, $matches)) {
 
-			$including_tax = $product->get_price_including_tax();
-			$excluding_tax = $product->get_price_excluding_tax();
+			// Rounding is needed, otherwise you get an imprecise float (e.g. one can be d:14.199999999999999289457264239899814128875732421875, whilst the other is d:14.2017000000000006565414878423325717449188232421875)
+
+			$decimals = absint( get_option( 'woocommerce_price_num_decimals' ) );
+			$including_tax = round($product->get_price_including_tax(), $decimals);
+			$excluding_tax = round($product->get_price_excluding_tax(), $decimals);
 
 			if ($including_tax != $excluding_tax) {
 				$price_display_suffix = preg_replace_callback( '#\{iftax\}(.*)\{\/iftax\}#', array($this, 'price_display_replace_callback'), $price_display_suffix );
@@ -81,18 +84,26 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 // 		$postcode = $address[2];
 // 		$city = $address[3];
 
-		if (is_admin() && !defined('DOING_AJAX')) return $address;
+		if (is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX)) return $address;
+
+		// Checkout processing - ignore the session
+		if (defined('WOOCOMMERCE_CHECKOUT') && WOOCOMMERCE_CHECKOUT) {
+		}
 
 		if (isset($this->compliance->wc->session) && is_object($this->compliance->wc->session)) {
-			$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state');
+			# Value set by check-out logic
+			$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state_checkout');
 		} else {
 			$eu_vat_state = '';
 		}
 
-		// Checkout/cart - get from session only
 		if ( (function_exists('is_checkout') && is_checkout()) || (function_exists('is_cart') && is_cart()) || defined('WOOCOMMERCE_CHECKOUT') || defined('WOOCOMMERCE_CART') ) {
-			$eu_vat_country = $this->get_preselect_country(false);
 
+			// Processing of checkout form activity - get from session only
+
+			$allow_from_widget = (!defined('WOOCOMMERCE_CHECKOUT') || !WOOCOMMERCE_CHECKOUT) ? true : false;
+
+			$eu_vat_country = $this->get_preselect_country(false, $allow_from_widget);
 			if (!empty($eu_vat_country) && $country != $eu_vat_country) {
 				return array($eu_vat_country, $eu_vat_state, '', '');
 			}
@@ -198,11 +209,14 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 ENDHERE;
 	}
 
-	public function get_preselect_country($allow_via_geoip = true) {
+	public function get_preselect_country($allow_via_geoip = true, $allow_from_widget = true) {
+// 		$allow_via_session = true;
 
 		// Priority: 1) Something set via _REQUEST 2) Something already set in the session 3) GeoIP country
 
 		$countries = $this->compliance->wc->countries->countries;
+
+// 		if (defined('DOING_AJAX') && DOING_AJAX && isset($_POST['action']) && 'woocommerce_update_order_review' == $_POST['action']) $allow_via_session = false;
 
 		# Something set via _REQUEST?
 		if (!empty($_REQUEST['wc_country_preselect'])) {
@@ -220,11 +234,11 @@ ENDHERE;
 
 				if (isset($this->compliance->wc->session)) {
 					if ('none' == $req_country) {
-						$this->compliance->wc->session->set('eu_vat_country', '');
-						$this->compliance->wc->session->set('eu_vat_state', '');
+						$this->compliance->wc->session->set('eu_vat_country_widget', '');
+						$this->compliance->wc->session->set('eu_vat_state_widget', '');
 					} else {
-						$this->compliance->wc->session->set('eu_vat_country', $req_country);
-						$this->compliance->wc->session->set('eu_vat_state', '');
+						$this->compliance->wc->session->set('eu_vat_country_widget', $req_country);
+						$this->compliance->wc->session->set('eu_vat_state_widget', '');
 					}
 				}
 
@@ -232,13 +246,19 @@ ENDHERE;
 			}
 		}
 
-		# Something already set in the session?
-		$session_country = (isset($this->compliance->wc->session)) ? $this->compliance->wc->session->get('eu_vat_country') : '';
-		#$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state');
+		# Something set in the session (via the widget)?
+		if ($allow_from_widget) {
+			$session_widget_country = (isset($this->compliance->wc->session)) ? $this->compliance->wc->session->get('eu_vat_country_widget') : '';
+			#$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state_widget');
 
-		if ('none' == $session_country || ($session_country && isset($countries[$session_country]))) {
-			return $session_country;
+			if ('none' == $session_widget_country || ($session_widget_country && isset($countries[$session_widget_country]))) return $session_widget_country;
 		}
+
+		# Something already set in the session (via the checkout)?
+		$session_country = (isset($this->compliance->wc->session)) ? $this->compliance->wc->session->get('eu_vat_country_checkout') : '';
+		#$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state_checkout');
+
+		if ('none' == $session_country || ($session_country && isset($countries[$session_country]))) return $session_country;
 
 		# GeoIP country?
 		if ($allow_via_geoip) {
@@ -248,8 +268,8 @@ ENDHERE;
 			if (isset($countries[$geoip_country])) {
 				if (isset($this->compliance->wc->session)) {
 					// Put in session, so that it will be retained on cart/checkout pages
-					$this->compliance->wc->session->set('eu_vat_state', '');
-					$this->compliance->wc->session->set('eu_vat_country', $geoip_country);
+					$this->compliance->wc->session->set('eu_vat_state_widget', '');
+					$this->compliance->wc->session->set('eu_vat_country_widget', $geoip_country);
 				}
 				return $geoip_country;
 			}

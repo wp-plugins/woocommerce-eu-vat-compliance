@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.7
+Stable tag: 1.6.8
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -104,6 +104,20 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.6.8 - 2015-01-03 =
+
+* FEATURE: VAT rate tables can now be pre-filled for any tax class (not just WooCommerce's built-in standard / reduced), and you can choose which rates to fetch them from
+* FIX: Fix bug (since 1.6.0) in the free version that caused any widget-selected country's VAT rate to be applied at the check-out, despite other settings.
+* FIX: Where no reduced rate exists (currently, Denmark), the standard rate is added instead
+* UPDATE: Default VAT rates for Luxembourg updated to reflect new values (Jan 2015) - you will need to update your WooCommerce tax tables to pick up the new rates
+* TWEAK: Round prices before comparing taxed and untaxed prices (otherwise two actually identical prices may apparently differ due to the nature of PHP floating point arithmetic - which could cause an "including tax" label to show when tax was actually zero)
+* TWEAK: CSV spreadsheet download now supplies date in local format (as well as standard ISO-8601 format) (suggestion from Guy Pasteger)
+* TWEAK: Date entry boxes in the control centre now have a date-picker widget (as they did if used from the WooCommerce reports page)
+* TWEAK: Record + display information on which exchange rate provider was used to convert (useful for audit), and the recorded rate
+* TWEAK: Added new readiness test: tests that all coupons are applied before tax (doing so after tax leads to non-compliant VAT invoices)
+* TWEAK: Added new readiness test: check that tax is enabled for the store
+* TRANSLATIONS: Updated POT file
 
 = 1.6.7 - 2015-01-01 =
 
@@ -245,7 +259,6 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 
 == Screenshots ==
 
-
 1. A button is added to allow you to enter all EU VAT rates with one click. <em>Note: Screenshots are included below from <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">the Premium version</a>. Please check the feature list for this plugin to clarify which features are available in which version.</em>
 
 2. VAT information being shown in the order details page
@@ -257,6 +270,8 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 5. Compliance dashboard, bringing all settings and information into one place
 
 6. Currency conversions, if you sell and report VAT in different currencies.
+
+7. Compliance report, checking a number of common essentials for configuring your store correctly for EU VAT.
 
 == License ==
 
@@ -275,4 +290,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.7 : Fix settings saving bug; use tax rates in tax names instead of country. Add classes parameter to shortcode.
+* 1.6.8 : Various tweaks, features and fixes. Recommended updated for all; also, update your tax tables afterwards (new rates).

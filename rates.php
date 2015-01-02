@@ -9,6 +9,7 @@ class WC_EU_VAT_Compliance_Rates {
 
 	private $rates = array();
 
+	private $known_rates;
 	private $which_rate = 'standard_rate';
 
 	private $sources = array(
@@ -22,6 +23,10 @@ class WC_EU_VAT_Compliance_Rates {
 
 	public function __construct() {
 		add_action('admin_init', array($this, 'admin_init'));
+		$this->known_rates = array(
+			'standard_rate' => __('Standard Rate', 'wc_eu_vat_compliance'),
+			'reduced_rate' => __('Reduced Rate', 'wc_eu_vat_compliance'),
+		);
 	}
 
 	public function admin_init() {
@@ -29,12 +34,12 @@ class WC_EU_VAT_Compliance_Rates {
 		// wp-admin/admin.php?page=wc-settings&tab=tax&s=standard
 		if ('admin.php' == $pagenow && !empty($_REQUEST['page']) && ('woocommerce_settings' == $_REQUEST['page'] || 'wc-settings' == $_REQUEST['page']) && !empty($_REQUEST['tab']) && 'tax' == $_REQUEST['tab'] && !empty($_REQUEST['section'])) {
 
-			if ('standard' == $_REQUEST['section']) {
-				$this->which_rate = 'standard_rate';
-				add_action('admin_footer', array($this, 'admin_footer'));
-			} elseif ('reduced-rate' == $_REQUEST['section']) {
+			$this->which_rate = 'standard_rate';
+			add_action('admin_footer', array($this, 'admin_footer'));
+// 			if ('standard' == $_REQUEST['section']) {
+// 			} else
+			if ('reduced-rate' == $_REQUEST['section']) {
 				$this->which_rate = 'reduced_rate';
-				add_action('admin_footer', array($this, 'admin_footer'));
 			}
 		}
 		if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) {
@@ -50,15 +55,15 @@ class WC_EU_VAT_Compliance_Rates {
 		$get_rates = $this->get_vat_rates();
 		$rates = (is_array($get_rates)) ? $get_rates : array();
 
-		$rate_description = ($this->which_rate == 'reduced_rate') ? __('Add / Update EU VAT Rates (Reduced)', 'wc_eu_vat_compliance') : __('Add / Update EU VAT Rates (Standard)', 'wc_eu_vat_compliance');
+// 		$rate_description = ($this->which_rate == 'reduced_rate') ? __('Add / Update EU VAT Rates (Reduced)', 'wc_eu_vat_compliance') : __('Add / Update EU VAT Rates (Standard)', 'wc_eu_vat_compliance');
+		$rate_description = __('Add / Update EU VAT Rates', 'wc_eu_vat_compliance');
 
 		?>
 
 		<script type="text/javascript">
-			jQuery(document).ready(function() {
+			jQuery(document).ready(function($) {
 
 				var rates = <?php echo json_encode($rates);?>;
-				var which_rate = '<?php echo $this->which_rate;?>';
 
 				var availableCountries = [<?php
 					$countries = array();
@@ -90,7 +95,8 @@ class WC_EU_VAT_Compliance_Rates {
 						var p_city = jQuery(line).find('td.city input:first').val();
 						if (p_iso == iso && (typeof p_state == 'undefined' || p_state == '') && (typeof p_postcode == 'undefined' || p_postcode == '') && (typeof p_city == 'undefined' || p_city == '')) {
 							jQuery(line).find('td.rate input:first').val(rate);
-// 							jQuery(line).find('td.name input:first').val(name);
+							// Since the VAT amount is in the name, update that too
+							jQuery(line).find('td.name input:first').val(name);
 							was_updated = true;
 							return;
 						}
@@ -152,23 +158,39 @@ class WC_EU_VAT_Compliance_Rates {
 					$vat_descr_info = esc_attr(__('Note: for any tax you enter below to be recognised as VAT for EU VAT purposes, its name will need to contain one of the following words or phrases:', 'wc_eu_vat_compliance')).' '.WooCommerce_EU_VAT_Compliance()->get_vat_matches('html-printable').'. <a href="?page='.$_REQUEST['page'].'&tab=tax">'.esc_attr(__('You can configure this list in the tax options.', 'wc_eu_vat_compliance')).'<a>';
 				?>
 
-				var $foot = jQuery('table.wc_tax_rates tfoot <?php echo $selector;?>').first();
+				var known_rates = [ "<?php echo implode('", "', array_keys($this->known_rates)); ?>" ];
+				var known_rate_descriptions = [ "<?php echo implode('", "', array_values($this->known_rates)); ?>" ];
+
+				var $foot = $('table.wc_tax_rates tfoot <?php echo $selector;?>').first();
 				$foot.after('<a href="#" id="euvatcompliance-updaterates" class="button euvatcompliance-updaterates"><?php echo htmlspecialchars($rate_description);?></a>');
 
-				jQuery('table.wc_tax_rates').first().before('<p><em><?php echo $vat_descr_info; ?></em></p>');
+				var rate_selector = '<select id="euvatcompliance-whichrate">';
+				for (i = 0; i < known_rates.length; i++) {
+					rate_selector += '<option value="'+known_rates[i]+'">'+known_rate_descriptions[i]+'</option>';
+				} 
+				rate_selector = rate_selector + '</select>';
 
-				jQuery('table.wc_tax_rates').on('click', '.euvatcompliance-updaterates', function() {
-					jQuery.each(rates, function(iso, country) {
+				$foot.after('<?php echo esc_js(__('Use rates:', 'wc_eu_vat_compliance')); ?> '+rate_selector);
+
+				$('table.wc_tax_rates').first().before('<p><em><?php echo $vat_descr_info; ?></em></p>');
+
+				$('table.wc_tax_rates').on('click', '.euvatcompliance-updaterates', function() {
+
+					var which_rate = $('#euvatcompliance-whichrate').val();
+					if (typeof which_rate == 'undefined' || '' == which_rate) { which_rate = '<?php echo $this->which_rate;?>'; }
+
+					$.each(rates, function(iso, country) {
 						var rate = country.standard_rate;
 						if (which_rate == 'reduced_rate') {
-							rate = country.reduced_rate;
+							var reduced_rate = country.reduced_rate;
+							if (typeof reduced_rate != 'boolean') { rate = reduced_rate; }
 						}
 						// VAT-compliant invoices must show the rate
-						var name = 'VAT ('+rate.toString()+' %)';
+						var name = 'VAT ('+rate.toString()+'%)';
 // 						var name = 'VAT ('+country.country+')';
-						if (which_rate == 'reduced_rate') {
-							name = name + ' (<?php echo esc_attr(__('reduced rate', 'wc_eu_vat_compliance'));?>)';
-						}
+// 						if (which_rate == 'reduced_rate') {
+// 							name = name + ' (<?php echo esc_attr(__('reduced rate', 'wc_eu_vat_compliance'));?>)';
+// 						}
 						wc_eu_vat_compliance_addrow(iso, rate.toString(), name)
 					});
 					return false;
