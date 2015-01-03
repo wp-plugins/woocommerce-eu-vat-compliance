@@ -208,7 +208,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 		if (count($has_rate_remaining_countries) > 0) {
 			if (1 == count($has_rate_remaining_countries) && in_array($base_country, $has_rate_remaining_countries)) {
 				if ($result) $result = 'unknown';
-				$info .= ' '.__('Your base country (%s) has no tax rate set in any tax rate table; but, perhaps this was intentional.', 'wc_eu_vat_compliance').' '.implode(', ', $has_rate_remaining_countries);
+				$info .= ' '.sprintf(__('Your base country (%s) has no tax rate set in any tax rate table; but, perhaps this was intentional.', 'wc_eu_vat_compliance'), $base_country);
 			} else {
 				$result = false;
 				$info .= ' '.__('These countries have no tax rate set in any tax rate table:', 'wc_eu_vat_compliance').' '.implode(', ', $has_rate_remaining_countries);
