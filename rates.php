@@ -251,24 +251,31 @@ class WC_EU_VAT_Compliance_Rates {
 		return $rates[$country_code][$rate];
 	}
 
-	public function get_vat_rates() {
+	public function fetch_remote_vat_rates() {
+		$new_rates = false;
+		foreach ($this->sources as $url) {
+			$get = wp_remote_get($url, array(
+				'timeout' => 5,
+			));
+			if (is_wp_error($get) || !is_array($get)) continue;
+			if (!isset($get['response']) || !isset($get['response']['code'])) continue;
+			if ($get['response']['code'] >= 300 || $get['response']['code'] < 200 || empty($get['body'])) continue;
+			$rates = json_decode($get['body'], true);
+			if (empty($rates) || !isset($rates['rates'])) continue;
+			$new_rates = $rates['rates'];
+			break;
+		}
+		return $new_rates;
+	}
+
+	public function get_vat_rates($use_transient = true) {
 		if (!empty($this->rates)) return $this->rates;
-		$rates = get_site_transient('wc_euvatrates_rates_byiso');
+		$rates = ($use_transient) ? get_site_transient('wc_euvatrates_rates_byiso') : false;
 		if (is_array($rates) && !empty($rates)) {
 			$new_rates = $rates;
 		} else {
 			$this->rates = false;
-			foreach ($this->sources as $url) {
-				$get = wp_remote_get($url, array(
-					'timeout' => 5,
-				));
-				if (is_wp_error($get) || !is_array($get)) continue;
-				if (!isset($get['response']) || !isset($get['response']['code'])) continue;
-				if ($get['response']['code'] >= 300 || $get['response']['code'] <= 200 || empty($get['body'])) continue;
-				$rates = json_decode($get['body'], true);
-				if (empty($rates) && isset($rates['rates'])) continue;
-				$new_rates = $rates['rates'];
-			}
+			$new_rates = $this->fetch_remote_vat_rates();
 		}
 		if (empty($new_rates) && (false != ($rates_from_file = file_get_contents(WC_EU_VAT_COMPLIANCE_DIR.'/data/rates.json')))) {
 			$rates = json_decode($rates_from_file, true);

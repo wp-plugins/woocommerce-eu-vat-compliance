@@ -8,6 +8,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 		return array(
 			'pass' => __('Passed', 'wc_eu_vat_compliance'),
 			'fail' => __('Failed', 'wc_eu_vat_compliance'),
+			'unknown' => __('Uncertain', 'wc_eu_vat_compliance'),
 		);
 	}
 
@@ -17,7 +18,12 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 			'tax_based_on' => __('Tax based upon', 'wc_eu_vat_compliance'),
 			'coupons_before_tax' => __('Coupons apply before tax', 'wc_eu_vat_compliance'),
 			'tax_enabled' => __('Store has tax enabled', 'wc_eu_vat_compliance'),
+			'rates_remote_fetch' => __('Current rates can be fetched from network', 'wc_eu_vat_compliance'),
+			'rates_exist_and_up_to_date' => __('VAT rates are up-to-date', 'wc_eu_vat_compliance'),
 		);
+		$this->compliance = WooCommerce_EU_VAT_Compliance();
+		$this->rates_class = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Rates');
+		$this->european_union_vat_countries = $this->compliance->get_european_union_vat_countries();
 // 			'' => __('', 'wc_eu_vat_compliance'),
 	}
 
@@ -29,6 +35,9 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 			if (!method_exists($this, $test)) continue;
 			$res = call_user_func(array($this, $test));
 			// label, result, info
+			if (is_wp_error($res)) {
+				$res = $this->res(false, $res->get_error_message());
+			}
 			if (isset($res['result'])) {
 				$results[$test] = $res;
 				$results[$test]['label'] = $label;
@@ -36,14 +45,17 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 		}
 
 		return $results;
-
 	}
 
 	protected function res($result, $info) {
-		if ($result) {
-			$rescode = 'pass';
+		if (is_bool($result)) {
+			if ($result) {
+				$rescode = 'pass';
+			} else {
+				$rescode = 'fail';
+			}
 		} else {
-			$rescode = 'fail';
+			$rescode = 'unknown';
 		}
 		return array(
 			'result' => $rescode,
@@ -130,6 +142,89 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 		return $this->res($result, $info);
 	}
 
+	// TODO: Test for whether base country settings are consistent (if we charge no VAT to base country, then... etc.)
+	// get_option( 'woocommerce_eu_vat_compliance_deduct_in_base' ) == 'yes' )
+	// $compliance->wc->countries->get_base_country()
+
+	protected function rates_exist_and_up_to_date() {
+		$has_rate_remaining_countries = $this->european_union_vat_countries;
+		$countries_with_apparently_wrong_rates = array();
+		$base_country = $this->compliance->wc->countries->get_base_country();
+
+		$rates = $this->rates_class->get_vat_rates();
+		$info = '';
+
+		$result = false;
+		if (empty($rates)) {
+			$info = __('Could not get any VAT rate information.', 'wc_eu_vat_compliance');
+		} else {
+			global $wpdb, $table_prefix;
+			$tax_rate_classes = get_option('woocommerce_tax_classes');
+			$sql = "SELECT tax_rate_country, tax_rate, tax_rate_class FROM ".$table_prefix."woocommerce_tax_rates WHERE tax_rate_state=''";
+			# Get an array of objects
+			$results = $wpdb->get_results($sql);
+			if (!is_array($results)) {
+				return $results;
+			} else {
+				foreach ($results as $res) {
+					$tax_rate_country = $res->tax_rate_country;
+					$tax_rate = $res->tax_rate;
+
+					if (($key = array_search($tax_rate_country, $has_rate_remaining_countries)) !== false) {
+						unset($has_rate_remaining_countries[$key]);
+					}
+
+					if (!is_array($rates[$tax_rate_country])) continue;
+					$found_rate = false;
+					foreach ($rates[$tax_rate_country] as $label => $rate) {
+						# N.B. Not all attribute/values are rates; but, all the numerical ones are
+						if (is_numeric($rate) && $rate == $tax_rate) {
+							$found_rate = true;
+							break;
+						}
+					}
+					if (!$found_rate) $countries_with_apparently_wrong_rates[$tax_rate_country] = $tax_rate;
+				}
+			}
+		}
+
+		if (count($countries_with_apparently_wrong_rates) > 0) {
+			$info = __('The following countries have tax rates set in a tax table, that were not found as any current VAT rate:', 'wc_eu_vat_compliance').' ';
+			$first = true;
+			foreach ($countries_with_apparently_wrong_rates as $country => $rate) {
+				if ($first) { $first = false; } else { $info .= ', '; }
+				$info .= "$country (".round($rate, 2)." %)";
+			}
+			$info .= '.';
+		} else {
+			if (count($results) > 0) {
+				$result = true;
+				$info = __('All countries had at least one tax table in which a current VAT rate entry was found.', 'wc_eu_vat_compliance');
+			} else {
+				$info = __('No tax rates at all were found in your WooCommerce tax tables. Have you set any up yet?', 'wc_eu_vat_compliance');
+			}
+		}
+
+		if (count($has_rate_remaining_countries) > 0) {
+			if (1 == count($has_rate_remaining_countries) && in_array($base_country, $has_rate_remaining_countries)) {
+				if ($result) $result = 'unknown';
+				$info .= ' '.__('Your base country (%s) has no tax rate set in any tax rate table; but, perhaps this was intentional.', 'wc_eu_vat_compliance').' '.implode(', ', $has_rate_remaining_countries);
+			} else {
+				$result = false;
+				$info .= ' '.__('These countries have no tax rate set in any tax rate table:', 'wc_eu_vat_compliance').' '.implode(', ', $has_rate_remaining_countries);
+			}
+		}
+
+		return $this->res($result, $info);
+	}
+
+	protected function rates_remote_fetch() {
+		$rates = $this->rates_class->fetch_remote_vat_rates();
+		$info = __('Testing ability to fetch current VAT rates from the network.', 'wc_eu_vat_compliance');
+		if (empty($rates)) $info .= ' '.__('If this fails, then check (with your web hosting company) the network connectivity from your webserver.', 'wc_eu_vat_compliance');
+		return $this->res(!empty($rates), $info);
+	}
+	
 	protected function tax_enabled() {
 		$woocommerce_calc_taxes = get_option('woocommerce_calc_taxes');
 		return $this->res('yes' == $woocommerce_calc_taxes, __('Taxes need to be enabled in the WooCommerce tax settings.', 'wc_eu_vat_compliance'));

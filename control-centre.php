@@ -672,7 +672,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		<table>
 		<thead>
 			<tr>
-				<th style="text-align:left;"><?php _e('Test', 'wc_eu_vat_compliance');?></th>
+				<th style="text-align:left; min-width: 140px;"><?php _e('Test', 'wc_eu_vat_compliance');?></th>
 				<th style="text-align:left; min-width:60px;"><?php _e('Result', 'wc_eu_vat_compliance');?></th>
 				<th style="text-align:left;"><?php _e('Futher information', 'wc_eu_vat_compliance');?></th>
 			</tr>
@@ -683,12 +683,26 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		foreach ($results as $id => $res) {
 			if (!is_array($res)) continue;
 			// result, label, info
-			$row_bg = ($res['result'] == 'fail') ? 'color:red;' : ($res['result'] == 'warning' ? 'color:orange' : 'color:green;');
+			switch ($res['result']) {
+				case 'fail':
+					$col = 'red';
+					break;
+				case 'pass':
+					$col = 'green';
+					break;
+				case 'warning':
+					$col = 'orange';
+					break;
+				default:
+					$col = 'orange';
+					break;
+			}
+			$row_bg = 'color:'.$col;
 			?>
 			<tr style="<?php echo $row_bg;?>">
 				<td style="vertical-align:top;"><?php echo $res['label'];?></td>
 				<td style="vertical-align:top;"><?php echo $result_descriptions[$res['result']];?></td>
-				<td><?php echo $res['info'];?></td>
+				<td style="vertical-align:top;"><?php echo $res['info'];?></td>
 			</tr>
 			<?php
 		}

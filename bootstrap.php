@@ -17,24 +17,29 @@ if (!in_array('woocommerce/woocommerce.php', $active_plugins ) && !array_key_exi
 // This plugin performs various distinct functions. So, we have separated the code accordingly.
 // Not all of these files may be present, depending on a) whether this is the free or premium version b) whether I've written the feature yet
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/vat-number.php');
-@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/reports.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/record-order-country.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/rates.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/preselect-country.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/premium.php');
-@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/control-centre.php');
 
 // Though the code is separated, some pieces are inter-dependent; the order also matters. So, don't assume you can just change this arbitrarily.
-$classes_to_activate = apply_filters('woocommerce_eu_vat_compliance_classes', array(
+$potential_classes_to_activate = array(
 	'WC_EU_VAT_Compliance',
 	'WC_EU_VAT_Compliance_VAT_Number',
-	'WC_EU_VAT_Compliance_Reports',
 	'WC_EU_VAT_Compliance_Record_Order_Country',
 	'WC_EU_VAT_Compliance_Rates',
 	'WC_EU_VAT_Compliance_Preselect_Country',
 	'WC_EU_VAT_Compliance_Premium',
-	'WC_EU_VAT_Compliance_Control_Centre'
-));
+);
+
+if (is_admin()) {
+	@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/reports.php');
+	@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/control-centre.php');
+	$potential_classes_to_activate[] = 'WC_EU_VAT_Compliance_Reports';
+	$potential_classes_to_activate[] = 'WC_EU_VAT_Compliance_Control_Centre';
+}
+
+$classes_to_activate = apply_filters('woocommerce_eu_vat_compliance_classes', $potential_classes_to_activate);
 
 if (!class_exists('WC_EU_VAT_Compliance')):
 class WC_EU_VAT_Compliance {
