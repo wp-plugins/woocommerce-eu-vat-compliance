@@ -69,7 +69,7 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 			foreach ($url as $u) {
 				if (!empty($new_xml)) continue;
 				$fetched = wp_remote_get($u);
-				if (!is_wp_error($u)) {
+				if (!is_wp_error($fetched)) {
 					if (!empty($fetched['response']) || $fetched['response']['code'] < 300) {
 						$new_xml = $fetched['body'];
 						if (strpos($new_xml, '<!DOCTYPE HTML') !== false) unset($new_xml);
