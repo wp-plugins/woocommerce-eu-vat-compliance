@@ -82,7 +82,7 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 // 				if ($url != $backup_url) {
 					// Always try again, in case the failure was transient
 					$fetched = wp_remote_get($backup_url);
-					if (!is_wp_error($backup_url)) {
+					if (!is_wp_error($fetched)) {
 						if (!empty($fetched['response']) || $fetched['response']['code'] < 300) $new_xml = $fetched['body'];
 					}
 // 				}
