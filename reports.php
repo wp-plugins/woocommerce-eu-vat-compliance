@@ -179,6 +179,8 @@ class WC_EU_VAT_Compliance_Reports {
 
 			$results = $wpdb->get_results($sql);
 
+			$remove_order_id = false;
+
 			if (!empty($results)) {
 				$page++;
 				foreach ($results as $res) {
@@ -197,6 +199,7 @@ class WC_EU_VAT_Compliance_Reports {
 							$vat_country = (empty($cinfo['taxable_address'])) ? '??' : $cinfo['taxable_address'];
 							if (!empty($vat_country[0])) {
 								if ($remove_non_eu_countries && !in_array($vat_country[0], $eu_countries)) {
+									$remove_order_id = $order_id;
 									unset($normalised_results[$order_status][$order_id]);
 									continue;
 								}
@@ -232,11 +235,15 @@ class WC_EU_VAT_Compliance_Reports {
 						case 'VAT number validated';
 							$normalised_results[$order_status][$order_id]['vatno_validated'] = $res->meta_value;
 						break;
-						case 'vat_compliance_country_info';
 						case '_customer_ip_address';
 							if ($print_as_csv) $normalised_results[$order_status][$order_id][$res->meta_key] = $res->meta_value;
 						break;
 					}
+
+					if ($remove_order_id === $order_id) {
+						unset($normalised_results[$order_status][$order_id]);
+					}
+
 				}
 			} else {
 				$fetch_more = false;

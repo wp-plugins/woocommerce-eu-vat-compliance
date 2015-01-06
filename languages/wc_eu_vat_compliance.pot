@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce EU Vat Compliance\n"
-"POT-Creation-Date: 2015-01-02 21:58+0100\n"
-"PO-Revision-Date: 2015-01-02 21:58+0100\n"
+"POT-Creation-Date: 2015-01-03 12:30+0100\n"
+"PO-Revision-Date: 2015-01-03 12:30+0100\n"
 "Last-Translator: David Anderson <contact@updraftplus.com>\n"
 "Language-Team:  <contact@simbahosting.co.uk>\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid "Download all orders with VAT data in CSV format"
 msgstr ""
 
 #: premium.php:250 premium.php:262 premium.php:266 premium.php:272
-#: premium.php:276 premium.php:283 reports.php:469 bootstrap.php:544
+#: premium.php:276 premium.php:283 reports.php:469 bootstrap.php:549
 #: vat-number.php:322 record-order-country.php:240
 #: record-order-country.php:257 record-order-country.php:259
 #: record-order-country.php:261 record-order-country.php:269
@@ -149,23 +149,23 @@ msgstr ""
 msgid "Total paid"
 msgstr ""
 
-#: bootstrap.php:53
+#: bootstrap.php:58
 msgid "CloudFlare Geo-Location"
 msgstr ""
 
-#: bootstrap.php:54
+#: bootstrap.php:59
 msgid "MaxMind GeoIP database was not installed"
 msgstr ""
 
-#: bootstrap.php:55
+#: bootstrap.php:60
 msgid "MaxMind GeoIP database"
 msgstr ""
 
-#: bootstrap.php:77
+#: bootstrap.php:82
 msgid "Phrase matches used to identify VAT taxes"
 msgstr ""
 
-#: bootstrap.php:78
+#: bootstrap.php:83
 msgid ""
 "A comma-separated (optional spaces) list of strings (phrases) used to "
 "identify taxes which are EU VAT taxes. One of these strings must be used in "
@@ -173,82 +173,82 @@ msgid ""
 "the tax to be identified as EU VAT."
 msgstr ""
 
-#: bootstrap.php:85
+#: bootstrap.php:90
 msgid "Invoice footer text (B2C)"
 msgstr ""
 
-#: bootstrap.php:86
+#: bootstrap.php:91
 msgid ""
 "Text to prepend to the footer of your PDF invoice for transactions with VAT "
 "paid and non-zero (for supported PDF invoicing plugins)"
 msgstr ""
 
-#: bootstrap.php:510
+#: bootstrap.php:515
 msgid "EU VAT Compliance Dashboard"
 msgstr ""
 
-#: bootstrap.php:513 control-centre.php:230
+#: bootstrap.php:518 control-centre.php:230
 msgid "Premium Version"
 msgstr ""
 
-#: bootstrap.php:531
+#: bootstrap.php:536
 msgid "Pending Payment"
 msgstr ""
 
-#: bootstrap.php:532
+#: bootstrap.php:537
 msgid "Processing"
 msgstr ""
 
-#: bootstrap.php:533
+#: bootstrap.php:538
 msgid "On Hold"
 msgstr ""
 
-#: bootstrap.php:534
+#: bootstrap.php:539
 msgid "Completed"
 msgstr ""
 
-#: bootstrap.php:535
+#: bootstrap.php:540
 msgid "Cancelled"
 msgstr ""
 
-#: bootstrap.php:536
+#: bootstrap.php:541
 msgid "Refunded"
 msgstr ""
 
-#: bootstrap.php:537 readiness-tests.php:10
+#: bootstrap.php:542 readiness-tests.php:10
 msgid "Failed"
 msgstr ""
 
-#: bootstrap.php:646
+#: bootstrap.php:651
 msgid "GeoIP database not found"
 msgstr ""
 
-#: bootstrap.php:647
+#: bootstrap.php:652
 msgid ""
 "You have the GeoIP plugin installed, but it has not yet downloaded its "
 "database. This is needed for country detection to work."
 msgstr ""
 
-#: bootstrap.php:648
+#: bootstrap.php:653
 msgid "Follow this link and press the Update Now button to download it"
 msgstr ""
 
-#: bootstrap.php:654
+#: bootstrap.php:659
 msgid "Required Plugin Not Found"
 msgstr ""
 
-#: bootstrap.php:655
+#: bootstrap.php:660
 msgid ""
 "For the WooCommerce EU VAT compliance module to be able to record the "
 "country that a customer is ordering from, the (free) GeoIP Detection plugin "
 "must be installed and activated."
 msgstr ""
 
-#: bootstrap.php:659
+#: bootstrap.php:664
 msgid "Follow this link to install it"
 msgstr ""
 
-#: bootstrap.php:661
+#: bootstrap.php:666
 msgid "Follow this link to activate it."
 msgstr ""
 
@@ -445,47 +445,59 @@ msgstr ""
 msgid "Passed"
 msgstr ""
 
-#: readiness-tests.php:16
-msgid "WooCommerce version"
+#: readiness-tests.php:11
+msgid "Uncertain"
 msgstr ""
 
 #: readiness-tests.php:17
-msgid "Tax based upon"
+msgid "WooCommerce version"
 msgstr ""
 
 #: readiness-tests.php:18
-msgid "Coupons apply before tax"
+msgid "Tax based upon"
 msgstr ""
 
 #: readiness-tests.php:19
+msgid "Coupons apply before tax"
+msgstr ""
+
+#: readiness-tests.php:20
 msgid "Store has tax enabled"
 msgstr ""
 
-#: readiness-tests.php:55
+#: readiness-tests.php:21
+msgid "Current rates can be fetched from network"
+msgstr ""
+
+#: readiness-tests.php:22
+msgid "VAT rates are up-to-date"
+msgstr ""
+
+#: readiness-tests.php:67
 msgid ""
 "WooCommerce 2.3 removed the problematic \"apply coupon after tax\" option."
 msgstr ""
 
-#: readiness-tests.php:104
+#: readiness-tests.php:116
 msgid ""
 "The following currently-valid coupons use the \"apply coupon after tax\" "
 "option (which leads to non-compliant VAT invoices): "
 msgstr ""
 
-#: readiness-tests.php:106
+#: readiness-tests.php:118
 msgid ""
 "You have no currently-valid coupons which use the \"apply coupon after tax\" "
 "option (which leads to non-compliant VAT invoices)"
 msgstr ""
 
-#: readiness-tests.php:114
+#: readiness-tests.php:126
 #, php-format
 msgid ""
 "Your WooCommerce version (%s) is high enough to support all features of this "
 "plugin."
 msgstr ""
 
-#: readiness-tests.php:116
+#: readiness-tests.php:128
 #, php-format
 msgid ""
 "Your WooCommerce version (%s) is lower than %s - as a result, all features "
@@ -493,17 +505,60 @@ msgid ""
 "taxes for their location before the cart or checkout."
 msgstr ""
 
-#: readiness-tests.php:125 readiness-tests.php:128
+#: readiness-tests.php:137 readiness-tests.php:140
 msgid ""
 "Tax calculations must be based on either the customer billing or shipping "
 "address."
 msgstr ""
 
-#: readiness-tests.php:128
+#: readiness-tests.php:140
 msgid "They cannot be based upon the shop base address."
 msgstr ""
 
-#: readiness-tests.php:135
+#: readiness-tests.php:159
+msgid "Could not get any VAT rate information."
+msgstr ""
+
+#: readiness-tests.php:192
+msgid ""
+"The following countries have tax rates set in a tax table, that were not "
+"found as any current VAT rate:"
+msgstr ""
+
+#: readiness-tests.php:202
+msgid ""
+"All countries had at least one tax table in which a current VAT rate entry "
+"was found."
+msgstr ""
+
+#: readiness-tests.php:204
+msgid ""
+"No tax rates at all were found in your WooCommerce tax tables. Have you set "
+"any up yet?"
+msgstr ""
+
+#: readiness-tests.php:211
+#, php-format
+msgid ""
+"Your base country (%s) has no tax rate set in any tax rate table; but, "
+"perhaps this was intentional."
+msgstr ""
+
+#: readiness-tests.php:214
+msgid "These countries have no tax rate set in any tax rate table:"
+msgstr ""
+
+#: readiness-tests.php:223
+msgid "Testing ability to fetch current VAT rates from the network."
+msgstr ""
+
+#: readiness-tests.php:224
+msgid ""
+"If this fails, then check (with your web hosting company) the network "
+"connectivity from your webserver."
+msgstr ""
+
+#: readiness-tests.php:230
 msgid "Taxes need to be enabled in the WooCommerce tax settings."
 msgstr ""
 
@@ -538,7 +593,7 @@ msgstr ""
 msgid "reduced rate"
 msgstr ""
 
-#: rates.php:290
+#: rates.php:297
 msgid "Isle of Man"
 msgstr ""
 
@@ -762,7 +817,7 @@ msgstr ""
 msgid "Settings Saved."
 msgstr ""
 
-#: control-centre.php:534 control-centre.php:537 control-centre.php:712
+#: control-centre.php:534 control-centre.php:537 control-centre.php:726
 msgid "Response:"
 msgstr ""
 
@@ -810,7 +865,7 @@ msgstr ""
 msgid "Follow this link for more information."
 msgstr ""
 
-#: control-centre.php:644 control-centre.php:710
+#: control-centre.php:644 control-centre.php:724
 msgid "Test Provider"
 msgstr ""
 
@@ -852,13 +907,13 @@ msgstr ""
 msgid "Futher information"
 msgstr ""
 
-#: control-centre.php:708
+#: control-centre.php:722
 msgid ""
 "N.B. The final country used may be modified according to your EU VAT "
 "settings."
 msgstr ""
 
-#: control-centre.php:709
+#: control-centre.php:723
 msgid "Testing..."
 msgstr ""
 

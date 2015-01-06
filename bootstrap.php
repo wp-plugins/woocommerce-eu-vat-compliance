@@ -19,6 +19,7 @@ if (!in_array('woocommerce/woocommerce.php', $active_plugins ) && !array_key_exi
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/vat-number.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/record-order-country.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/rates.php');
+@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/widgets.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/preselect-country.php');
 @include_once(WC_EU_VAT_COMPLIANCE_DIR.'/premium.php');
 
@@ -28,6 +29,7 @@ $potential_classes_to_activate = array(
 	'WC_EU_VAT_Compliance_VAT_Number',
 	'WC_EU_VAT_Compliance_Record_Order_Country',
 	'WC_EU_VAT_Compliance_Rates',
+	'WC_EU_VAT_Country_PreSelect_Widget',
 	'WC_EU_VAT_Compliance_Preselect_Country',
 	'WC_EU_VAT_Compliance_Premium',
 );
