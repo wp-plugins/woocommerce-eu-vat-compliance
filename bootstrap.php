@@ -79,24 +79,6 @@ class WC_EU_VAT_Compliance {
 
 		add_action('wpo_wcpdf_footer', array($this, 'wpo_wcpdf_footer'));
 
-		$this->settings = array(
-			array(
-				'name' 		=> __( 'Phrase matches used to identify VAT taxes', 'wc_eu_vat_compliance' ),
-				'desc' 		=> __( 'A comma-separated (optional spaces) list of strings (phrases) used to identify taxes which are EU VAT taxes. One of these strings must be used in your tax name labels (i.e. the names used in your tax tables) if you wish the tax to be identified as EU VAT.', 'wc_eu_vat_compliance' ),
-				'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
-				'type' 		=> 'text',
-				'default'		=> $this->default_vat_matches
-			),
-
-			array(
-				'name' 		=> __( 'Invoice footer text (B2C)', 'wc_eu_vat_compliance' ),
-				'desc' 		=> __( "Text to prepend to the footer of your PDF invoice for transactions with VAT paid and non-zero (for supported PDF invoicing plugins)", 'wc_eu_vat_compliance' ),
-				'id' 		=> 'woocommerce_eu_vat_compliance_pdf_footer_b2c',
-				'type' 		=> 'textarea',
-				'css'		=> 'width:100%; height: 100px;'
-			),
-		);
-
 	}
 
 	public function wpo_wcpdf_footer($footer) {
@@ -561,7 +543,26 @@ Array
 	}
 
 	public function plugins_loaded() {
+
 		load_plugin_textdomain('wc_eu_vat_compliance', false, basename(WC_EU_VAT_COMPLIANCE_DIR).'/languages');
+
+		$this->settings = array(
+			array(
+				'name' 		=> __( 'Phrase matches used to identify VAT taxes', 'wc_eu_vat_compliance' ),
+				'desc' 		=> __( 'A comma-separated (optional spaces) list of strings (phrases) used to identify taxes which are EU VAT taxes. One of these strings must be used in your tax name labels (i.e. the names used in your tax tables) if you wish the tax to be identified as EU VAT.', 'wc_eu_vat_compliance' ),
+				'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
+				'type' 		=> 'text',
+				'default'		=> $this->default_vat_matches
+			),
+
+			array(
+				'name' 		=> __( 'Invoice footer text (B2C)', 'wc_eu_vat_compliance' ),
+				'desc' 		=> __( "Text to prepend to the footer of your PDF invoice for transactions with VAT paid and non-zero (for supported PDF invoicing plugins)", 'wc_eu_vat_compliance' ),
+				'id' 		=> 'woocommerce_eu_vat_compliance_pdf_footer_b2c',
+				'type' 		=> 'textarea',
+				'css'		=> 'width:100%; height: 100px;'
+			),
+		);
 
 		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;
 

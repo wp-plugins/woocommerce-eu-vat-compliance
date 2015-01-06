@@ -329,13 +329,19 @@ class WC_EU_VAT_Compliance_Reports {
 		?>
 
 		<form id="wceuvat_report_form" method="post" style="padding-bottom:8px;">
-			<input type="hidden" name="tab" value="taxes">
 			<?php
 				$print_fields = array('page', 'tab', 'report', 'chart');
 				foreach ($print_fields as $field) {
 					if (isset($_REQUEST[$field])) {
+						if ('tab' == $field) $printed_tab = true;
 						echo '<input type="hidden" name="'.$field.'" value="'.$_REQUEST[$field].'">'."\n";
 					}
+				}
+
+				if (empty($printed_tab)) {
+					echo '<input type="hidden" name="tab" value="reports">'."\n";
+				} else {
+					echo '<input type="hidden" name="tab" value="taxes">'."\n";
 				}
 
 				$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';

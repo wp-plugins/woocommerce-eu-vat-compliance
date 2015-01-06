@@ -163,15 +163,14 @@ class WC_EU_VAT_Compliance_Control_Centre {
 	public function settings_page() {
 
 		$tabs = apply_filters('wc_eu_vat_compliance_cc_tabs', array(
-// 			'general' => __('General', 'wc_eu_vat_compliance'),
 			'settings' => __('Settings', 'wc_eu_vat_compliance'),
 			'readiness' => __('Readiness Report', 'wc_eu_vat_compliance'),
 			'reports' => __('VAT Reports', 'wc_eu_vat_compliance'),
 			'premium' => __('Premium', 'wc_eu_vat_compliance')
 		));
 
-		// TODO: Return to general
 		$active_tab = !empty($_REQUEST['tab']) ? $_REQUEST['tab'] : 'settings';
+		if ('taxes' == $active_tab) $active_tab = 'reports';
 
 		$this->compliance = WooCommerce_EU_VAT_Compliance();
 
@@ -378,7 +377,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 				'default' => '',
 				'class' => 'widefat',
 				'type'    => 'text',
-				'desc'    => __( 'Define text to show after your product prices. This could be, for example, "inc. Vat" to explain your pricing. You can also have prices substituted here using one of the following: <code>{price_including_tax}, {price_excluding_tax}</code>. Content wrapped in-between <code>{iftax}</code> and <code>{/iftax}</code> will display only if there was tax; within that, <code>{country}</code> will be replaced by the name of the country used to calculate tax.', 'woocommerce' ),
+				'desc'    => __( 'Define text to show after your product prices. This could be, for example, "inc. Vat" to explain your pricing. You can also have prices substituted here using one of the following: <code>{price_including_tax}, {price_excluding_tax}</code>. Content wrapped in-between <code>{iftax}</code> and <code>{/iftax}</code> will display only if there was tax; within that, <code>{country}</code> will be replaced by the name of the country used to calculate tax.', 'wc_eu_vat_compliance' ),
 			),
 
 			array(

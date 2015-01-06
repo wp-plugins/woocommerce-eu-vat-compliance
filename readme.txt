@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.11
+Stable tag: 1.6.12
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -104,6 +104,14 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.6.12 - 2015-01-06 =
+
+* FEATURE: CSV downloads now take notice of the chosen dates in the date selector widget (reports) (i.e. so you can now alsop download selected data, instead of only downloading all data)
+* FIX: Some more translated strings are now translated in the admin interface.
+* FIX: Restore functionality on WooCommerce < 2.2 (checkout broken in 1.6.0)
+* FIX: Don't tweak the "taxes estimated for" message on the cart page on WooCommerce < 2.2.9, since the country choice widget requires this version
+* FIX: The button on the report date selector form, if accessed via the compliance centre (rather than WooCommerce reports) was not working
 
 = 1.6.11 - 2015-01-06 =
 
@@ -307,4 +315,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.8-1.6.11 : Various tweaks, features and fixes. Recommended updated for all; also, update your tax tables afterwards (new rates).
+* 1.6.8-1.6.12 : Various tweaks, features and fixes. Recommended updated for all; also, update your tax tables afterwards (new rates).

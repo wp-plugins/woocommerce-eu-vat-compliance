@@ -47,10 +47,13 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		$country_info = $compliance->get_visitor_country_info();
 
 		$tax = $compliance->wc->cart->tax;
+		$customer = $compliance->wc->customer;
 		if (method_exists($tax, 'get_tax_location')) {
 			$taxable_address = $tax->get_tax_location();
+		} elseif (method_exists($customer, 'get_taxable_address')) {
+			$taxable_address = $customer->get_taxable_address();
 		} else {
-			$taxable_address = $tax->get_taxable_address();
+			$taxable_address = array();
 		}
 
 		$country_info['taxable_address'] = $taxable_address;

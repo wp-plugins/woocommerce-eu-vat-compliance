@@ -35,8 +35,10 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 // 		add_action('woocommerce_init', array($this, 'woocommerce_init'));
 
 		// This is hacky. To get the "taxes estimated for (country)" message on the shipping page to work, we use these two actions to hook and then unhook a filter
-		add_action('woocommerce_cart_totals_after_order_total', array($this, 'woocommerce_cart_totals_after_order_total'));
-		add_action('woocommerce_after_cart_totals', array($this, 'woocommerce_after_cart_totals'));
+		if (!defined('WOOCOMMERCE_VERSION') || version_compare(WOOCOMMERCE_VERSION, '2.2.9', '>=')) {
+			add_action('woocommerce_cart_totals_after_order_total', array($this, 'woocommerce_cart_totals_after_order_total'));
+			add_action('woocommerce_after_cart_totals', array($this, 'woocommerce_after_cart_totals'));
+		}
 
 	}
 
@@ -49,7 +51,6 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 	}
 
 	public function woocommerce_countries_base_country($country) {
-
 		if (!defined('WOOCOMMERCE_CART') || !WOOCOMMERCE_CART) return $country;
 
 		$eu_vat_country = $this->get_preselect_country(false, true);
@@ -234,10 +235,10 @@ ENDHERE;
 		$countries = $this->compliance->wc->countries->countries;
 
 // 		if (defined('DOING_AJAX') && DOING_AJAX && isset($_POST['action']) && 'woocommerce_update_order_review' == $_POST['action']) $allow_via_session = false;
+		# Something set via _REQUEST? or _POST from shipping page calculator?
+		if (!empty($_REQUEST['wc_country_preselect']) || !empty($_POST['calc_shipping_country'])) {
+			$req_country = (!empty($_POST['calc_shipping_country'])) ? $_POST['calc_shipping_country'] : $_REQUEST['wc_country_preselect'];
 
-		# Something set via _REQUEST?
-		if (!empty($_REQUEST['wc_country_preselect'])) {
-			$req_country = $_REQUEST['wc_country_preselect'];
 			if ('none' == $req_country || isset($countries[$req_country])) {
 
 				if (isset($this->compliance->wc->customer)) {
