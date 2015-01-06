@@ -258,10 +258,10 @@ class WC_EU_VAT_Compliance_Reports {
 					// Legacy orders
 					switch ( $tax_based_on ) {
 						case 'billing' :
-						$res['taxable_country'] = isset($res['_billing_country']) ? : '';
+						$res['taxable_country'] = isset($res['_billing_country']) ? $res['_billing_country'] : '';
 						break;
 						case 'shipping' :
-						$res['taxable_country'] = isset($res['_shipping_country']) ? : '';
+						$res['taxable_country'] = isset($res['_shipping_country']) ? $res['_shipping_country'] : '';
 						break;
 						default:
 						unset($normalised_results[$order_status][$order_id]);

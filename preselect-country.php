@@ -34,6 +34,27 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 
 // 		add_action('woocommerce_init', array($this, 'woocommerce_init'));
 
+		// This is hacky. To get the "taxes estimated for (country)" message on the shipping page to work, we use these two actions to hook and then unhook a filter
+		add_action('woocommerce_cart_totals_after_order_total', array($this, 'woocommerce_cart_totals_after_order_total'));
+		add_action('woocommerce_after_cart_totals', array($this, 'woocommerce_after_cart_totals'));
+
+	}
+
+	public function woocommerce_cart_totals_after_order_total() {
+		add_filter('woocommerce_countries_base_country', array($this, 'woocommerce_countries_base_country'));
+	}
+
+	public function woocommerce_after_cart_totals() {
+		remove_filter('woocommerce_countries_base_country', array($this, 'woocommerce_countries_base_country'));
+	}
+
+	public function woocommerce_countries_base_country($country) {
+
+		if (!defined('WOOCOMMERCE_CART') || !WOOCOMMERCE_CART) return $country;
+
+		$eu_vat_country = $this->get_preselect_country(false, true);
+
+		return (!empty($eu_vat_country)) ? $eu_vat_country : $country;
 	}
 
 	public function widgets_init() {
@@ -85,10 +106,6 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 // 		$city = $address[3];
 
 		if (is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX)) return $address;
-
-		// Checkout processing - ignore the session
-		if (defined('WOOCOMMERCE_CHECKOUT') && WOOCOMMERCE_CHECKOUT) {
-		}
 
 		if (isset($this->compliance->wc->session) && is_object($this->compliance->wc->session)) {
 			# Value set by check-out logic

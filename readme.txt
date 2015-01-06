@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.10
+Stable tag: 1.6.11
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -105,10 +105,12 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 
 == Changelog ==
 
-= 1.6.10 - 2015-01-06 =
+= 1.6.11 - 2015-01-06 =
 
+* FIX: Restore ability to run on PHP 5.2
 * FIX: If no current exchange rates were available at check-out time, and HTTP network download failed, then this case was handled incorrectly.
 * FIX: Some settings strings were not being translated in the admin interface.
+* FIX: "Taxes estimated for" message on the cart page now indicates the correct country
 * TWEAK: Move widget + shortcode code to a different file
 * TWEAK: CSV order download will now only list orders from 1st Jan 2015 onwards, to prevent large numbers of database queries for orders preceeding the VAT law on shops with large existing order lists.
 * TWEAK: CSV order download will now intentionally show orders from non-EU countries (since these could be subject to audit for compliance also); a later release will make this optional. Before, these orders were shown, though not intentionally, and the data was incomplete.
@@ -305,4 +307,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.8-1.6.10 : Various tweaks, features and fixes. Recommended updated for all; also, update your tax tables afterwards (new rates).
+* 1.6.8-1.6.11 : Various tweaks, features and fixes. Recommended updated for all; also, update your tax tables afterwards (new rates).
