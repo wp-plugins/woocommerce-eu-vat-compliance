@@ -456,9 +456,15 @@ class WC_EU_VAT_Compliance_Control_Centre {
 		// Tax tables
 		echo '<h3>'.__('Tax tables (set up tax rates for each country)', 'wc_eu_vat_compliance').'</h3>';
 
-		echo '<div><h4>'.__('Standard-rate tax table', 'wc_eu_vat_compliance').'</h4><p><a href="'.$tax_settings_link.'&section=standard">'.__('Follow this link.', 'wc_eu_vat_compliance').'</a></p>';
+		echo '<div>';
+
+		echo '<p><a href="http://ec.europa.eu/taxation_customs/resources/documents/taxation/vat/how_vat_works/rates/vat_rates_en.pdf">'.__('Official EU documentation on current VAT rates.', 'wc_eu_vat_compliance').'</a></p>';
+
+// TODO: List all known rate classes
+		echo '<h4>'.__('Standard-rate tax table', 'wc_eu_vat_compliance').'</h4><p><a href="'.$tax_settings_link.'&section=standard">'.__('Follow this link.', 'wc_eu_vat_compliance').'</a></p>';
 
 		echo '<h4>'.__('Reduced-rate tax table', 'wc_eu_vat_compliance').'</h4><p><a href="'.$tax_settings_link.'&section=reduced-rate">'.__('Follow this link.', 'wc_eu_vat_compliance').'</a></p>';
+
 
 		echo '</div>';
 

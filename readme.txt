@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.12
+Stable tag: 1.6.13
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -35,7 +35,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Central control:</strong> brings all settings, reports and other information into a single centralised location, so that you don't have to deal with items spread all over the WordPress dashboard.
 
-- <strong>Distinguish VAT from other taxes:</strong> if you are in a jurisdiction where you have to apply other taxes also, then this plugin can handle that: it knows which taxes are VAT, and which are not.
+- <strong>Distinguish VAT from other taxes:</strong> if you are in a jurisdiction where you have to apply other taxes also, then this plugin can handle that: it knows which taxes are EU VAT, and which are not.
 
 - <strong>Add line to invoices:</strong> If VAT was paid on the order, then an extra, configurable line can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
 
@@ -104,6 +104,13 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.6.13 - 2015-01-08 =
+
+* FIX: The button to add tax rates was not appearing when WordPress was en Français.
+* TWEAK: Add TVA/T.V.A. to the list of taxes recognised as VAT by default
+* TWEAK: Readiness test in the free version will now alert if the WooCommerce Subscriptions extension is active (free version does not contain the extra code needed to support it)
+* TWEAK: Add link in the control centre to the official EU PDF detailing current VAT rates
 
 = 1.6.12 - 2015-01-06 =
 
@@ -315,4 +322,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.8-1.6.12 : Various tweaks, features and fixes. Recommended updated for all; also, update your tax tables afterwards (new rates).
+* 1.6.13 : Fix disappearance of button for synchronising rates if WordPress was using French.

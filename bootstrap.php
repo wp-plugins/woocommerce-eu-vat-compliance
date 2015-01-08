@@ -46,7 +46,7 @@ $classes_to_activate = apply_filters('woocommerce_eu_vat_compliance_classes', $p
 if (!class_exists('WC_EU_VAT_Compliance')):
 class WC_EU_VAT_Compliance {
 
-	private $default_vat_matches = 'VAT, V.A.T, IVA, I.V.A., Value Added Tax';
+	private $default_vat_matches = 'VAT, V.A.T, IVA, I.V.A., Value Added Tax, TVA, T.V.A.';
 	public $wc;
 	public $settings;
 
@@ -553,15 +553,26 @@ Array
 				'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
 				'type' 		=> 'text',
 				'default'		=> $this->default_vat_matches
-			),
+			)
+		);
 
-			array(
-				'name' 		=> __( 'Invoice footer text (B2C)', 'wc_eu_vat_compliance' ),
-				'desc' 		=> __( "Text to prepend to the footer of your PDF invoice for transactions with VAT paid and non-zero (for supported PDF invoicing plugins)", 'wc_eu_vat_compliance' ),
-				'id' 		=> 'woocommerce_eu_vat_compliance_pdf_footer_b2c',
-				'type' 		=> 'textarea',
-				'css'		=> 'width:100%; height: 100px;'
-			),
+# TODO
+// 		if (!defined('WOOCOMMERCE_VERSION') || version_compare(WOOCOMMERCE_VERSION, '2.2.9', '>=')) {
+// 			$this->settings[] = array(
+// 				'name' 		=> __( "Show prices based on visitor's GeoIP-detected country", 'wc_eu_vat_compliance' ),
+// 				'desc' 		=> __( "If this option is selected, then tax calculations will take into account the visitor's apparent country, without them needing to select a country at the cart of checkout.", 'wc_eu_vat_compliance' ),
+// 				'id' 		=> 'woocommerce_eu_vat_compliance_preselect_country',
+// 				'type' 		=> 'checkbox',
+// 				'default'		=> 'yes'
+// 			);
+// 		}
+
+		$this->settings[] = array(
+			'name' 		=> __( 'Invoice footer text (B2C)', 'wc_eu_vat_compliance' ),
+			'desc' 		=> __( "Text to prepend to the footer of your PDF invoice for transactions with VAT paid and non-zero (for supported PDF invoicing plugins)", 'wc_eu_vat_compliance' ),
+			'id' 		=> 'woocommerce_eu_vat_compliance_pdf_footer_b2c',
+			'type' 		=> 'textarea',
+			'css'		=> 'width:100%; height: 100px;'
 		);
 
 		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;

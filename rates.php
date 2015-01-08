@@ -23,13 +23,15 @@ class WC_EU_VAT_Compliance_Rates {
 
 	public function __construct() {
 		add_action('admin_init', array($this, 'admin_init'));
+	}
+
+	public function admin_init() {
+
 		$this->known_rates = array(
 			'standard_rate' => __('Standard Rate', 'wc_eu_vat_compliance'),
 			'reduced_rate' => __('Reduced Rate', 'wc_eu_vat_compliance'),
 		);
-	}
 
-	public function admin_init() {
 		global $pagenow;
 		// wp-admin/admin.php?page=wc-settings&tab=tax&s=standard
 		if ('admin.php' == $pagenow && !empty($_REQUEST['page']) && ('woocommerce_settings' == $_REQUEST['page'] || 'wc-settings' == $_REQUEST['page']) && !empty($_REQUEST['tab']) && 'tax' == $_REQUEST['tab'] && !empty($_REQUEST['section'])) {
@@ -162,7 +164,7 @@ class WC_EU_VAT_Compliance_Rates {
 				var known_rate_descriptions = [ "<?php echo implode('", "', array_values($this->known_rates)); ?>" ];
 
 				var $foot = $('table.wc_tax_rates tfoot <?php echo $selector;?>').first();
-				$foot.after('<a href="#" id="euvatcompliance-updaterates" class="button euvatcompliance-updaterates"><?php echo htmlspecialchars($rate_description);?></a>');
+				$foot.after('<a href="#" id="euvatcompliance-updaterates" class="button euvatcompliance-updaterates"><?php echo esc_js($rate_description);?></a>');
 
 				var rate_selector = '<select id="euvatcompliance-whichrate">';
 				for (i = 0; i < known_rates.length; i++) {

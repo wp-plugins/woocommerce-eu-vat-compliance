@@ -21,7 +21,13 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 			'rates_remote_fetch' => __('Current rates can be fetched from network', 'wc_eu_vat_compliance'),
 			'rates_exist_and_up_to_date' => __('VAT rates are up-to-date', 'wc_eu_vat_compliance'),
 		);
+
 		$this->compliance = WooCommerce_EU_VAT_Compliance();
+
+		if (!$this->compliance->is_premium()) {
+			$this->tests['subscriptions_plugin_on_free_version'] = __('Support for the WooCommerce Subscriptions extension', 'wc_eu_vat_compliance');
+		}
+
 		$this->rates_class = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Rates');
 		$this->european_union_vat_countries = $this->compliance->get_european_union_vat_countries();
 // 			'' => __('', 'wc_eu_vat_compliance'),
@@ -228,6 +234,18 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 	protected function tax_enabled() {
 		$woocommerce_calc_taxes = get_option('woocommerce_calc_taxes');
 		return $this->res('yes' == $woocommerce_calc_taxes, __('Taxes need to be enabled in the WooCommerce tax settings.', 'wc_eu_vat_compliance'));
+	}
+
+	protected function subscriptions_plugin_on_free_version() {
+
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+		if (is_multisite()) $active_plugins = array_merge($active_plugins, get_site_option('active_sitewide_plugins', array()));
+
+		// Return just true: better not to report a non-event
+		if (!in_array('woocommerce-subscriptions/woocommerce-subscriptions.php', $active_plugins ) || array_key_exists('woocommerce-subscriptions/woocommerce-subscriptions.php', $active_plugins)) return true;
+
+		return $this->res(false, sprintf(__('The %s plugin is active, but support for subscription orders is not part of the free version of the EU VAT Compliance plugin. New orders created via subscriptions will not have VAT compliance information attached.', 'wc_eu_vat_compliance'), __('WooCommerce subscriptions', 'wc_eu_vat_compliance')));
+
 	}
 
 }

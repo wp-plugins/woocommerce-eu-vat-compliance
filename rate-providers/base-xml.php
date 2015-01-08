@@ -63,12 +63,13 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 
 		if (empty($xml_last_data) || (!empty($this->force_refresh_on_new_month) && $last_updated_month != $this_month) || $xml_last_updated + $this->force_refresh_rates_every <= time()) {
 
-			$url = $this->getbase.$this->get_leaf($the_time);
+			$url_base = $this->getbase;
+			$url = $this->get_leaf($the_time);
 			if (is_string($url)) $url = array($url);
 
 			foreach ($url as $u) {
 				if (!empty($new_xml)) continue;
-				$fetched = wp_remote_get($u);
+				$fetched = wp_remote_get($url_base.$u);
 				if (!is_wp_error($fetched)) {
 					if (!empty($fetched['response']) || $fetched['response']['code'] < 300) {
 						$new_xml = $fetched['body'];
@@ -78,12 +79,17 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 			}
 			if (empty($new_xml)) {
 				// Try yesterday, in case we have a timezone issue, or data not yet uploaded, etc.
-				$backup_url = $this->getbase.$this->get_leaf($the_time - 86400);
+				$backup_url = $this->get_leaf($the_time - 86400);
+				if (is_string($backup_url)) $backup_url = array($backup_url);
 // 				if ($url != $backup_url) {
 					// Always try again, in case the failure was transient
-					$fetched = wp_remote_get($backup_url);
-					if (!is_wp_error($fetched)) {
-						if (!empty($fetched['response']) || $fetched['response']['code'] < 300) $new_xml = $fetched['body'];
+					foreach ($backup_url as $u) {
+						if (!empty($new_xml)) continue;
+						$fetched = wp_remote_get($url_base.$u);
+						if (!is_wp_error($fetched)) {
+							if (!empty($fetched['response']) || $fetched['response']['code'] < 300) $new_xml = $fetched['body'];
+							//if (strpos($new_xml, '<!DOCTYPE HTML') !== false) unset($new_xml);
+						}
 					}
 // 				}
 			}
