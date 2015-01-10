@@ -2,7 +2,7 @@
 
 if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access.');
 
-// Purpose: Official European Central Bank exchange rates: https://www.ecb.europa.eu/stats/exchange/eurofxref/html/index.en.html
+// Purpose: Official Danish National Bank exchange rates
 
 // Methods: info(), convert($from_currency, $to_currency, $amount, $the_time = false), settings_fields(), test()
 
@@ -33,11 +33,11 @@ class WC_EU_VAT_Compliance_Rate_Provider_danishnb extends WC_EU_VAT_Compliance_R
 	public function get_current_conversion_rate_from_time($currency, $the_time = false) {
 
 		$parsed = $this->populate_rates_parsed_xml($the_time);
-		if (empty($parsed)) return (!empty($value)) ? $value : false;
+		if (empty($parsed)) return false;
 
 		if (is_object($parsed) && isset($parsed->dailyrates) && isset($parsed->dailyrates->currency)) {
 			foreach ($parsed->dailyrates->currency as $cur){
-				if (isset($cur['code']) && $currency == $cur['code'] && isset($cur['rate'])) {
+				if (isset($cur['code']) && $currency == strtoupper($cur['code']) && isset($cur['rate'])) {
 					$rate = (float)$cur['rate'];
 					return (0 == $rate) ? false : 1/$rate;
 				}

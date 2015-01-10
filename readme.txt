@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.13
+Stable tag: 1.6.14
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -27,7 +27,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Display prices including correct VAT from the first page:</strong> GeoIP information is also used to show the correct VAT from the first time a customer sees a product. A widget and shortcode are also provided allowing the customer to set their own country (whole feature requires WooCommerce 2.2.9 or later).
 
-- <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. Currently, three official sources of exchange rates are available: the European Central Bank (ECB), the Danish National Bank, and HM Revenue & Customs (UK).
+- <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. Currently, three official sources of exchange rates are available: the European Central Bank (ECB), the Danish National Bank, the Central Bank of the Russian Federation, and HM Revenue & Customs (UK).
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
@@ -71,7 +71,7 @@ Please note that, just as with WordPress and its plugins generally (including Wo
 
 Whether you think the EU's treaties with other jurisdictions will lead to success in enforcing the collection of taxes in other jurisdictions is a question for lawyers and potential tax-payers, not for software developers!
 
-Many thanks to Diego Zanella, for various ideas we have swapped whilst working on these issues.
+Many thanks to Diego Zanella, for various ideas we have swapped whilst working on these issues. Thanks to Dietrich Ayala, whose NuSOAP library is included under the LGPLv2 licence.
 
 = Other information =
 
@@ -104,6 +104,15 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.6.14 - 2015-01-10 =
+
+* FEATURE: Upon discovery of a valid Spanish VAT number which the existing API server did not return as valid, we now use the official VIES service directly, and fall back to a second option if that does not respond positively (thus adding some redundancy if one service is down).
+* FEATURE: VAT number validity at the checkout is now checked as it is typed (i.e. before order is placed), and feedback given allowing the customer to respond (e.g. hint that you have chosen a different country to that which the VAT number is for).
+* FEATURE: Support for the official exchange rates of the Central Bank of the Russian Federation (http://www.cbr.ru)
+* TWEAK: Move the position of the "VAT Number" field at the checkout to the bottom of the billing column, and make it filterable
+* TWEAK: If Belgian customer enters a 9-digit VAT number, then automatically prefix with a 0 (https://www.gov.uk/vat-eu-country-codes-vat-numbers-and-vat-in-other-languages)
+* TRANSLATIONS: Updated POT file
 
 = 1.6.13 - 2015-01-08 =
 
@@ -322,4 +331,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.13 : Fix disappearance of button for synchronising rates if WordPress was using French.
+* 1.6.14: Various tweaks and improvements in VAT number handling (Premium); also provide exchange rates from the Bank of Russia.

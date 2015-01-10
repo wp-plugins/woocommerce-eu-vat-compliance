@@ -93,7 +93,7 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 					}
 // 				}
 			}
-			if (empty($new_xml) && false != ($on_disk_file = apply_filters('wc_eu_vat_'.$this->key.'_file', false, $the_time, $include_day_key, $include_hour_key)) && file_exists($on_disk_file)) {
+			if (empty($new_xml) && false != ($on_disk_file = apply_filters('wc_eu_vat_'.$this->key.'_file', false, $the_time)) && file_exists($on_disk_file)) {
 				$new_xml = file_get_contents($on_disk_file);
 			}
 		}
