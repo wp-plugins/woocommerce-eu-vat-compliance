@@ -67,9 +67,22 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 		if (empty($this->all_countries)) $this->all_countries = $this->compliance->wc->countries->countries;
 
 		$country = $this->get_preselect_country(true);
+		$country_name = isset($this->all_countries[$country]) ? $this->all_countries[$country] : '';
 
-		$search = '{country}';
-		$replace = isset($this->all_countries[$country]) ? $this->all_countries[$country] : '';
+		if (!empty($this->suffixing_product) && is_a($this->suffixing_product, 'WC_Product')) {
+			if (!$this->compliance->product_taxable_class_indicates_variable_eu_vat($this->suffixing_product)) {
+				$country_name = '';
+			}
+		}
+
+		$search = array(
+			'{country}',
+			'{country_with_brackets}',
+		);
+		$replace = array(
+			$country_name,
+			($country_name) ? '('.$country_name.')' : '',
+		);
 
 		return str_replace($search, $replace, $matches[1]);
 	}
@@ -86,6 +99,7 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 			$excluding_tax = round($product->get_price_excluding_tax(), $decimals);
 
 			if ($including_tax != $excluding_tax) {
+				$this->suffixing_product = $product;
 				$price_display_suffix = preg_replace_callback( '#\{iftax\}(.*)\{\/iftax\}#', array($this, 'price_display_replace_callback'), $price_display_suffix );
 
 			} else {
@@ -190,31 +204,31 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 
 				// https://stackoverflow.com/questions/1634748/how-can-i-delete-a-query-string-parameter-in-javascript
 				function removeURLParameter(url, parameter) {
-				//prefer to use l.search if you have a location/link object
-				var urlparts= url.split('?');   
-				if (urlparts.length>=2) {
+					//prefer to use l.search if you have a location/link object
+					var urlparts= url.split('?');   
+					if (urlparts.length>=2) {
 
-					var prefix= encodeURIComponent(parameter)+'=';
-					var pars= urlparts[1].split(/[&;]/g);
+						var prefix= encodeURIComponent(parameter)+'=';
+						var pars= urlparts[1].split(/[&;]/g);
 
-					//reverse iteration as may be destructive
-					for (var i= pars.length; i-- > 0;) {    
-						//idiom for string.startsWith
-						if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
-							pars.splice(i, 1);
+						//reverse iteration as may be destructive
+						for (var i= pars.length; i-- > 0;) {    
+							//idiom for string.startsWith
+							if (pars[i].lastIndexOf(prefix, 0) !== -1) {  
+								pars.splice(i, 1);
+							}
 						}
-					}
 
-					url= urlparts[0]+'?'+pars.join('&');
-					return url;
-				} else {
-					return url;
-				}
+						url= urlparts[0]+'?'+pars.join('&');
+						return url;
+					} else {
+						return url;
+					}
 				}
 
 				$('select.countrypreselect_chosencountry').change(function() {
 					var chosen = $(this).val();
-					var url = removeURLParameter(window.location.href, 'wc_country_preselect');
+					var url = removeURLParameter(document.location.href.match(/(^[^#]*)/)[0], 'wc_country_preselect');
 					if (url.indexOf('?') > -1){
 						url += '&wc_country_preselect='+chosen;
 					} else {

@@ -152,6 +152,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 	// get_option( 'woocommerce_eu_vat_compliance_deduct_in_base' ) == 'yes' )
 	// $compliance->wc->countries->get_base_country()
 
+// TODO: This check needs to only check rate tables that are in the configured tax classes (or does it? Even traditional VAT should have the right rate).
 	protected function rates_exist_and_up_to_date() {
 		$has_rate_remaining_countries = $this->european_union_vat_countries;
 		$countries_with_apparently_wrong_rates = array();
@@ -180,7 +181,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 						unset($has_rate_remaining_countries[$key]);
 					}
 
-					if (!is_array($rates[$tax_rate_country])) continue;
+					if (empty($tax_rate_country) || '*' == $tax_rate_country || !is_array($rates[$tax_rate_country])) continue;
 					$found_rate = false;
 					foreach ($rates[$tax_rate_country] as $label => $rate) {
 						# N.B. Not all attribute/values are rates; but, all the numerical ones are

@@ -18,7 +18,6 @@ Components to have:
 - Add FAQ link at the top, if/when there are some
 */
 
-// TODO: Test some more on WC 2.0
 // TODO: Link to documentation, when written
 
 class WC_EU_VAT_Compliance_Control_Centre {
@@ -40,7 +39,6 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			if (empty($_POST['settings']) || !is_string($_POST['settings'])) die;
 
 			parse_str($_POST['settings'], $posted_settings);
-
 			$vat_settings = $this->get_settings_vat();
 			$tax_settings = $this->get_settings_tax();
 
@@ -69,20 +67,20 @@ class WC_EU_VAT_Compliance_Control_Centre {
 				if ($setting['type'] == 'euvat_tax_options_section' || $setting['type'] == 'sectionend') continue;
 
 				if (!isset($posted_settings[$setting['id']])) {
-	// 				error_log("NOT FOUND: ".$setting['id']);
+// 					error_log("NOT FOUND: ".$setting['id']);
 					continue;
 				}
 
 				$value = null;
-
-	// error_log_v($posted_settings[$setting['id']]);
-	// error_log($setting['id'].": ".$setting['type']);
 
 				switch ($setting['type']) {
 					case 'text';
 					case 'radio';
 					case 'select';
 					$value = $posted_settings[$setting['id']];
+					break;
+					case 'wceuvat_taxclasses';
+					$value = array_diff($posted_settings[$setting['id']], array('0'));
 					break;
 					case 'textarea';
 					$value = wp_kses_post( trim( $posted_settings[$setting['id']] ) );
@@ -94,6 +92,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 				if (!is_null($value)) {
 					$any_found = true;
+// error_log($setting['id'].": ".serialize($value));
 					update_option($setting['id'], $value);
 				}
 
@@ -192,7 +191,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			?><a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/"><?php _e("Premium", 'wc_eu_vat_compliance');?></a> |
 		<?php } ?>
 		<a href="https://www.simbahosting.co.uk/s3/shop/"><?php _e('More plugins', 'wc_eu_vat_compliance');?></a> |
-		<a href="http://updraftplus.com">UpdraftPlus WordPress Backups</a> | 
+		<a href="https://updraftplus.com">UpdraftPlus WordPress Backups</a> | 
 		<a href="http://david.dw-perspective.org.uk"><?php _e("Lead developer's homepage",'wc_eu_vat_compliance');?></a>
 		<!--<a href="https://wordpress.org/plugins/woocommerce-eu-vat-compliance/faq/">FAQs</a> | -->
 		- <?php _e('Version','wc_eu_vat_compliance');?>: <?php echo $version; ?>
@@ -377,7 +376,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 				'default' => '',
 				'class' => 'widefat',
 				'type'    => 'text',
-				'desc'    => __( 'Define text to show after your product prices. This could be, for example, "inc. Vat" to explain your pricing. You can also have prices substituted here using one of the following: <code>{price_including_tax}, {price_excluding_tax}</code>. Content wrapped in-between <code>{iftax}</code> and <code>{/iftax}</code> will display only if there was tax; within that, <code>{country}</code> will be replaced by the name of the country used to calculate tax.', 'wc_eu_vat_compliance' ),
+				'desc'    => __( 'Define text to show after your product prices. This could be, for example, "inc. Vat" to explain your pricing. You can also have prices substituted here using one of the following: <code>{price_including_tax}, {price_excluding_tax}</code>. Content wrapped in-between <code>{iftax}</code> and <code>{/iftax}</code> will display only if there was tax; within that, <code>{country}</code> will be replaced by the name of the country used to calculate tax.', 'wc_eu_vat_compliance' ).' '.__('Use <code>{country_with_brackets}</code> to show the country only if the item had per-country varying VAT, and to show brackets around the country.', 'wc_eu_vat_compliance'),
 			),
 
 			array(

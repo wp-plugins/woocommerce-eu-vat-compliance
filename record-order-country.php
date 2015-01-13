@@ -40,14 +40,28 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	}
 
 	public function woocommerce_checkout_update_order_meta($order_id) {
+
 		// Note: whilst this records the country via GeoIP resolution, that does not indicate which tax WooCommerce applies - that will be determined by the user's WooCommerce settings. The GeoIP data is recorded for compliance purposes.
 
+		// Record the information about the customer's location in the order meta
 		$compliance = WooCommerce_EU_VAT_Compliance();
 
 		$country_info = $compliance->get_visitor_country_info();
+		$country_info['taxable_address'] = $this->get_taxable_address();
 
+		update_post_meta($order_id, 'vat_compliance_country_info', apply_filters('wc_eu_vat_compliance_meta_country_info', $country_info));
+
+		// Record the current conversion rates in the order meta
+		$this->record_conversion_rates($order_id);
+
+	}
+
+	private function get_taxable_address() {
+
+		$compliance = WooCommerce_EU_VAT_Compliance();
 		$tax = $compliance->wc->cart->tax;
 		$customer = $compliance->wc->customer;
+
 		if (method_exists($tax, 'get_tax_location')) {
 			$taxable_address = $tax->get_tax_location();
 		} elseif (method_exists($customer, 'get_taxable_address')) {
@@ -56,11 +70,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			$taxable_address = array();
 		}
 
-		$country_info['taxable_address'] = $taxable_address;
-		update_post_meta($order_id, 'vat_compliance_country_info', apply_filters('wc_eu_vat_compliance_meta_country_info', $country_info));
-
-		$this->record_conversion_rates($order_id);
-
+		return $taxable_address;
 	}
 
 	public function record_conversion_rates($order_id) {
@@ -146,7 +156,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			$order_currency = isset($vat_paid['currency']) ? $vat_paid['currency'] : (method_exists($order, 'get_order_currency') ? $order->get_order_currency() : get_option('woocommerce_currency'));
 
 			// This should not be possible - but, it is best to err on the side of caution
-			if (!isset($vat_paid['by_rates'])) $vat_paid['by_rates'] = array(array('items_total' => $vat_paid['items_total'], 'shipping_total' => $vat_paid['shipping_total'], 'rate' => '??', 'name' => __('VAT', 'wc_eu_vat_compliance')));
+			if (!isset($vat_paid['by_rates'])) $vat_paid['by_rates'] = array(array('items_total' => $vat_paid['items_total'], 'is_variable_eu_vat' => 1, 'shipping_total' => $vat_paid['shipping_total'], 'rate' => '??', 'name' => __('VAT', 'wc_eu_vat_compliance')));
 
 			// What currencies is VAT meant to be reported in?
 			$conversion_rates =  get_post_meta($post_id, 'wceuvat_conversion_rates', true);
@@ -172,6 +182,8 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 				}
 			}
 
+			// TODO: Handle rounding as WC does
+
 			// A default - redundant
 // 			if (empty($conversion_currencies)) $conversion_currencies = array($order_currency);
 
@@ -185,7 +197,15 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 				}
 			}
 
+			$items_total = false;
+			$shipping_total = false;
+			$total_total = false;
+
 			foreach ($vat_paid['by_rates'] as $vat) {
+
+				$items_total += $vat['items_total'];
+				$shipping_total += $vat['shipping_total'];
+				$total_total += $vat['items_total'] + $vat['shipping_total'];
 
 				$items = $compliance->get_amount_in_conversion_currencies($vat['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
@@ -193,7 +213,14 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 				$total = $compliance->get_amount_in_conversion_currencies($vat['items_total']+$vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
-				echo '<strong>'.$vat['name'].' ('.sprintf('%0.2f', $vat['rate']).' %)</strong><br>';
+				// When it is not set, we have legacy data format (pre 1.7.0), where all VAT-able items were assumed to be digital
+				if (isset($vat['is_variable_eu_vat']) && !$vat['is_variable_eu_vat']) {
+					$extra_title = '<em>'._x('(Traditional VAT)', 'wc_eu_vat_compliance', 'Traditional VAT = VAT that does not vary by country under the new digital regulations; i.e. the VAT still charged on physical goods until 1 Jan 2016').'</em><br>';
+				} else {
+					$extra_title = '';
+				}
+
+				echo '<strong>'.$vat['name'].' ('.sprintf('%0.2f', $vat['rate']).' %)</strong><br>'.$extra_title;
 				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';
 				echo __('Shipping', 'wc_eu_vat_compliance').': '.$shipping.'<br>';
 				echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
@@ -201,11 +228,12 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			}
 
 			if (count($vat_paid['by_rates']) > 1) {
-				$items = $compliance->get_amount_in_conversion_currencies($vat_paid['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
-				$shipping = $compliance->get_amount_in_conversion_currencies($vat_paid['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$items = $compliance->get_amount_in_conversion_currencies(($items_total === false) ? $vat_paid['items_total'] : $items_total, $conversion_currencies, $conversion_rates, $order_currency);
 
-				$total = $compliance->get_amount_in_conversion_currencies($vat_paid['total'], $conversion_currencies, $conversion_rates, $order_currency);
+				$shipping = $compliance->get_amount_in_conversion_currencies(($shipping_total === false) ? $vat_paid['shipping_total'] : $shipping_total, $conversion_currencies, $conversion_rates, $order_currency);
+
+				$total = $compliance->get_amount_in_conversion_currencies(($total_total === false) ? $vat_paid['total'] : $total_total, $conversion_currencies, $conversion_rates, $order_currency);
 
 				echo '<strong>'.__('All VAT charges', 'wc_eu_vat_compliance').'</strong><br>';
 				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';

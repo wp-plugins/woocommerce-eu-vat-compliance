@@ -79,6 +79,118 @@ class WC_EU_VAT_Compliance {
 
 		add_action('wpo_wcpdf_footer', array($this, 'wpo_wcpdf_footer'));
 
+		add_action('woocommerce_admin_field_wceuvat_taxclasses', array($this, 'woocommerce_admin_field_wceuvat_taxclasses'));
+
+		add_action('woocommerce_check_cart_items', array($this, 'woocommerce_check_cart_items'));
+		add_action('woocommerce_checkout_process', array($this, 'woocommerce_check_cart_items'));
+
+	}
+
+	// If EU VAT checkout is forbidden, then this function is where the work is done to prevent it
+	public function woocommerce_check_cart_items() {
+
+		// Taxes turned on on the store, and VAT-able orders not forbidden?
+		if ('yes' != get_option('woocommerce_eu_vat_compliance_forbid_vatable_checkout', 'no') || 'yes' != get_option('woocommerce_calc_taxes')) return;
+		$opts_classes = $this->get_euvat_tax_classes();
+
+		$relevant_products_found = false;
+		$cart = $this->wc->cart->get_cart();
+
+		foreach ($cart as $item) {
+			if (empty($item['data'])) continue;
+			$_product = $item['data'];
+			$tax_status = $_product->get_tax_status();
+			if ('taxable' != $tax_status) continue;
+			$tax_class = $_product->get_tax_class();
+			if (empty($tax_class)) $tax_class = 'standard';
+			if (in_array($tax_class, $opts_classes)) {
+				$relevant_products_found = true;
+				break;
+			}
+		}
+		if (!$relevant_products_found) return;
+
+		$taxable_address = $this->wc->customer->get_taxable_address();
+		$eu_vat_countries = $this->get_european_union_vat_countries();
+
+		if (empty($taxable_address[0]) || !in_array($taxable_address[0], $eu_vat_countries)) return;
+
+		// If in cart, then warn - they still may select a different VAT country.
+		$current_filter = current_filter();
+		if ('woocommerce_checkout_process' != $current_filter) {
+			// Cart: just warn
+			echo "<p class=\"woocommerce-info\" id=\"wceuvat_notpossible\">".apply_filters('wceuvat_euvatcart_message', __('Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws).', 'wc_eu_vat_compliance'))."</p>";
+		} else {
+			// Attempting to check-out: prevent
+			$this->add_wc_error(
+				apply_filters('wceuvat_euvatcheckoutforbidden_message', __('This order cannot be processed. Due to the high costs of complying with EU VAT laws, we do not sell items liable to EU VAT to EU customers.', 'wc_eu_vat_compliance'))
+			);
+		}
+	}
+
+	public function get_tax_classes() {
+		$tax = new WC_Tax();
+		// Does not exist on WC 2.0 (not checked 2.1)
+		$tax_classes = (method_exists($tax, 'get_tax_classes')) ? $tax->get_tax_classes() : array_filter( array_map( 'trim', explode( "\n", get_option( 'woocommerce_tax_classes' ) ) ) );
+		if (!is_array($tax_classes)) $tax_classes = array();
+
+		$classes_by_title = array('standard' => __('Standard Rate', 'wc_eu_vat_compliance'));
+
+		foreach ( $tax_classes as $class ) {
+			$classes_by_title[sanitize_title($class)] = $class;
+		}
+
+		return $classes_by_title;
+	}
+
+	// Optional: pass an array of slugs of default tax classes, if you have one; otherwise, one will be obtained from self::get_tax_classes();
+	public function get_euvat_tax_classes($default = false) {
+
+		if (false === $default) {
+			$default = array_keys($this->get_tax_classes());
+		}
+
+		// Apply a default value, for if this is not set (people upgrading)
+		$opts_classes = get_option('woocommerce_eu_vat_compliance_tax_classes', $default);
+		if (!is_array($opts_classes)) $opts_classes = $default;
+
+		return $opts_classes;
+	}
+
+	// Input: either a tax class (string, slug) or a WC_Product
+	public function product_taxable_class_indicates_variable_eu_vat($product_or_tax_class) {
+		if (is_a($product_or_tax_class, 'WC_Product') && 'taxable' != $product_or_tax_class->get_tax_status()) return false;
+		if (empty($this->eu_vat_classes)) $this->eu_vat_classes = $this->get_euvat_tax_classes();
+		$tax_class = (is_a($product_or_tax_class, 'WC_Product')) ? $product_or_tax_class->get_tax_class() : $product_or_tax_class;
+		// WC's handling of the 'default' tax class is rather ugly/non-intuitive - you need the secret knowledge of its name
+		if (empty($tax_class)) $tax_class = 'standard';
+		return (in_array($tax_class, $this->eu_vat_classes)) ? true : false;
+	}
+
+
+	public function woocommerce_admin_field_wceuvat_taxclasses() {
+
+		$tax_classes = $this->get_tax_classes();
+		$opts_classes = $this->get_euvat_tax_classes(array_diff(array_keys($tax_classes), array('zero-rate')));
+
+		$settings_link = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) ? admin_url('admin.php?page=woocommerce_settings&tab=tax') : admin_url('admin.php?page=wc-settings&tab=tax');
+
+		?>
+		<tr valign="top">
+			<th scope="row" class="titledesc">
+			<label><?php _e('Relevant tax classes', 'wc_eu_vat_compliance');?></label>
+			</th>
+			<td>
+				<p><em><?php echo __('Indicate all the WooCommerce tax classes for which variable-by-country EU VAT is charged.', 'wc_eu_vat_compliance').' <a href="'.esc_attr($settings_link).'">'.__('To create additional tax classes, go to the WooCommerce tax settings.', 'wc_eu_vat_compliance').'</a> '.__('Products which are not in one of these tax classes will be excluded from per-country VAT calculations recorded by this plugin (though they may still have traditional EU VAT charged if you have configured them to do so - i.e., the purpose of this setting is to allow you to have a shop selling mixed goods).', 'wc_eu_vat_compliance');?></em></p>
+					<?php
+						foreach ($tax_classes as $slug => $label) {
+							$checked = (in_array($slug, $opts_classes) || in_array('all$all', $opts_classes)) ? ' checked="checked"' : '';
+							echo '<input type="checkbox"'.$checked.' id="woocommerce_eu_vat_compliance_tax_classes_'.$slug.'" name="woocommerce_eu_vat_compliance_tax_classes[]" value="'.$slug.'"> <label for="woocommerce_eu_vat_compliance_tax_classes_'.$slug.'">'.htmlspecialchars($label).'</label><br>';
+						}
+					?>
+			</td>
+		</tr>
+		<?php
 	}
 
 	public function wpo_wcpdf_footer($footer) {
@@ -258,7 +370,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		$post_id = (isset($order->post)) ? $order->post->ID : $order->id;
 
 		if ($allow_quick) {
-
 			if (!empty($this->vat_paid_post_id) && $this->vat_paid_post_id == $post_id && !empty($this->vat_paid_info)) {
 				$vat_paid = $this->vat_paid_info;
 			} else {
@@ -271,6 +382,19 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 			}
 			if ($quick_only) return false;
 		}
+
+// This is the wrong approach. What we actually need to do is to take the rate ID, and see what table that comes from. Tables are 1:1 in relationship with classes; thus, certain rate IDs just don't count.
+// 		$items = $order->get_items();
+// 		if (empty($items)) return false;
+// 
+// 		foreach ($items as $item) {
+// 			if (!is_array($item)) continue;
+// 			$tax_class = (empty($item['tax_class'])) ? 'standard' : $item['tax_class'];
+// 			if (!$this->product_taxable_class_indicates_variable_eu_vat($tax_class)) {
+// 				// New-style EU VAT does not apply to this product - do something
+// 				
+// 			}
+// 		}
 
 		$taxes = $order->get_taxes();
 
@@ -300,13 +424,15 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		foreach ($taxes as $tax) {
 			if (!is_array($tax) || !isset($tax['label']) || !preg_match($vat_strings, $tax['label'])) continue;
 
-			$tax_rate_id = $tax['rate_id'];
+			$tax_rate_class = empty($tax['tax_rate_class']) ? 'standard' : $tax['tax_rate_class'];
 
-			if (!empty($tax['tax_amount'])) $vat_total += $tax['tax_amount'];
-			if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total += $tax['shipping_tax_amount'];
+			$is_variable_eu_vat = $this->product_taxable_class_indicates_variable_eu_vat($tax_rate_class);
+
+			$tax_rate_id = $tax['rate_id'];
 
 			if(!isset($by_rates[$tax_rate_id])) {
 				$by_rates[$tax_rate_id] = array(
+					'is_variable_eu_vat' => $is_variable_eu_vat,
 					'items_total' => 0,
 					'shipping_total' => 0,
 				);
@@ -317,20 +443,25 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 			if (!empty($tax['tax_amount'])) $by_rates[$tax_rate_id]['items_total'] += $tax['tax_amount'];
 			if (!empty($tax['shipping_tax_amount'])) $by_rates[$tax_rate_id]['shipping_total'] += $tax['shipping_tax_amount'];
 
-			// TODO: Remove all base_currency stuff from here - instead, we are using conversions at reporting time
-			if ($currency != $base_currency) {
-				if (empty($tax['tax_amount_base_currency'])) {
-					// This will be wrong, of course, unless your conversion rate is 1:1
-					if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount'];
-					if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount'];
-					$base_currency_totals_are_reliable = false;
+			if ($is_variable_eu_vat) {
+				if (!empty($tax['tax_amount'])) $vat_total += $tax['tax_amount'];
+				if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total += $tax['shipping_tax_amount'];
+
+				// TODO: Remove all base_currency stuff from here - instead, we are using conversions at reporting time
+				if ($currency != $base_currency) {
+					if (empty($tax['tax_amount_base_currency'])) {
+						// This will be wrong, of course, unless your conversion rate is 1:1
+						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount'];
+						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount'];
+						$base_currency_totals_are_reliable = false;
+					} else {
+						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount_base_currency'];
+						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount_base_currency'];
+					}
 				} else {
-					if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount_base_currency'];
-					if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount_base_currency'];
+					$vat_total_base_currency = $vat_total;
+					$vat_shipping_total_base_currency = $vat_shipping_total;
 				}
-			} else {
-				$vat_total_base_currency = $vat_total;
-				$vat_shipping_total_base_currency = $vat_shipping_total;
 			}
 		}
 
@@ -457,10 +588,11 @@ Array
 			$order_tax_id = (int)$tax_rate_ids[$tax_rate_info['tax_rate_id']];
 			$taxes[$order_tax_id]['tax_rate'] = $tax_rate_info['tax_rate'];
 			$taxes[$order_tax_id]['tax_rate_name'] = $tax_rate_info['tax_rate_name'];
+			$taxes[$order_tax_id]['tax_rate_class'] = $tax_rate_info['tax_rate_class'];
 // 			$taxes[$order_tax_id]['tax_rate_country'] = $tax_rate_info['tax_rate_country'];
 // 			$taxes[$order_tax_id]['tax_rate_state'] = $tax_rate_info['tax_rate_state'];
 
-			// Attach the rest tax information to the original array, for convenience
+			// Attach the tax information to the original array, for convenience
 			$taxes[$order_tax_id]['tax_info'] = $tax_rate_info;
 		}
 
@@ -546,14 +678,29 @@ Array
 
 		load_plugin_textdomain('wc_eu_vat_compliance', false, basename(WC_EU_VAT_COMPLIANCE_DIR).'/languages');
 
-		$this->settings = array(
-			array(
-				'name' 		=> __( 'Phrase matches used to identify VAT taxes', 'wc_eu_vat_compliance' ),
-				'desc' 		=> __( 'A comma-separated (optional spaces) list of strings (phrases) used to identify taxes which are EU VAT taxes. One of these strings must be used in your tax name labels (i.e. the names used in your tax tables) if you wish the tax to be identified as EU VAT.', 'wc_eu_vat_compliance' ),
-				'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
-				'type' 		=> 'text',
-				'default'		=> $this->default_vat_matches
-			)
+		$this->settings = array(array(
+			'name' 		=> __( "Forbid EU VAT checkout", 'wc_eu_vat_compliance' ),
+			'desc' 		=> __( "If this option is selected, then <strong>all</strong> orders by EU customers (whether consumer or business) which contain goods subject to variable EU VAT (whether the customer is exempt or not) will be forbidden.", 'wc_eu_vat_compliance').' ',
+			'desc_tip' 	=> __('This feature is intended only for sellers who wish to avoid issues from EU variable VAT regulations entirely, by not selling any qualifying goods to EU customers (even ones who are potentially VAT exempt).', 'wc_eu_vat_compliance' ).' '.__("Check-out will be forbidden if the cart contains any goods from the relevant tax classes indicated below, and if the customer's VAT country is part of the EU.", 'wc_eu_vat_compliance'),
+			'id' 		=> 'woocommerce_eu_vat_compliance_forbid_vatable_checkout',
+			'type' 		=> 'checkbox',
+			'default'		=> 'no'
+		));
+
+		$this->settings[] = array(
+			'name' 		=> __( 'Phrase matches used to identify VAT', 'wc_eu_vat_compliance' ),
+			'desc' 		=> __( 'A comma-separated (optional spaces) list of strings (phrases) used to identify taxes which are EU VAT taxes. One of these strings must be used in your tax name labels (i.e. the names used in your tax tables) if you wish the tax to be identified as EU VAT.', 'wc_eu_vat_compliance' ),
+			'id' 		=> 'woocommerce_eu_vat_compliance_vat_match',
+			'type' 		=> 'text',
+			'default'		=> $this->default_vat_matches
+		);
+
+		$this->settings[] = array(
+			'name' 		=> __("Relevant tax classes", 'wc_eu_vat_compliance' ),
+			'desc' 		=> __("Select all tax classes which are used in your store for products sold under EU Digital VAT regulations", 'wc_eu_vat_compliance' ),
+			'id' 		=> 'woocommerce_eu_vat_compliance_tax_classes',
+			'type' 		=> 'wceuvat_taxclasses',
+			'default'		=> 'yes'
 		);
 
 # TODO
@@ -684,8 +831,7 @@ Array
 	}
 
 	public function is_premium() {
-		$premium = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Premium');
-		return is_object($premium);
+		return is_object(WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Premium'));
 	}
 }
 endif;

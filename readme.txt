@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.6.14
+Stable tag: 1.7.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -21,9 +21,9 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Identify your customers' locations:</strong> this plugin will record evidence of your customer's location, using their billing or shipping address, and their IP address (via a GeoIP lookup).
 
-- <strong>Forbid EU sales (feature not yet released)</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out.
+- <strong>Forbid EU sales if any goods have VAT chargeable</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out if they have selected any goods which are subject to EU VAT (whilst still allowing purchase of other goods, unlike the built-in WooCommerce feature which allows you to forbid check-out from some countries entirely).
 
-- <strong>Evidence is recorded, ready for audit:</strong> full information that was used to calculate VAT is displayed in the WooCommerce order screen in the back-end.
+- <strong>Evidence is recorded, ready for audit:</strong> full information that was used to calculate VAT and customer location is displayed in the WooCommerce order screen in the back-end.
 
 - <strong>Display prices including correct VAT from the first page:</strong> GeoIP information is also used to show the correct VAT from the first time a customer sees a product. A widget and shortcode are also provided allowing the customer to set their own country (whole feature requires WooCommerce 2.2.9 or later).
 
@@ -34,6 +34,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 - <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, currency and order status.
 
 - <strong>Central control:</strong> brings all settings, reports and other information into a single centralised location, so that you don't have to deal with items spread all over the WordPress dashboard.
+
+- <strong>Mixed shops:</strong> You can sell goods subject to EU VAT under the 2015 digital goods regulations and other physical goods which are (until 2016) subject to traditional base-country-based VAT regulations. The plugin supports this via allowing you to identify which tax classes in your WooCommerce configuration are used for 2015 digital goods items. Products which you place in other tax classes are not included in calculations/reports made by this plugin for per-country tax liabilities, even if VAT was charged upon them. (For such goods, you will calculate how much you owe your local tax-man by using WooCommerce's built-in tax reports).
 
 - <strong>Distinguish VAT from other taxes:</strong> if you are in a jurisdiction where you have to apply other taxes also, then this plugin can handle that: it knows which taxes are EU VAT, and which are not.
 
@@ -104,6 +106,18 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
 == Changelog ==
+
+= 1.7.0 - 2015-01-13 =
+
+* USER NOTE: This plugin is already compatible with version 2.0 of the GeoIP detect plugin, but if/when you update to that, you will need to update the GeoIP database (as version 2.0 uses a new format) - go to Tools -> GeoIP Detection ... you will then need to reload the dashboard once more to get rid of the "No database" warning message.
+* FEATURE: Forbid checkout if any goods liable to EU VAT are in the cart (this can be a better option than using WooCommerce's built-in feature to forbid all sales at all to EU countries - perhaps not all your goods are VAT-liable. Note that this is a stronger option that the existing option to only forbid consumer sales (i.e. customers who have no access to VAT exemption via supply of a VAT number))
+* FEATURE: Support mixed shops, selling goods subject to EU VAT under the 2015 digital goods regulations and other goods subject to traditional base-country-based VAT regulations. The plugin supports this via allowing you to identify which tax classes in your WooCommerce configuration are used for 2015 digital goods items. Products which you place in other tax classes are not included in calculations/reports made by this plugin for per-country tax liabilities, even if VAT was charged upon them. (For such goods, you calculate how much you owe your local tax-man by using WooCommerce's built-in tax reports).
+* FEATURE: Within {iftax}{/iftax} tags, you can use the special value value {country_with_brackets} to show the country that tax was calculated using, surrounded by brackets, if one is relevant; or nothing will be shown if not. Example: {iftax}incl. VAT {country_with_brackets}{/iftax}. This is most useful for mixed shops, where you will not what the confuse the customer by showing the country for products for which the VAT is not based upon country.
+* FIX: Country pre-selection drop-down via shortcode was not activating if the page URL had a # in it.
+* FIX: Unbalanced <div> in Premium plugin on checkout page if self-certification was disabled.
+* TWEAK: Negative VAT number lookups are now cached for 1 minute instead of 7 days (to mitigate the possible undesirable consequences of cacheing a false negative, and given that we expect very few negatives anyway)
+* TWEAK: Change prefix used for transient names, to effectively prevent any previously cached negative lookups for certain valid Spanish VAT numbers (see 1.6.14) being retained, without requiring the shop owner to manually flush their transients.
+* TRANSLATION: Updated French translation (thanks to Guy Pasteger)
 
 = 1.6.14 - 2015-01-10 =
 
@@ -331,4 +345,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.6.14: Various tweaks and improvements in VAT number handling (Premium); also provide exchange rates from the Bank of Russia.
+* 1.7.0 : Support for mixed shops, selling both digital and physical goods under separate both VAT regimes. Tweak regarding VIES lookups, plus a couple of small bug-fixes.
