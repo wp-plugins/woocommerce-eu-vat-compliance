@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -105,7 +105,17 @@ You must remember, of course, to make sure that a) your WooCommerce installation
 
 There is a widget for this; so, look in your dashboard, in Appearance -> Widgets. You can also display it anywhere in page content, using a shortcode, optionally including an option for displaying prices without taxes: [euvat_country_selector include_notaxes="true|false"]. Note: this feature requires WooCommerce 2.2.9 or later, as previous versions did not include the necessary hooks to make this feature possible.
 
+= I want to make everyone pay the same prices, regardless of VAT =
+
+This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
+
 == Changelog ==
+
+= 1.7.1 - 2015-01-20 =
+
+* FIX: No longer require the shop base country to be in the EU when applying VAT exemptions for B2B customers
+* FEATURE: Add an option for a separate checkbox for the "show prices without taxes" option in the country-selection widget (in addition to the existing, but not-necessarily-easy-to-find, menu option on the country list)
+* TRANSLATION: Updated French translation (thanks to Guy Pasteger)
 
 = 1.7.0 - 2015-01-13 =
 
@@ -345,4 +355,4 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.7.0 : Support for mixed shops, selling both digital and physical goods under separate both VAT regimes. Tweak regarding VIES lookups, plus a couple of small bug-fixes.
+* 1.7.1 : No longer require the shop base country to be in the EU when applying VAT exemptions for B2B customers. New feature for separate "show without taxes" checkbox on country selection widget (as the menu option may be harder to spot). Updated French translation.

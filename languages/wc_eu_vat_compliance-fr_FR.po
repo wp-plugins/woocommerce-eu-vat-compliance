@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WooCommerce EU VAT Compliance package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-01-12 14:06:50+0000\n"
+"PO-Revision-Date: 2015-01-14 16:03:08+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,59 +12,59 @@ msgstr ""
 
 #: record-order-country.php:218
 msgid "(Traditional VAT)"
-msgstr ""
+msgstr "TVA traditionnelle"
 
 #: bootstrap.php:122
 msgid "Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws)."
-msgstr ""
+msgstr "Selon votre pays, il peut ne pas être possible d'acheter tous les articles de ce panier. Ceci parce que cette boutique ne vend pas les produits assujettis à la TVA de l'UE à des clients de l'UE (en raison des coûts élevés de mise en conformité avec les lois de l'UE sur la TVA)."
 
 #: bootstrap.php:126
 msgid "This order cannot be processed. Due to the high costs of complying with EU VAT laws, we do not sell items liable to EU VAT to EU customers."
-msgstr ""
+msgstr "Cette commande ne peut être traitée. En raison des coûts élevés pour se conformer aux lois de l'UE sur la TVA , nous ne vendons pas de produits assujettis à la TVA de l'UE à des clients de l'UE."
 
 #: bootstrap.php:181 bootstrap.php:701
 msgid "Relevant tax classes"
-msgstr ""
+msgstr "Catégories de taxe pertinentes"
 
 #: bootstrap.php:184
 msgid "Indicate all the WooCommerce tax classes for which variable-by-country EU VAT is charged."
-msgstr ""
+msgstr "Indiquer toutes les catégories de taxes sur WooCommerce pour lesquelles la TVA variable par pays de l'UE est applicable."
 
 #: bootstrap.php:184
 msgid "To create additional tax classes, go to the WooCommerce tax settings."
-msgstr ""
+msgstr "Pour créer des catégories de taxe supplémentaires, allez dans les paramètres de taxes de WooCommerce. "
 
 #: bootstrap.php:184
 msgid "Products which are not in one of these tax classes will be excluded from per-country VAT calculations recorded by this plugin (though they may still have traditional EU VAT charged if you have configured them to do so - i.e., the purpose of this setting is to allow you to have a shop selling mixed goods)."
-msgstr ""
+msgstr "Les produits qui ne sont pas dans une de ces catégories de taxe seront exclus des calculs de TVA par pays enregistrés par ce plugin (ils peuvent encore avoir la TVA traditionnelle appliquée si vous l'avez configuré pour le faire - c'est à dire que le but de ce paramètre est de vous permettre d'avoir une boutique vendant des produits mixtes)."
 
 #: bootstrap.php:684
 msgid "Forbid EU VAT checkout"
-msgstr ""
+msgstr "Interdire commande TVA UE"
 
 #: bootstrap.php:685
 msgid "If this option is selected, then <strong>all</strong> orders by EU customers (whether consumer or business) which contain goods subject to variable EU VAT (whether the customer is exempt or not) will be forbidden."
-msgstr ""
+msgstr "Si cette option est sélectionnée, <strong> toutes </strong> les commandes de clients de l'UE (consommateur ou entreprise) qui contiennent des marchandises soumises à la TVA variable de l'UE (si le client est exonéré ou non) sera interdite."
 
 #: bootstrap.php:686
 msgid "This feature is intended only for sellers who wish to avoid issues from EU variable VAT regulations entirely, by not selling any qualifying goods to EU customers (even ones who are potentially VAT exempt)."
-msgstr ""
+msgstr "Cette fonction est destinée uniquement aux vendeurs qui souhaitent complètement éviter les problèmes de l'UE en matière de TVA variable, en ne vendant pas des marchandises admissibles aux clients de l'UE (même ceux qui sont potentiellement exonérés de la TVA). "
 
 #: bootstrap.php:686
 msgid "Check-out will be forbidden if the cart contains any goods from the relevant tax classes indicated below, and if the customer's VAT country is part of the EU."
-msgstr ""
+msgstr "La commande sera interdite si le panier contient des produits appartenant aux catégories fiscales indiquées ci-dessous, et si le pays de TVA du client fait partie de l'UE."
 
 #: bootstrap.php:693
 msgid "Phrase matches used to identify VAT"
-msgstr ""
+msgstr "Termes utilisés pour identifier la TVA"
 
 #: bootstrap.php:702
 msgid "Select all tax classes which are used in your store for products sold under EU Digital VAT regulations"
-msgstr ""
+msgstr "Sélectionnez toutes les catégories de taxes qui sont utilisées dans votre boutique pour les produits vendus en vertu des règlements de la TVA EU sur les produits numériques."
 
 #: control-centre.php:379
 msgid "Use <code>{country_with_brackets}</code> to show the country only if the item had per-country varying VAT, and to show brackets around the country."
-msgstr ""
+msgstr "Utiliser <code>{country_with_brackets}</code> pour afficher le pays seulement si l'article a une TVA variable par pays, et mettre le pays entre parenthèse."
 
 #: premium.php:106
 msgid "Download all orders with VAT data (from the chosen date range) in CSV format"
@@ -164,7 +164,7 @@ msgstr "Version WooCommerce"
 
 #: readiness-tests.php:19
 msgid "Coupons apply before tax"
-msgstr "Coupons s'appliquent avant impôt"
+msgstr "Coupons s'appliquent avant les taxes"
 
 #: readiness-tests.php:20
 msgid "Store has tax enabled"
@@ -212,7 +212,7 @@ msgstr "Définir le texte à afficher après le prix de vos produits. Ce pourrai
 
 #: record-order-country.php:262
 msgid "Currency conversion source:"
-msgstr "Devise source de conversion:"
+msgstr "Source de conversion de devises:"
 
 #: readiness-tests.php:134
 msgid "Your WooCommerce version (%s) is lower than %s - as a result, all features are supported, except for the ability to allow the customer to see exact taxes for their location before the cart or checkout."
@@ -424,7 +424,7 @@ msgstr "Résoudre les données de TVA contradictoires"
 
 #: vat-number.php:179
 msgid "This option determines what will happen if the customer's apparent country (according to their IP address) conflicts with the country used to determine their taxes (i.e. shipping or billing country, depending upon the setting further up this page)."
-msgstr "Cette option détermine ce qui se passera si le pays apparent du client (en fonction de leur adresse IP) entre en conflit avec le pays utilisés pour déterminer leurs taxes (c&#39;est à dire les frais d&#39;expédition ou le pays de facturation, selon la mise en place ultérieure cette page)."
+msgstr "Cette option détermine ce qui se passera si le pays apparent du client (en fonction de leur adresse IP) entre en conflit avec le pays utilisés pour déterminer leurs taxes (c&#39;est à dire les données d&#39;expédition ou le pays de facturation, selon la mise en place ultérieure cette page)."
 
 #: vat-number.php:179
 msgid "Which is the correct option for you depends upon the particular evidence your local taxman is happy with to verify the country of purchase."
@@ -508,7 +508,7 @@ msgstr "Taux réduit"
 
 #: rates.php:299
 msgid "Isle of Man"
-msgstr "Île du Man"
+msgstr "Île de Man"
 
 #: control-centre.php:134
 msgid "Failed: The currency conversion failed. Please check the settings, that the chosen provider provides exchange rates for your chosen currencies, and the outgoing network connectivity from your webserver."
@@ -716,7 +716,7 @@ msgstr "Fournisseur de taux de change"
 
 #: control-centre.php:618
 msgid "Set the currency that you have to use when making VAT reports. If this is not the same as your base currency (%s), then when orders are placed, the exchange rate will be recorded as part of the order information, allowing accurate VAT reports to be made."
-msgstr "Réglez la monnaie que vous avez à utiliser lors de rapports de la TVA. Si ce ne est pas le même que votre monnaie (%s) de base, puis quand les commandes sont passées, le taux de change sera enregistré dans le cadre de l&#39;information de commande, ce qui permet de faire des rapports de TVA plus précis."
+msgstr "Réglez la monnaie que vous avez à utiliser lors de rapports de la TVA. Si ce ne est pas le même que votre monnaie de base (%s), puis quand les commandes sont passées, le taux de change sera enregistré dans le cadre de l&#39;information de commande, ce qui permet de faire des rapports de TVA plus précis."
 
 #: control-centre.php:618
 msgid "If using a currency other than your base currency, then you must configure an exchange rate provider."
@@ -752,7 +752,7 @@ msgstr "NB Il ne est pas encore le 1er Janvier 2015; oui, vous voudrez peut-êtr
 
 #: control-centre.php:667
 msgid "Please come back here after your next plugin update, to see what has been added - this feature is still under development. When done, it will advise you on which of your WooCommerce and other settings may need adjusting for EU VAT compliance."
-msgstr "Veuillez revenir ici après votre prochaine mise à jour du plug-in pour voir ce qui a été ajoutée - cette fonctionnalité est encore en développement. Quand cela sera fait, il vous conseillera quels autres paramètres peuvent nécessiter un ajustement pour la conformité de TVA de l&#39;UE."
+msgstr "Veuillez revenir ici après votre prochaine mise à jour du plug-in pour voir ce qui a été ajouté - cette fonctionnalité est encore en développement. Quand cela sera fait, il vous sera conseillé quels autres paramètres peuvent nécessiter un ajustement pour la conformité de TVA de l&#39;UE."
 
 #: control-centre.php:726
 msgid "N.B. The final country used may be modified according to your EU VAT settings."
@@ -872,7 +872,7 @@ msgstr "Le total des ventes ci-dessous inclut l&#39;expédition (le cas échéan
 
 #: reports.php:313
 msgid "Downloading all orders with VAT data in CSV format is a feature of the Premium version of this plugin."
-msgstr "Téléchargement de tous les ordres de données de la TVA au format CSV est une caractéristique de la version Premium de ce plugin."
+msgstr "Le téléchargement au format CSV de toutes les commandes avec TVA  est une caractéristique de la version Premium de ce plugin."
 
 #: reports.php:362
 msgid "Statuses (updates instantly):"

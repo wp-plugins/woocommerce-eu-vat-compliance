@@ -35,7 +35,7 @@ class WC_EU_VAT_Country_PreSelect_Widget extends WP_Widget {
 		
 		if (!empty($instance['explanation'])) echo '<div class="countrypreselect_explanation">'.$instance['explanation'].'</div>';
 
-		$include_notaxes = !empty($instance['include_notaxes']);
+		$include_notaxes = !empty($instance['include_notaxes']) ? $instance['include_notaxes'] : false;
 
 		$preselect = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Preselect_Country');
 		$preselect->render_dropdown($include_notaxes);
@@ -48,7 +48,7 @@ class WC_EU_VAT_Country_PreSelect_Widget extends WP_Widget {
 		$instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
 		$title = empty($instance['title']) ? '' : $instance['title'];
 		$explanation = empty($instance['explanation']) ? '' : $instance['explanation'];
-		$include_notaxes = empty($instance['include_notaxes']) ? false : true;
+		$include_notaxes = empty($instance['include_notaxes']) ? false : $instance['include_notaxes'];
 
 		if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2.9', '<')) {
 			echo '<p style="color: red">'.sprintf(__('Due to limitations in earlier versions, this widget requires WooCommerce %s or later, and will not work on your version (%s).', 'wc_eu_vat_compliance'), '2.2.9', WOOCOMMERCE_VERSION).'</p>';
@@ -59,7 +59,11 @@ class WC_EU_VAT_Country_PreSelect_Widget extends WP_Widget {
 
 		<p><label for="<?php echo $this->get_field_id('explanation'); ?>"><?php _e('Explanatory text (HTML accepted):', 'wc_eu_vat_compliance');?> <textarea class="widefat" id="<?php echo $this->get_field_id('explanation'); ?>" name="<?php echo $this->get_field_name('explanation'); ?>"><?php echo htmlentities($explanation); ?></textarea> </label></p>
 
-		<p><input id="<?php echo $this->get_field_id('include_notaxes'); ?>" name="<?php echo $this->get_field_name('include_notaxes'); ?>" type="checkbox" value="1" <?php if ($include_notaxes) echo ' checked="checked"';?>/><label for="<?php echo $this->get_field_id('include_notaxes'); ?>"><?php echo htmlspecialchars(__('Include option for the customer to show prices with no VAT.', 'wc_eu_vat_compliance'));?> </label></p>
+		<p><input id="<?php echo $this->get_field_id('include_notaxes_nooption'); ?>" name="<?php echo $this->get_field_name('include_notaxes'); ?>" type="radio" value="0" <?php if ($include_notaxes == 0) echo ' checked="checked"';?>/><label for="<?php echo $this->get_field_id('include_notaxes_nooption'); ?>"><?php echo htmlspecialchars(__('Do not include a menu option for the customer to show prices with no VAT.', 'wc_eu_vat_compliance'));?> </label></p>
+
+		<p><input id="<?php echo $this->get_field_id('include_notaxes_withmenu'); ?>" name="<?php echo $this->get_field_name('include_notaxes'); ?>" type="radio" value="1" <?php if ($include_notaxes == 1) echo ' checked="checked"';?>/><label for="<?php echo $this->get_field_id('include_notaxes_withmenu'); ?>"><?php echo htmlspecialchars(__('Include menu option for the customer to show prices with no VAT.', 'wc_eu_vat_compliance'));?> </label></p>
+
+		<p><input id="<?php echo $this->get_field_id('include_notaxes_withcheckbox'); ?>" name="<?php echo $this->get_field_name('include_notaxes'); ?>" type="radio" value="2" <?php if ($include_notaxes == 2) echo ' checked="checked"';?>/><label for="<?php echo $this->get_field_id('include_notaxes_withcheckbox'); ?>"><?php echo htmlspecialchars(__('Include menu option and separate checkbox for the customer to show prices with no VAT.', 'wc_eu_vat_compliance'));?> </label></p>
 
 		<?php
 
@@ -69,7 +73,7 @@ class WC_EU_VAT_Country_PreSelect_Widget extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = $new_instance['title'];
 		$instance['explanation'] = $new_instance['explanation'];
-		$instance['include_notaxes'] = (!empty($new_instance['include_notaxes'])) ? true : false;
+		$instance['include_notaxes'] = (!empty($new_instance['include_notaxes'])) ? $new_instance['include_notaxes'] : false;
 		return $instance;
 	}
 

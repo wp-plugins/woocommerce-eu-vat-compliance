@@ -181,7 +181,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 						unset($has_rate_remaining_countries[$key]);
 					}
 
-					if (empty($tax_rate_country) || '*' == $tax_rate_country || !is_array($rates[$tax_rate_country])) continue;
+					if (empty($tax_rate_country) || '*' == $tax_rate_country || !isset($rates[$tax_rate_country]) || !is_array($rates[$tax_rate_country])) continue;
 					$found_rate = false;
 					foreach ($rates[$tax_rate_country] as $label => $rate) {
 						# N.B. Not all attribute/values are rates; but, all the numerical ones are

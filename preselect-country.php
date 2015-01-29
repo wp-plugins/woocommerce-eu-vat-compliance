@@ -157,14 +157,17 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 
 	public function shortcode_euvat_country_selector($atts) {
 		$atts = shortcode_atts(array(
-			'include_notaxes' => true,
+			'include_notaxes' => 1,
 			'classes' => '',
 		), $atts, 'euvat_country_selector');
 
 		$this->render_dropdown($atts['include_notaxes'], $atts['classes']);
 	}
 
-	public function render_dropdown($include_notaxes = true, $classes = '') {
+	public function render_dropdown($include_notaxes = 1, $classes = '') {
+
+		static $index_count = 0;
+		$index_count++;
 
 		$all_countries = $this->compliance->wc->countries->countries;
 
@@ -185,7 +188,16 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 			echo '<option value="'.$code.'"'.$selected.'>'.$label.'</option>';
 		}
 
-		echo '</select><noscript><input type="submit" value="'.__('Change', 'wc_eu_vat_compliance').'"</noscript></form>';
+		echo '</select>';
+
+		if ($include_notaxes == 2) {
+			$id = 'wc_country_preselect_withoutvat_checkbox_'.$index_count;
+			echo '<div class="wc_country_preselect_withoutvat"><input id="'.$id.'" type="checkbox" class="wc_country_preselect_withoutvat_checkbox" '.(('none' == $selected_country) ? 'checked="checked"' : '').'> <label for="'.$id.'">'.apply_filters('wceuvat_showpriceswithoutvat_msg', __('Show prices without VAT', 'wc_eu_vat_compliance')).'</label></div>';
+		}
+
+		echo '<noscript><input type="submit" value="'.__('Change', 'wc_eu_vat_compliance').'"</noscript>';
+
+		echo '</form>';
 
 		add_action('wp_footer', array($this, 'wp_footer'));
 
@@ -226,8 +238,25 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 					}
 				}
 
-				$('select.countrypreselect_chosencountry').change(function() {
-					var chosen = $(this).val();
+				var previously_chosen = '';
+
+				$('.wc_country_preselect_withoutvat_checkbox').click(function() {
+					var chosen = $(this).is(':checked');
+					var selector = $(this).parents('form').find('select.countrypreselect_chosencountry');
+					var none_exists_on_menu = $(selector).find('option[value="none"]').length;
+					if (chosen) {
+						if (none_exists_on_menu) {
+// 							$(selector).val('none');
+						}
+						reload_page_with_country('none');
+					} else {
+						if (none_exists_on_menu) { $(selector).val('none'); }
+						country = $(selector).val();
+						if ('none' != country) { reload_page_with_country(country); }
+					}
+				});
+
+				function reload_page_with_country(chosen) {
 					var url = removeURLParameter(document.location.href.match(/(^[^#]*)/)[0], 'wc_country_preselect');
 					if (url.indexOf('?') > -1){
 						url += '&wc_country_preselect='+chosen;
@@ -235,13 +264,18 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 						url += '?&wc_country_preselect='+chosen;
 					}
 					window.location.href = url;
+				}
+
+				$('select.countrypreselect_chosencountry').change(function() {
+					var chosen = $(this).val();
+					reload_page_with_country(chosen);
 				});
 			});
 		</script>
 ENDHERE;
 	}
 
-	public function get_preselect_country($allow_via_geoip = true, $allow_from_widget = true) {
+	public function get_preselect_country($allow_via_geoip = true, $allow_from_widget = true, $allow_from_request = true, $allow_from_session = true) {
 // 		$allow_via_session = true;
 
 		// Priority: 1) Something set via _REQUEST 2) Something already set in the session 3) GeoIP country
@@ -250,7 +284,7 @@ ENDHERE;
 
 // 		if (defined('DOING_AJAX') && DOING_AJAX && isset($_POST['action']) && 'woocommerce_update_order_review' == $_POST['action']) $allow_via_session = false;
 		# Something set via _REQUEST? or _POST from shipping page calculator?
-		if (!empty($_REQUEST['wc_country_preselect']) || !empty($_POST['calc_shipping_country'])) {
+		if ($allow_from_request && (!empty($_REQUEST['wc_country_preselect']) || !empty($_POST['calc_shipping_country']))) {
 			$req_country = (!empty($_POST['calc_shipping_country'])) ? $_POST['calc_shipping_country'] : $_REQUEST['wc_country_preselect'];
 
 			if ('none' == $req_country || isset($countries[$req_country])) {
@@ -286,11 +320,13 @@ ENDHERE;
 			if ('none' == $session_widget_country || ($session_widget_country && isset($countries[$session_widget_country]))) return $session_widget_country;
 		}
 
-		# Something already set in the session (via the checkout)?
-		$session_country = (isset($this->compliance->wc->session)) ? $this->compliance->wc->session->get('eu_vat_country_checkout') : '';
-		#$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state_checkout');
+		if ($allow_from_session) {
+			# Something already set in the session (via the checkout)?
+			$session_country = (isset($this->compliance->wc->session)) ? $this->compliance->wc->session->get('eu_vat_country_checkout') : '';
+			#$eu_vat_state = $this->compliance->wc->session->get('eu_vat_state_checkout');
 
-		if ('none' == $session_country || ($session_country && isset($countries[$session_country]))) return $session_country;
+			if ('none' == $session_country || ($session_country && isset($countries[$session_country]))) return $session_country;
+		}
 
 		# GeoIP country?
 		if ($allow_via_geoip) {
