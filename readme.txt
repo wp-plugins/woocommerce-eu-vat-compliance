@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -63,7 +63,7 @@ Before January 1st 2015, of course, you will want to be careful about which feat
 
 = Footnotes and legalese =
 
-This plugin requires WooCommerce 2.0 or later (tested up to 2.2). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
+This plugin is tested on WooCommerce 2.1 up to 2.3 (releases up to 1.7.1 were also tested on WC 2.0). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
 
 Geographical IP lookups are performed via the MaxMind GeoIP database, via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
 
@@ -110,6 +110,12 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.7.2 - 2015-02-07 =
+
+* COMPATIBILITY: Tested on WooCommerce 2.3 (RC1). Note that WooCommerce EU VAT Compliance will over-ride WooCommerce 2.3's built-in geo-location features - so, you should not need to adjust any settings after updating to WooCommerce 2.3. WooCommerce 2.0 is no longer officially supported or tested (though this release is still believed to be compatible).
+* TWEAK: Add order number to the CSV download (allowing order number to differ from the WooCommerce order ID - e.g. if using http://www.woothemes.com/products/sequential-order-numbers-pro/).
+* TWEAK: Introduce WC_EU_VAT_NOCOUNTRYPRESELECT constant, allowing you to disable the built-in country pre-selection (if, for example, you already have an existing solution)
 
 = 1.7.1 - 2015-01-20 =
 
@@ -355,4 +361,4 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.7.1 : No longer require the shop base country to be in the EU when applying VAT exemptions for B2B customers. New feature for separate "show without taxes" checkbox on country selection widget (as the menu option may be harder to spot). Updated French translation.
+* 1.7.2 : Compatible with the forth-coming WooCommerce 2.3. Add order number column to the CSV download (for shops with custom order-numbers).

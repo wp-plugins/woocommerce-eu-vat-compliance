@@ -103,7 +103,7 @@ class WC_EU_VAT_Compliance_Reports {
 					AND (taxonomy.taxonomy = 'shop_order_status')
 					AND orders.post_date >= '$start_date 00:00:00'
 					AND orders.post_date <= '$end_date 23:59:59'
-					AND order_meta.meta_key IN ('_billing_state', '_billing_country', '_order_currency', '_order_tax', '_order_tax_base_currency', '_order_total', '_order_total_base_currency', 'vat_compliance_country_info', 'vat_compliance_vat_paid', 'Valid EU VAT Number', 'VAT Number', 'VAT number validated' $tax_based_on_extra)
+					AND order_meta.meta_key IN ('_billing_state', '_billing_country', '_order_currency', '_order_tax', '_order_tax_base_currency', '_order_total', '_order_total_base_currency', 'vat_compliance_country_info', 'vat_compliance_vat_paid', 'Valid EU VAT Number', 'VAT Number', 'VAT number validated', 'order_time_order_number' $tax_based_on_extra)
 				ORDER BY
 					orders.ID desc
 					,order_meta.meta_key
@@ -126,7 +126,7 @@ class WC_EU_VAT_Compliance_Reports {
 					(orders.post_type = 'shop_order')
 					AND orders.post_date >= '$start_date 00:00:00'
 					AND orders.post_date <= '$end_date 23:59:59'
-					AND order_meta.meta_key IN ('_billing_state', '_billing_country', '_order_currency', '_order_tax', '_order_tax_base_currency', '_order_total', '_order_total_base_currency', 'vat_compliance_country_info', 'vat_compliance_vat_paid', 'Valid EU VAT Number', 'VAT Number', 'VAT number validated' $tax_based_on_extra)
+					AND order_meta.meta_key IN ('_billing_state', '_billing_country', '_order_currency', '_order_tax', '_order_tax_base_currency', '_order_total', '_order_total_base_currency', 'vat_compliance_country_info', 'vat_compliance_vat_paid', 'Valid EU VAT Number', 'VAT Number', 'VAT number validated', 'order_time_order_number' $tax_based_on_extra)
 				ORDER BY
 					orders.ID desc
 					,order_meta.meta_key
@@ -229,6 +229,9 @@ class WC_EU_VAT_Compliance_Reports {
 						case 'Valid EU VAT Number';
 							$normalised_results[$order_status][$order_id]['vatno_valid'] = $res->meta_value;
 						break;
+						case 'order_time_order_number';
+							$normalised_results[$order_status][$order_id]['order_number'] = $res->meta_value;
+						break;
 						case 'VAT Number';
 							$normalised_results[$order_status][$order_id]['vatno'] = $res->meta_value;
 						break;
@@ -245,6 +248,7 @@ class WC_EU_VAT_Compliance_Reports {
 					}
 
 				}
+
 			} else {
 				$fetch_more = false;
 			}
@@ -281,6 +285,12 @@ class WC_EU_VAT_Compliance_Reports {
 				// N.B. Use of empty() means that those with zero VAT are also excluded at this point
 				if (empty($res['vat_paid'])) {
 					unset($normalised_results[$order_status][$order_id]);
+				} elseif (!isset($res['order_number'])) {
+					// This will be database-intensive, the first time, if they had a lot of orders before this bit of meta began to be recorded at order time (plugin version 1.7.2)
+					$order = $compliance->get_order($order_id);
+					$order_number = $order->get_order_number();
+					$normalised_results[$order_status][$order_id]['order_number'] = $order_number;
+					update_post_meta($order_id, 'order_time_order_number', $order_number);
 				}
 			}
 		}

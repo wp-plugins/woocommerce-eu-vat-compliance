@@ -337,18 +337,36 @@ class WC_EU_VAT_Compliance_Control_Centre {
 					'base'     => __( 'Shop base address', 'woocommerce' )
 				),
 			),
+		);
 
-			array(
-				'title'    => __( 'Default Customer Address:', 'woocommerce' ),
-				'id'       => 'woocommerce_default_customer_address',
-				'desc_tip' =>  __( 'This option determines the customers default address (before they input their own).', 'woocommerce' ),
-				'default'  => 'base',
-				'type'     => 'select',
-				'options'  => array(
-					''     => __( 'No address', 'woocommerce' ),
-					'base' => __( 'Shop base address', 'woocommerce' ),
-				),
-			),
+			if (function_exists('WC') && version_compare(WC()->version, '2.3', '>=')) {
+				// WC 2.3 has an extra 'geo-locate' option
+				$tax_settings[] = array(
+					'title'    => __( 'Default Customer Address:', 'woocommerce' ),
+					'id'       => 'woocommerce_default_customer_address',
+					'desc_tip' =>  __( 'This option determines the customers default address (before they input their details).', 'woocommerce' ),
+					'default'  => 'geolocation',
+					'type'     => 'select',
+					'class'    => 'wc-enhanced-select',
+					'options'  => array(
+						''            => __( 'No address', 'woocommerce' ),
+						'base'        => __( 'Shop base address', 'woocommerce' ),
+						'geolocation' => __( 'Geolocate address', 'woocommerce' ),
+					),
+				);
+			} else {
+				$tax_settings[] = array(
+					'title'    => __( 'Default Customer Address:', 'woocommerce' ),
+					'id'       => 'woocommerce_default_customer_address',
+					'desc_tip' =>  __( 'This option determines the customers default address (before they input their own).', 'woocommerce' ),
+					'default'  => 'base',
+					'type'     => 'select',
+					'options'  => array(
+						''     => __( 'No address', 'woocommerce' ),
+						'base' => __( 'Shop base address', 'woocommerce' ),
+					),
+				);
+			}
 
 // 			array(
 // 				'title'   => __( 'Additional Tax Classes', 'woocommerce' ),
@@ -359,6 +377,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 // 				'default' => sprintf( __( 'Reduced Rate%sZero Rate', 'woocommerce' ), PHP_EOL )
 // 			),
 
+			$tax_settings = array_merge($tax_settings, array(
 			array(
 				'title'   => __( 'Display prices in the shop:', 'woocommerce' ),
 				'id'      => 'woocommerce_tax_display_shop',
@@ -405,7 +424,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 			array( 'type' => 'sectionend', 'id' => 'euvat_tax_options' ),
 
-		);
+		));
 
 		return $tax_settings;
 	}
@@ -724,6 +743,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 	public function admin_footer() {
 		$text = esc_attr(__('N.B. The final country used may be modified according to your EU VAT settings.', 'wc_eu_vat_compliance'));
+		$text2 = esc_attr(__('N.B. The WooCommerce EU VAT Compliance plugin causes geo-location to identify the default address, regardless of whether you also activate the geo-location built into WooCommerce (2.3+) here. We recommend choosing "Shop Base Address" here (though, choosing "Geolocate address" should be harmless, as both geo-locations should have the same result).', 'wc_eu_vat_compliance'));
 		$testing = esc_js(__('Testing...', 'wc_eu_vat_compliance'));
 		$test = esc_js(__('Test Provider', 'wc_eu_vat_compliance'));
 		$nonce = wp_create_nonce("wc_eu_vat_nonce");
@@ -761,6 +781,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 					show_correct_provider();
 				});
 				$('#woocommerce_tax_based_on').after('<br><em>$text</em>');
+				$('#woocommerce_default_customer_address').after('<br><em>$text2</em>');
 				$('#wceuvat_tabs a.nav-tab').click(function() {
 					$('#wceuvat_tabs a.nav-tab').removeClass('nav-tab-active');
 					$(this).addClass('nav-tab-active');

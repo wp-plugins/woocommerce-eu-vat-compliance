@@ -52,7 +52,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		update_post_meta($order_id, 'vat_compliance_country_info', apply_filters('wc_eu_vat_compliance_meta_country_info', $country_info));
 
 		// Record the current conversion rates in the order meta
-		$this->record_conversion_rates($order_id);
+		$this->record_conversion_rates_and_other_meta($order_id);
 
 	}
 
@@ -73,8 +73,13 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		return $taxable_address;
 	}
 
-	public function record_conversion_rates($order_id) {
+	public function record_conversion_rates_and_other_meta($order_id) {
+
 		$compliance = WooCommerce_EU_VAT_Compliance();
+		$order = $compliance->get_order($order_id);
+
+		// Record order number; see: http://docs.woothemes.com/document/sequential-order-numbers/
+		update_post_meta($order_id, 'order_time_order_number', $order->get_order_number());
 
 		$conversion_provider = get_option('woocommerce_eu_vat_compliance_exchange_rate_provider');
 
@@ -86,7 +91,6 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		if (empty($record_currencies)) $record_currencies = array();
 		if (!is_array($record_currencies)) $record_currencies = array($record_currencies);
 
-		$order = $compliance->get_order($order_id);
 		$order_time = strtotime($order->order_date);
 		if (method_exists($order, 'get_order_currency')) {
 			$order_currency = $order->get_order_currency();

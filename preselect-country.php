@@ -15,6 +15,8 @@ The dropdown requires WC 2.2.9 or later to work.
 
 */
 
+if (defined('WC_EU_VAT_NOCOUNTRYPRESELECT') && WC_EU_VAT_NOCOUNTRYPRESELECT) return;
+
 if (class_exists('WC_EU_VAT_Compliance_Preselect_Country')) return;
 
 class WC_EU_VAT_Compliance_Preselect_Country {
@@ -25,10 +27,10 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 		add_action('widgets_init', array($this, 'widgets_init'));
 
 		// WC 2.2.9+ only - this filter shows prices on the shop front-end
-		add_filter('woocommerce_get_tax_location', array($this, 'woocommerce_customer_taxable_address'));
+		add_filter('woocommerce_get_tax_location', array($this, 'woocommerce_customer_taxable_address'), 11);
 
 		// WC 2.0 and later - this filter is used to set their taxable address when they check-out
-		add_filter('woocommerce_customer_taxable_address', array($this, 'woocommerce_customer_taxable_address'));
+		add_filter('woocommerce_customer_taxable_address', array($this, 'woocommerce_customer_taxable_address'), 11);
 
 		add_filter('woocommerce_get_price_suffix', array($this, 'woocommerce_get_price_suffix'), 10, 2);
 
