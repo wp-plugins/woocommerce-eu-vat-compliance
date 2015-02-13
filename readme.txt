@@ -111,10 +111,9 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 
 == Changelog ==
 
-= 1.7.3 - 2015-02-13 =
+= 1.7.4 - 2015-02-13 =
 
 * FIX: The HMRC (UK) decided to move their rates feed to a new URL this month (again!), removing one of the under-scores from the URL (also see changelog for 1.6.7). This fix will also be OK next month in case this was a mistake and they revert, or even if they switch back to Dec 2014's location. Update in order to make sure you are using current rates.
-
 
 = 1.7.2 - 2015-02-07 =
 
@@ -366,4 +365,4 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.7.3 : HMRC (UK) moved their exchange rate feed again - use new location (whilst remaining aware of old, in case they switch back)
+* 1.7.4 : HMRC (UK) moved their exchange rate feed again - use new location (whilst remaining aware of old, in case they switch back)

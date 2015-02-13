@@ -41,7 +41,7 @@ class WC_EU_VAT_Compliance_Rate_Provider_hmrc_uk extends WC_EU_VAT_Compliance_Ra
 			# Jan 2015: Just why did they do this? Grrr...
 			# Feb 2015: Again!!
 			return array(
-				"exrates_monthly$mon$yer.xml",
+				"excrates_monthly$mon$yer.xml",
 				"exrates_monthly_$mon$yer.xml",
 				"exrates-monthly-$mon$yer.xml"
 			);
