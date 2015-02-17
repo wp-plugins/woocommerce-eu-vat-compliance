@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.7.2
+Stable tag: 1.7.5
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -65,7 +65,7 @@ Before January 1st 2015, of course, you will want to be careful about which feat
 
 This plugin is tested on WooCommerce 2.1 up to 2.3 (releases up to 1.7.1 were also tested on WC 2.0). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
 
-Geographical IP lookups are performed via the MaxMind GeoIP database, via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
+Geographical IP lookups are performed via WooCommerce's built-in geo-location features (WC 2.3+), or if on WC 2.2 or earlier then via the MaxMind GeoIP database via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
 
 Please make sure that you review this plugin's installation instructions and have not missed any important information there.
 
@@ -110,6 +110,15 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.7.5 - 2015-02-17 =
+
+* TWEAK: If on WC 2.3 or greater, then use WC's built-in geo-location code for geo-locating, and thus avoid requiring either CloudFlare or a second geo-location plugin.
+* TWEAK: Avoided using a deprecated method in WC 2.3
+
+= 1.7.4 - 2015-02-13 =
+
+* FIX: The HMRC (UK) decided to move their rates feed to a new URL this month (again!), removing one of the under-scores from the URL (also see changelog for 1.6.7). This fix will also be OK next month in case this was a mistake and they revert, or even if they switch back to Dec 2014's location. Update in order to make sure you are using current rates.
 
 = 1.7.2 - 2015-02-07 =
 
@@ -361,4 +370,4 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.7.2 : Compatible with the forth-coming WooCommerce 2.3. Add order number column to the CSV download (for shops with custom order-numbers).
+* 1.7.5 : Geo-location improvements on WC 2.3. Also (1.7.4): HMRC (UK) moved their exchange rate feed again - use new location (whilst remaining aware of old, in case they switch back)
