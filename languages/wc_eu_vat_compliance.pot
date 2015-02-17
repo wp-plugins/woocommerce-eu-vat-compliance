@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce EU Vat Compliance\n"
-"POT-Creation-Date: 2015-02-13 13:03+0100\n"
-"PO-Revision-Date: 2015-02-13 13:03+0100\n"
+"POT-Creation-Date: 2015-02-17 23:50+0100\n"
+"PO-Revision-Date: 2015-02-17 23:50+0100\n"
 "Last-Translator: David Anderson <contact@updraftplus.com>\n"
 "Language-Team:  <contact@simbahosting.co.uk>\n"
 "MIME-Version: 1.0\n"
@@ -81,11 +81,11 @@ msgid ""
 msgstr ""
 
 #: premium.php:278 premium.php:290 premium.php:294 premium.php:300
-#: premium.php:304 premium.php:311 reports.php:492 bootstrap.php:665
-#: vat-number.php:369 record-order-country.php:275
-#: record-order-country.php:292 record-order-country.php:294
-#: record-order-country.php:296 record-order-country.php:304
-#: record-order-country.php:308
+#: premium.php:304 premium.php:311 reports.php:492 bootstrap.php:666
+#: vat-number.php:369 record-order-country.php:279
+#: record-order-country.php:296 record-order-country.php:298
+#: record-order-country.php:300 record-order-country.php:308
+#: record-order-country.php:312
 msgid "Unknown"
 msgstr ""
 
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Sales (without VAT)"
 msgstr ""
 
-#: reports.php:676 reports.php:687 record-order-country.php:163
+#: reports.php:676 reports.php:687 record-order-country.php:167
 msgid "VAT"
 msgstr ""
 
@@ -194,45 +194,49 @@ msgid "CloudFlare Geo-Location"
 msgstr ""
 
 #: bootstrap.php:61
-msgid "MaxMind GeoIP database was not installed"
+msgid "WooCommerce 2.3+ built-in geo-location"
 msgstr ""
 
 #: bootstrap.php:62
+msgid "MaxMind GeoIP database was not installed"
+msgstr ""
+
+#: bootstrap.php:63
 msgid "MaxMind GeoIP database"
 msgstr ""
 
-#: bootstrap.php:122
+#: bootstrap.php:123
 msgid ""
 "Depending on your country, it may not be possible to purchase all the items "
 "in this cart. This is because this store does not sell items liable to EU "
 "VAT to EU customers (due to the high costs of complying with EU VAT laws)."
 msgstr ""
 
-#: bootstrap.php:126
+#: bootstrap.php:127
 msgid ""
 "This order cannot be processed. Due to the high costs of complying with EU "
 "VAT laws, we do not sell items liable to EU VAT to EU customers."
 msgstr ""
 
-#: bootstrap.php:137 rates.php:31
+#: bootstrap.php:138 rates.php:31
 msgid "Standard Rate"
 msgstr ""
 
-#: bootstrap.php:181 bootstrap.php:699
+#: bootstrap.php:182 bootstrap.php:700
 msgid "Relevant tax classes"
 msgstr ""
 
-#: bootstrap.php:184
+#: bootstrap.php:185
 msgid ""
 "Indicate all the WooCommerce tax classes for which variable-by-country EU "
 "VAT is charged."
 msgstr ""
 
-#: bootstrap.php:184
+#: bootstrap.php:185
 msgid "To create additional tax classes, go to the WooCommerce tax settings."
 msgstr ""
 
-#: bootstrap.php:184
+#: bootstrap.php:185
 msgid ""
 "Products which are not in one of these tax classes will be excluded from per-"
 "country VAT calculations recorded by this plugin (though they may still have "
@@ -240,72 +244,72 @@ msgid ""
 "purpose of this setting is to allow you to have a shop selling mixed goods)."
 msgstr ""
 
-#: bootstrap.php:631
+#: bootstrap.php:632
 msgid "EU VAT Compliance Dashboard"
 msgstr ""
 
-#: bootstrap.php:634 control-centre.php:228
+#: bootstrap.php:635 control-centre.php:228
 msgid "Premium Version"
 msgstr ""
 
-#: bootstrap.php:652
+#: bootstrap.php:653
 msgid "Pending Payment"
 msgstr ""
 
-#: bootstrap.php:653
+#: bootstrap.php:654
 msgid "Processing"
 msgstr ""
 
-#: bootstrap.php:654
+#: bootstrap.php:655
 msgid "On Hold"
 msgstr ""
 
-#: bootstrap.php:655
+#: bootstrap.php:656
 msgid "Completed"
 msgstr ""
 
-#: bootstrap.php:656
+#: bootstrap.php:657
 msgid "Cancelled"
 msgstr ""
 
-#: bootstrap.php:657
+#: bootstrap.php:658
 msgid "Refunded"
 msgstr ""
 
-#: bootstrap.php:658 readiness-tests.php:10
+#: bootstrap.php:659 readiness-tests.php:10
 msgid "Failed"
 msgstr ""
 
-#: bootstrap.php:682
+#: bootstrap.php:683
 msgid "Forbid EU VAT checkout"
 msgstr ""
 
-#: bootstrap.php:683
+#: bootstrap.php:684
 msgid ""
 "If this option is selected, then <strong>all</strong> orders by EU customers "
 "(whether consumer or business) which contain goods subject to variable EU "
 "VAT (whether the customer is exempt or not) will be forbidden."
 msgstr ""
 
-#: bootstrap.php:684
+#: bootstrap.php:685
 msgid ""
 "This feature is intended only for sellers who wish to avoid issues from EU "
 "variable VAT regulations entirely, by not selling any qualifying goods to EU "
 "customers (even ones who are potentially VAT exempt)."
 msgstr ""
 
-#: bootstrap.php:684
+#: bootstrap.php:685
 msgid ""
 "Check-out will be forbidden if the cart contains any goods from the relevant "
 "tax classes indicated below, and if the customer's VAT country is part of "
 "the EU."
 msgstr ""
 
-#: bootstrap.php:691
+#: bootstrap.php:692
 msgid "Phrase matches used to identify VAT"
 msgstr ""
 
-#: bootstrap.php:692
+#: bootstrap.php:693
 msgid ""
 "A comma-separated (optional spaces) list of strings (phrases) used to "
 "identify taxes which are EU VAT taxes. One of these strings must be used in "
@@ -313,52 +317,52 @@ msgid ""
 "the tax to be identified as EU VAT."
 msgstr ""
 
-#: bootstrap.php:700
+#: bootstrap.php:701
 msgid ""
 "Select all tax classes which are used in your store for products sold under "
 "EU Digital VAT regulations"
 msgstr ""
 
-#: bootstrap.php:718
+#: bootstrap.php:719
 msgid "Invoice footer text (B2C)"
 msgstr ""
 
-#: bootstrap.php:719
+#: bootstrap.php:720
 msgid ""
 "Text to prepend to the footer of your PDF invoice for transactions with VAT "
 "paid and non-zero (for supported PDF invoicing plugins)"
 msgstr ""
 
-#: bootstrap.php:812
+#: bootstrap.php:819
 msgid "GeoIP database not found"
 msgstr ""
 
-#: bootstrap.php:813
+#: bootstrap.php:820
 msgid ""
 "You have the GeoIP plugin installed, but it has not yet downloaded its "
 "database. This is needed for country detection to work."
 msgstr ""
 
-#: bootstrap.php:814
+#: bootstrap.php:821
 msgid "Follow this link and press the Update Now button to download it"
 msgstr ""
 
-#: bootstrap.php:820
+#: bootstrap.php:827
 msgid "Required Plugin Not Found"
 msgstr ""
 
-#: bootstrap.php:821
+#: bootstrap.php:828
 msgid ""
 "For the WooCommerce EU VAT compliance module to be able to record the "
 "country that a customer is ordering from, the (free) GeoIP Detection plugin "
 "must be installed and activated."
 msgstr ""
 
-#: bootstrap.php:825
+#: bootstrap.php:832
 msgid "Follow this link to install it"
 msgstr ""
 
-#: bootstrap.php:827
+#: bootstrap.php:834
 msgid "Follow this link to activate it."
 msgstr ""
 
@@ -1102,64 +1106,64 @@ msgstr ""
 msgid "EU VAT compliance information"
 msgstr ""
 
-#: record-order-country.php:145
+#: record-order-country.php:149
 msgid ""
 "No further information recorded (the EU VAT Compliance plugin was not active "
 "when this order was made)."
 msgstr ""
 
-#: record-order-country.php:149
+#: record-order-country.php:153
 msgid ""
 "The following information is based upon looking up the customer's IP address "
 "now."
 msgstr ""
 
-#: record-order-country.php:222
+#: record-order-country.php:226
 msgid "(Traditional VAT)"
 msgstr ""
 
-#: record-order-country.php:228 record-order-country.php:243
+#: record-order-country.php:232 record-order-country.php:247
 msgid "Items"
 msgstr ""
 
-#: record-order-country.php:229 record-order-country.php:244
+#: record-order-country.php:233 record-order-country.php:248
 msgid "Shipping"
 msgstr ""
 
-#: record-order-country.php:230 record-order-country.php:245
+#: record-order-country.php:234 record-order-country.php:249
 msgid "Total"
 msgstr ""
 
-#: record-order-country.php:242
+#: record-order-country.php:246
 msgid "All VAT charges"
 msgstr ""
 
-#: record-order-country.php:259
+#: record-order-country.php:263
 #, php-format
 msgid "Validated VAT number: %s"
 msgstr ""
 
-#: record-order-country.php:266
+#: record-order-country.php:270
 msgid "Currency conversion source:"
 msgstr ""
 
-#: record-order-country.php:275
+#: record-order-country.php:279
 msgid "VAT paid:"
 msgstr ""
 
-#: record-order-country.php:298
+#: record-order-country.php:302
 msgid "Raw information:"
 msgstr ""
 
-#: record-order-country.php:306
+#: record-order-country.php:310
 msgid "Country used to calculate tax:"
 msgstr ""
 
-#: record-order-country.php:316
+#: record-order-country.php:320
 msgid "IP Country:"
 msgstr ""
 
-#: record-order-country.php:317
+#: record-order-country.php:321
 msgid "Source:"
 msgstr ""
 
