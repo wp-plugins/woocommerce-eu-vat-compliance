@@ -2,7 +2,7 @@
 
 if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 
-// Function: record the GeoIP information for the order, at order time. This module uses either the CloudFlare header (if available - https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-), or requires http://wordpress.org/plugins/geoip-detect/. Or, you can hook into it and use something else. It will always record something, even if the something is the information that nothing could be worked out.
+// Function: record the GeoIP information for the order, at order time. This module uses either the CloudFlare header (if available - https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-), or the geo-location class built-in to WC 2.3+, or requires http://wordpress.org/plugins/geoip-detect/. Or, you can hook into it and use something else. It will always record something, even if the something is the information that nothing could be worked out.
 
 // The information is stored as order meta, with key: update_post_meta
 
@@ -59,7 +59,11 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	private function get_taxable_address() {
 
 		$compliance = WooCommerce_EU_VAT_Compliance();
-		$tax = $compliance->wc->cart->tax;
+		if (function_exists('WC') && version_compare(WC()->version, '2.3', '>=')) {
+			$tax = new WC_Tax;
+		} else {
+			$tax = $compliance->wc->cart->tax;
+		}
 		$customer = $compliance->wc->customer;
 
 		if (method_exists($tax, 'get_tax_location')) {
