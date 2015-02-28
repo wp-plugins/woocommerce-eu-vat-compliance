@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.7.7
+Stable tag: 1.7.8
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -79,7 +79,7 @@ Many thanks to Diego Zanella, for various ideas we have swapped whilst working o
 
 - Some other WooCommerce plugins you may be interested in: https://www.simbahosting.co.uk/s3/shop/
 
-- This plugin is ready for translations (English, French and German are currently available), and we would welcome new translations (please post them in the support forum; <a href="http://plugins.svn.wordpress.org/woocommerce-eu-vat-compliance/trunk/languages/">the POT file is here</a>, or you can contact us and ask for a web-based login for our translation website).
+- This plugin is ready for translations (English, Finnish, French and German are currently available), and we would welcome new translations (please post them in the support forum; <a href="http://plugins.svn.wordpress.org/woocommerce-eu-vat-compliance/trunk/languages/">the POT file is here</a>, or you can contact us and ask for a web-based login for our translation website).
 
 == Installation ==
 
@@ -111,13 +111,17 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 
 == Changelog ==
 
+= 1.7.8 - 2015-02-28 =
+
+* TRANSLATION: Finnish translation, courtesy of Arhi Paivarinta
+
 = 1.7.7 - 2015-02-23 =
 
 * FIX: Deal with undocumented change in WC's tax tables setup in WC 2.3 - the "add/update rates" feature is now working again on WC 2.3
 
 = 1.7.6 - 2015-02-20 =
 
-* TWEAK: VAT number fields will no longer appear at the check-out if there were not VAT-liable items in the cart
+* TWEAK: VAT number fields will no longer appear at the check-out if there were no VAT-liable items in the cart
 * TWEAK: Add wc_eu_vat_default_vat_number_field_value filter, allowing developers to pre-fill the VAT number field (e.g. with a previously-used value)
 
 = 1.7.5 - 2015-02-17 =
@@ -379,4 +383,4 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.7.7 : Deal with undocumented change in WC's tax tables setup in WC 2.3 - the "add/update rates" feature is now working again on WC 2.3
+* 1.7.8 : Finnish translation - thanks to Arhi Paivarinta
