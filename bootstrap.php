@@ -58,6 +58,7 @@ class WC_EU_VAT_Compliance {
 
 		$this->data_sources = array(
 			'HTTP_CF_IPCOUNTRY' => __('CloudFlare Geo-Location', 'wc_eu_vat_compliance'),
+			'woocommerce' => __('WooCommerce 2.3+ built-in geo-location', 'wc_eu_vat_compliance'),
 			'geoip_detect_get_info_from_ip_function_not_available' => __('MaxMind GeoIP database was not installed', 'wc_eu_vat_compliance'),
 			'geoip_detect_get_info_from_ip' => __('MaxMind GeoIP database', 'wc_eu_vat_compliance'),
 		);
@@ -722,7 +723,7 @@ Array
 			'css'		=> 'width:100%; height: 100px;'
 		);
 
-		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;
+		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || class_exists('WC_Geolocation') || !is_admin() || !current_user_can('manage_options')) return;
 
 		if (!function_exists('geoip_detect_get_info_from_ip')) {
 			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
@@ -766,6 +767,12 @@ Array
 			$country_info = array(
 				'source' => 'HTTP_CF_IPCOUNTRY',
 				'data' => $_SERVER["HTTP_CF_IPCOUNTRY"]
+			);
+		} elseif (class_exists('WC_Geolocation') && ($data = WC_Geolocation::geolocate_ip()) && is_array($data) && isset($data['country'])) {
+			$info = null;
+			$country_info = array(
+				'source' => 'woocommerce',
+				'data' => $data['country']
 			);
 		} elseif (!function_exists('geoip_detect_get_info_from_ip')) {
 			$country_info = array(
