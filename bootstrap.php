@@ -650,13 +650,13 @@ Array
 	// From WC 2.2
 	public function order_status_to_text($status) {
 		$order_statuses = array(
-			'wc-pending'    => _x( 'Pending Payment', 'Order status', 'woocommerce' ),
-			'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ),
-			'wc-on-hold'    => _x( 'On Hold', 'Order status', 'woocommerce' ),
-			'wc-completed'  => _x( 'Completed', 'Order status', 'woocommerce' ),
-			'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ),
-			'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
-			'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
+			'wc-pending'    => _x( 'Pending Payment', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-processing' => _x( 'Processing', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-on-hold'    => _x( 'On Hold', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-completed'  => _x( 'Completed', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-refunded'   => _x( 'Refunded', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-failed'     => _x( 'Failed', 'Order status', 'wc_eu_vat_compliance' ),
 		);
 		$order_statuses = apply_filters( 'wc_order_statuses', $order_statuses );
 
