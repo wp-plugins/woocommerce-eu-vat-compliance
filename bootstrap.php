@@ -58,6 +58,7 @@ class WC_EU_VAT_Compliance {
 
 		$this->data_sources = array(
 			'HTTP_CF_IPCOUNTRY' => __('CloudFlare Geo-Location', 'wc_eu_vat_compliance'),
+			'woocommerce' => __('WooCommerce 2.3+ built-in geo-location', 'wc_eu_vat_compliance'),
 			'geoip_detect_get_info_from_ip_function_not_available' => __('MaxMind GeoIP database was not installed', 'wc_eu_vat_compliance'),
 			'geoip_detect_get_info_from_ip' => __('MaxMind GeoIP database', 'wc_eu_vat_compliance'),
 		);
@@ -413,7 +414,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		$vat_shipping_total = 0;
 		$vat_total_base_currency = 0;
 		$vat_shipping_total_base_currency = 0;
-		$base_currency_totals_are_reliable = true;
 
 		// Add extra information
 		$taxes = $this->add_tax_rates_details($taxes);
@@ -453,7 +453,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 						// This will be wrong, of course, unless your conversion rate is 1:1
 						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount'];
 						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount'];
-						$base_currency_totals_are_reliable = false;
 					} else {
 						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount_base_currency'];
 						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount_base_currency'];
@@ -476,7 +475,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 			'items_total_base_currency' => $vat_total_base_currency,
 			'shipping_total_base_currency' => $vat_shipping_total_base_currency,
 			'total_base_currency' => $vat_total_base_currency + $vat_shipping_total_base_currency,
-			'base_currency_totals_are_reliable' => $base_currency_totals_are_reliable
 		), $order, $taxes, $currency, $base_currency);
 
 /*
@@ -547,6 +545,11 @@ Array
 
 		return $vat_paid;
 
+	}
+
+	// This is here as a funnel that can be changed in future, without needing to adapt everywhere that calls it
+	public function round_amount($amount) {
+		return round($amount, 2);
 	}
 
 	// This function lightly adapted from the work of Diego Zanella
@@ -649,13 +652,13 @@ Array
 	// From WC 2.2
 	public function order_status_to_text($status) {
 		$order_statuses = array(
-			'wc-pending'    => _x( 'Pending Payment', 'Order status', 'woocommerce' ),
-			'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ),
-			'wc-on-hold'    => _x( 'On Hold', 'Order status', 'woocommerce' ),
-			'wc-completed'  => _x( 'Completed', 'Order status', 'woocommerce' ),
-			'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ),
-			'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
-			'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
+			'wc-pending'    => _x( 'Pending Payment', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-processing' => _x( 'Processing', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-on-hold'    => _x( 'On Hold', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-completed'  => _x( 'Completed', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-refunded'   => _x( 'Refunded', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-failed'     => _x( 'Failed', 'Order status', 'wc_eu_vat_compliance' ),
 		);
 		$order_statuses = apply_filters( 'wc_order_statuses', $order_statuses );
 
@@ -722,7 +725,7 @@ Array
 			'css'		=> 'width:100%; height: 100px;'
 		);
 
-		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;
+		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || class_exists('WC_Geolocation') || !is_admin() || !current_user_can('manage_options')) return;
 
 		if (!function_exists('geoip_detect_get_info_from_ip')) {
 			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
@@ -766,6 +769,12 @@ Array
 			$country_info = array(
 				'source' => 'HTTP_CF_IPCOUNTRY',
 				'data' => $_SERVER["HTTP_CF_IPCOUNTRY"]
+			);
+		} elseif (class_exists('WC_Geolocation') && ($data = WC_Geolocation::geolocate_ip()) && is_array($data) && isset($data['country'])) {
+			$info = null;
+			$country_info = array(
+				'source' => 'woocommerce',
+				'data' => $data['country']
 			);
 		} elseif (!function_exists('geoip_detect_get_info_from_ip')) {
 			$country_info = array(
@@ -822,7 +831,8 @@ Array
 
 		if (current_user_can('install_plugins')) {
 			if (!file_exists(WP_PLUGIN_DIR.'/geoip-detect')) {
-				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
+// 				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
+				echo '<a href="https://github.com/yellowtree/wp-geoip-detect/releases">'.__('Follow this link to get it', 'wc_eu_vat_compliance').'</a>';
 			} elseif (file_exists(WP_PLUGIN_DIR.'/geoip-detect/geoip-detect.php')) {
 				echo '<a href="'.esc_url(wp_nonce_url(self_admin_url('plugins.php?action=activate&plugin=geoip-detect/geoip-detect.php'), 'activate-plugin_geoip-detect/geoip-detect.php')).'">'.__('Follow this link to activate it.', 'wc_eu_vat_compliance').'</a>';
 			}

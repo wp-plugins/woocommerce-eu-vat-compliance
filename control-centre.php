@@ -169,7 +169,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 		));
 
 		$active_tab = !empty($_REQUEST['tab']) ? $_REQUEST['tab'] : 'settings';
-		if ('taxes' == $active_tab) $active_tab = 'reports';
+		if ('taxes' == $active_tab || !empty($_GET['range'])) $active_tab = 'reports';
 
 		$this->compliance = WooCommerce_EU_VAT_Compliance();
 
@@ -306,35 +306,35 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			array( 'title' => __( 'Other WooCommerce tax options potentially relevant for EU VAT compliance', 'wc_eu_vat_compliance' ), 'type' => 'euvat_tax_options_section','desc' => '', 'id' => 'euvat_tax_options' ),
 
 			array(
-				'title'   => __( 'Enable Taxes', 'woocommerce' ),
-				'desc'    => __( 'Enable taxes and tax calculations', 'woocommerce' ),
+				'title'   => __( 'Enable Taxes', 'wc_eu_vat_compliance' ),
+				'desc'    => __( 'Enable taxes and tax calculations', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_calc_taxes',
 				'default' => 'no',
 				'type'    => 'checkbox'
 			),
 
 			array(
-				'title'    => __( 'Prices Entered With Tax', 'woocommerce' ),
+				'title'    => __( 'Prices Entered With Tax', 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_prices_include_tax',
 				'default'  => 'no',
 				'type'     => 'radio',
-				'desc_tip' =>  __( 'This option is important as it will affect how you input prices. Changing it will not update existing products.', 'woocommerce' ),
+				'desc_tip' =>  __( 'This option is important as it will affect how you input prices. Changing it will not update existing products.', 'wc_eu_vat_compliance' ),
 				'options'  => array(
-					'yes' => __( 'Yes, I will enter prices inclusive of tax', 'woocommerce' ),
-					'no'  => __( 'No, I will enter prices exclusive of tax', 'woocommerce' )
+					'yes' => __( 'Yes, I will enter prices inclusive of tax', 'wc_eu_vat_compliance' ),
+					'no'  => __( 'No, I will enter prices exclusive of tax', 'wc_eu_vat_compliance' )
 				),
 			),
 
 			array(
-				'title'    => __( 'Calculate Tax Based On:', 'woocommerce' ),
+				'title'    => __( 'Calculate Tax Based On:', 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_tax_based_on',
-				'desc_tip' =>  __( 'This option determines which address is used to calculate tax.', 'woocommerce' ),
+				'desc_tip' =>  __( 'This option determines which address is used to calculate tax.', 'wc_eu_vat_compliance' ),
 				'default'  => 'shipping',
 				'type'     => 'select',
 				'options'  => array(
-					'shipping' => __( 'Customer shipping address', 'woocommerce' ),
-					'billing'  => __( 'Customer billing address', 'woocommerce' ),
-					'base'     => __( 'Shop base address', 'woocommerce' )
+					'shipping' => __( 'Customer shipping address', 'wc_eu_vat_compliance' ),
+					'billing'  => __( 'Customer billing address', 'wc_eu_vat_compliance' ),
+					'base'     => __( 'Shop base address', 'wc_eu_vat_compliance' )
 				),
 			),
 		);
@@ -342,55 +342,55 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			if (function_exists('WC') && version_compare(WC()->version, '2.3', '>=')) {
 				// WC 2.3 has an extra 'geo-locate' option
 				$tax_settings[] = array(
-					'title'    => __( 'Default Customer Address:', 'woocommerce' ),
+					'title'    => __( 'Default Customer Address:', 'wc_eu_vat_compliance' ),
 					'id'       => 'woocommerce_default_customer_address',
-					'desc_tip' =>  __( 'This option determines the customers default address (before they input their details).', 'woocommerce' ),
+					'desc_tip' =>  __( 'This option determines the customers default address (before they input their details).', 'wc_eu_vat_compliance' ),
 					'default'  => 'geolocation',
 					'type'     => 'select',
 					'class'    => 'wc-enhanced-select',
 					'options'  => array(
-						''            => __( 'No address', 'woocommerce' ),
-						'base'        => __( 'Shop base address', 'woocommerce' ),
-						'geolocation' => __( 'Geolocate address', 'woocommerce' ),
+						''            => __( 'No address', 'wc_eu_vat_compliance' ),
+						'base'        => __( 'Shop base address', 'wc_eu_vat_compliance' ),
+						'geolocation' => __( 'Geolocate address', 'wc_eu_vat_compliance' ),
 					),
 				);
 			} else {
 				$tax_settings[] = array(
-					'title'    => __( 'Default Customer Address:', 'woocommerce' ),
+					'title'    => __( 'Default Customer Address:', 'wc_eu_vat_compliance' ),
 					'id'       => 'woocommerce_default_customer_address',
-					'desc_tip' =>  __( 'This option determines the customers default address (before they input their own).', 'woocommerce' ),
+					'desc_tip' =>  __( 'This option determines the customers default address (before they input their own).', 'wc_eu_vat_compliance' ),
 					'default'  => 'base',
 					'type'     => 'select',
 					'options'  => array(
-						''     => __( 'No address', 'woocommerce' ),
-						'base' => __( 'Shop base address', 'woocommerce' ),
+						''     => __( 'No address', 'wc_eu_vat_compliance' ),
+						'base' => __( 'Shop base address', 'wc_eu_vat_compliance' ),
 					),
 				);
 			}
 
 // 			array(
-// 				'title'   => __( 'Additional Tax Classes', 'woocommerce' ),
-// 				'desc'    => __( 'List additional tax classes below (1 per line). This is in addition to the default <code>Standard Rate</code>. Tax classes can be assigned to products.', 'woocommerce' ),
+// 				'title'   => __( 'Additional Tax Classes', 'wc_eu_vat_compliance' ),
+// 				'desc'    => __( 'List additional tax classes below (1 per line). This is in addition to the default <code>Standard Rate</code>. Tax classes can be assigned to products.', 'wc_eu_vat_compliance' ),
 // 				'id'      => 'woocommerce_tax_classes',
 // 				'css'     => 'width:100%; height: 65px;',
 // 				'type'    => 'textarea',
-// 				'default' => sprintf( __( 'Reduced Rate%sZero Rate', 'woocommerce' ), PHP_EOL )
+// 				'default' => sprintf( __( 'Reduced Rate%sZero Rate', 'wc_eu_vat_compliance' ), PHP_EOL )
 // 			),
 
 			$tax_settings = array_merge($tax_settings, array(
 			array(
-				'title'   => __( 'Display prices in the shop:', 'woocommerce' ),
+				'title'   => __( 'Display prices in the shop:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_tax_display_shop',
 				'default' => 'excl',
 				'type'    => 'select',
 				'options' => array(
-					'incl'   => __( 'Including tax', 'woocommerce' ),
-					'excl'   => __( 'Excluding tax', 'woocommerce' ),
+					'incl'   => __( 'Including tax', 'wc_eu_vat_compliance' ),
+					'excl'   => __( 'Excluding tax', 'wc_eu_vat_compliance' ),
 				)
 			),
 
 			array(
-				'title'   => __( 'Price display suffix:', 'woocommerce' ),
+				'title'   => __( 'Price display suffix:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_price_display_suffix',
 				'default' => '',
 				'class' => 'widefat',
@@ -399,25 +399,25 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			),
 
 			array(
-				'title'   => __( 'Display prices during cart/checkout:', 'woocommerce' ),
+				'title'   => __( 'Display prices during cart/checkout:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_tax_display_cart',
 				'default' => 'excl',
 				'type'    => 'select',
 				'options' => array(
-					'incl'   => __( 'Including tax', 'woocommerce' ),
-					'excl'   => __( 'Excluding tax', 'woocommerce' ),
+					'incl'   => __( 'Including tax', 'wc_eu_vat_compliance' ),
+					'excl'   => __( 'Excluding tax', 'wc_eu_vat_compliance' ),
 				),
 				'autoload'      => false
 			),
 
 			array(
-				'title'   => __( 'Display tax totals:', 'woocommerce' ),
+				'title'   => __( 'Display tax totals:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_tax_total_display',
 				'default' => 'itemized',
 				'type'    => 'select',
 				'options' => array(
-					'single'     => __( 'As a single total', 'woocommerce' ),
-					'itemized'   => __( 'Itemized', 'woocommerce' ),
+					'single'     => __( 'As a single total', 'wc_eu_vat_compliance' ),
+					'itemized'   => __( 'Itemized', 'wc_eu_vat_compliance' ),
 				),
 				'autoload' => false
 			),
@@ -431,8 +431,6 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 	private function render_tab_settings() {
 		echo '<h2>'.__('Settings', 'wc_eu_vat_compliance').'</h2>';
-
-		echo '<p><em>'.__('This control panel is under rapid development. Please make sure you keep this plugin up-to-date with any available updates that WordPress tells you are available.', 'wc_eu_vat_compliance').'</em></p>';
 
 		echo '<p><em>'.__('Many settings below can also be found in other parts of your WordPress dashboard; they are brought together here also for convenience.', 'wc_eu_vat_compliance').'</em></p>';
 
@@ -602,7 +600,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 		return apply_filters('wc_euvat_compliance_exchange_settings', array(
 			array(
-				'title'    => __( 'Currency', 'woocommerce' ),
+				'title'    => __( 'Currency', 'wc_eu_vat_compliance' ),
 				'desc'     => __( "When an order is made, exchange rate information will be added to the order, allowing all amounts to be converted into the currency chosen here. This is necessary if orders may be made in a different currency than the currency you are required to report VAT in.", 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_eu_vat_compliance_vat_recording_currency',
 				'css'      => 'min-width:350px;',
