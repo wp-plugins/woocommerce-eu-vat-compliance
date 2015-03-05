@@ -169,7 +169,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 		));
 
 		$active_tab = !empty($_REQUEST['tab']) ? $_REQUEST['tab'] : 'settings';
-		if ('taxes' == $active_tab) $active_tab = 'reports';
+		if ('taxes' == $active_tab || !empty($_GET['range'])) $active_tab = 'reports';
 
 		$this->compliance = WooCommerce_EU_VAT_Compliance();
 
@@ -431,8 +431,6 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 	private function render_tab_settings() {
 		echo '<h2>'.__('Settings', 'wc_eu_vat_compliance').'</h2>';
-
-		echo '<p><em>'.__('This control panel is under rapid development. Please make sure you keep this plugin up-to-date with any available updates that WordPress tells you are available.', 'wc_eu_vat_compliance').'</em></p>';
 
 		echo '<p><em>'.__('Many settings below can also be found in other parts of your WordPress dashboard; they are brought together here also for convenience.', 'wc_eu_vat_compliance').'</em></p>';
 

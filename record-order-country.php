@@ -223,7 +223,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 
 				// When it is not set, we have legacy data format (pre 1.7.0), where all VAT-able items were assumed to be digital
 				if (isset($vat['is_variable_eu_vat']) && !$vat['is_variable_eu_vat']) {
-					$extra_title = '<em>'._x('(Traditional VAT)', 'wc_eu_vat_compliance', 'Traditional VAT = VAT that does not vary by country under the new digital regulations; i.e. the VAT still charged on physical goods until 1 Jan 2016').'</em><br>';
+					$extra_title = '<em>'._x('(Traditional VAT)', 'Traditional VAT = VAT that does not vary by country under the new digital regulations; i.e. the VAT still charged on physical goods until 1 Jan 2016', 'wc_eu_vat_compliance').'</em><br>';
 				} else {
 					$extra_title = '';
 				}
@@ -289,7 +289,6 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 	'items_total_base_currency' => int 2
 	'shipping_total_base_currency' => float 2.8
 	'total_base_currency' => float 4.8
-	'base_currency_totals_are_reliable' => boolean true
 */
 		if (!empty($country_info) && is_array($country_info)) {
 

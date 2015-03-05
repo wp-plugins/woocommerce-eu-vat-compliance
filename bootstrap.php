@@ -414,7 +414,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		$vat_shipping_total = 0;
 		$vat_total_base_currency = 0;
 		$vat_shipping_total_base_currency = 0;
-		$base_currency_totals_are_reliable = true;
 
 		// Add extra information
 		$taxes = $this->add_tax_rates_details($taxes);
@@ -454,7 +453,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 						// This will be wrong, of course, unless your conversion rate is 1:1
 						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount'];
 						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount'];
-						$base_currency_totals_are_reliable = false;
 					} else {
 						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount_base_currency'];
 						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount_base_currency'];
@@ -477,7 +475,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 			'items_total_base_currency' => $vat_total_base_currency,
 			'shipping_total_base_currency' => $vat_shipping_total_base_currency,
 			'total_base_currency' => $vat_total_base_currency + $vat_shipping_total_base_currency,
-			'base_currency_totals_are_reliable' => $base_currency_totals_are_reliable
 		), $order, $taxes, $currency, $base_currency);
 
 /*
@@ -548,6 +545,11 @@ Array
 
 		return $vat_paid;
 
+	}
+
+	// This is here as a funnel that can be changed in future, without needing to adapt everywhere that calls it
+	public function round_amount($amount) {
+		return round($amount, 2);
 	}
 
 	// This function lightly adapted from the work of Diego Zanella
@@ -829,7 +831,8 @@ Array
 
 		if (current_user_can('install_plugins')) {
 			if (!file_exists(WP_PLUGIN_DIR.'/geoip-detect')) {
-				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
+// 				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
+				echo '<a href="https://github.com/yellowtree/wp-geoip-detect/releases">'.__('Follow this link to get it', 'wc_eu_vat_compliance').'</a>';
 			} elseif (file_exists(WP_PLUGIN_DIR.'/geoip-detect/geoip-detect.php')) {
 				echo '<a href="'.esc_url(wp_nonce_url(self_admin_url('plugins.php?action=activate&plugin=geoip-detect/geoip-detect.php'), 'activate-plugin_geoip-detect/geoip-detect.php')).'">'.__('Follow this link to activate it.', 'wc_eu_vat_compliance').'</a>';
 			}

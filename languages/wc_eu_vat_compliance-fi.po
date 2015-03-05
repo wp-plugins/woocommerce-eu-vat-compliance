@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the WooCommerce EU VAT Compliance package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2015-02-27 22:45:20+0000\n"
+"PO-Revision-Date: 2015-03-03 17:00:28+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,11 +10,51 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WooCommerce EU VAT Compliance\n"
 
+#: record-order-country.php:226
+msgctxt "Traditional VAT = VAT that does not vary by country under the new digital regulations; i.e. the VAT still charged on physical goods until 1 Jan 2016"
+msgid "(Traditional VAT)"
+msgstr "(Perinteinen alv. fyysisistä tuotteista)"
+
+#: bootstrap.php:653
+msgctxt "Order status"
+msgid "Pending Payment"
+msgstr "Odottaa maksua"
+
+#: bootstrap.php:654
+msgctxt "Order status"
+msgid "Processing"
+msgstr "Käsittelyssä"
+
+#: bootstrap.php:655
+msgctxt "Order status"
+msgid "On Hold"
+msgstr "Jonossa"
+
+#: bootstrap.php:656
+msgctxt "Order status"
+msgid "Completed"
+msgstr "Valmistunut"
+
+#: bootstrap.php:657
+msgctxt "Order status"
+msgid "Cancelled"
+msgstr "Peruttu"
+
+#: bootstrap.php:658
+msgctxt "Order status"
+msgid "Refunded"
+msgstr "Hyvitetty"
+
+#: bootstrap.php:659
+msgctxt "Order status"
+msgid "Failed"
+msgstr "Epäonnistui"
+
 #: bootstrap.php:61
 msgid "WooCommerce 2.3+ built-in geo-location"
 msgstr "WooCommerce 2.3+ paikannus"
 
-#: vat-number.php:283 control-centre.php:746
+#: vat-number.php:291 control-centre.php:746
 msgid "N.B. The WooCommerce EU VAT Compliance plugin causes geo-location to identify the default address, regardless of whether you also activate the geo-location built into WooCommerce (2.3+) here. We recommend choosing \"Shop Base Address\" here (though, choosing \"Geolocate address\" should be harmless, as both geo-locations should have the same result)."
 msgstr "Huom.: Tämä WooCommerce EU VAT Compliance -lisäosa paikantaa automaattisesti oletusosoitteen, riippumatta siitä onko WooCommerce 2.3 ja uudemman paikannustoiminto käytössä vai ei. Suositus: valitse tässä \"Kaupan osoite\" (vaikka  \"Paikanna osoite\" valinta pitäisi olla harmiton koska kumpikin paikannus tuottaa saman lopputuloksen)."
 
@@ -37,10 +77,6 @@ msgstr "Lisää valikkoon mahdollisuus, että asiakas näkee hinnat ilman arvonl
 #: widgets.php:66
 msgid "Include menu option and separate checkbox for the customer to show prices with no VAT."
 msgstr "Lisää valikkoon valinta- sekä erillinen valintaruutu jotta asiakas saa nähdä hinnat ilman arvonlisäveroa."
-
-#: record-order-country.php:226
-msgid "(Traditional VAT)"
-msgstr "(Perinteinen alv.)"
 
 #: bootstrap.php:123
 msgid "Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws)."
@@ -98,23 +134,23 @@ msgstr "Käytä <code>{country_with_brackets}</code> koodia silloin, kun tuote v
 msgid "Download all orders with VAT data (from the chosen date range) in CSV format"
 msgstr "Siirrä/vie kaikki tilaukset ja alv./VAT tiedot CSV-tiedostona. Voit valita ajanjakson."
 
-#: vat-number.php:464
+#: vat-number.php:518
 msgid "The number entered was successfully validated."
 msgstr "Annettu numero on kelvollinen ja se vahvistettiin."
 
-#: vat-number.php:466
+#: vat-number.php:520
 msgid "The number entered was not successfully validated for the chosen country."
 msgstr "Annettua numeroa ei vahvistettu kyseiselle maalle."
 
-#: vat-number.php:470
+#: vat-number.php:524
 msgid "The number entered is not long enough to be valid for the chosen country."
 msgstr "Annettu numero on liian lyhyt ollakseen kelvollinen tälle maalle."
 
-#: vat-number.php:472
+#: vat-number.php:526
 msgid "The validity of the number entered could not be ascertained."
 msgstr "Numeron kelvollisuutta ei voitu vahvistaa."
 
-#: vat-number.php:537
+#: vat-number.php:591
 msgid "The number entered is being checked..."
 msgstr "Annettua numeroa tarkastetaan..."
 
@@ -230,7 +266,7 @@ msgstr "Alennettu veroprosentti"
 msgid "Add / Update EU VAT Rates"
 msgstr "Lisää/Päivitä EU alv. vero%"
 
-#: rates.php:175
+#: rates.php:184
 msgid "Use rates:"
 msgstr "Käytä veroprosentteja:"
 
@@ -258,43 +294,43 @@ msgstr "Viralliset valuuttakurssit Tanskan kansallispankilta (Danish National Ba
 msgid "Text to prepend to the footer of your PDF invoice for transactions with VAT paid and non-zero (for supported PDF invoicing plugins)"
 msgstr "Teksti joka liitetään PDF laskun alatekstin alkuun. Tekstissä näkyy maksettu alv (käytetään yhteensopivissa PDF laskutus lisäosissa)."
 
-#: vat-number.php:127
+#: vat-number.php:135
 msgid "Text to prepend to the footer of your PDF invoice for transactions with validated VAT numbers (for supported PDF invoicing plugins). If you include {vat_number}, then it will be replaced with the validated number."
 msgstr "Teksti joka liitetään PDF laskun alatekstin alkuun kun tilauksessa on kelvollinen alv./VAT tunnus (käytetään yhteensopivissa PDF laskutus lisäosissa). Jos tekstiin sisällytetään {vat_number} niin se korvataan hyväksytyllä alv./VAT tunnuksella."
 
-#: vat-number.php:134
+#: vat-number.php:142
 msgid "Allow VAT numbers to be entered"
 msgstr "Salli alv./VAT tunnuksen kirjoittaminen"
 
-#: vat-number.php:135
+#: vat-number.php:143
 msgid "N.B. Some of the options further down the page are irrelevant, if you choose \"Never\" here."
 msgstr "Huom.: jotkut alla olevat valinnat ovat merkityksettömiä jos valitset \"Ei koskaan\" tässä."
 
-#: vat-number.php:139
+#: vat-number.php:147
 msgid "Permit: customers with valid EU VAT numbers can enter them, and become VAT-exempt."
 msgstr "Salli: asiakkaat joilla on kelvollinen alv./VAT tunnus voivat sen kirjoittaa ja saavat verovähennyksen."
 
-#: vat-number.php:140
+#: vat-number.php:148
 msgid "Never: VAT will always be charged whenever VAT-able items are present."
 msgstr "Ei koskaan: alv. veloitetaan aina kun tilauksessa on alv. verollisia tuotteita."
 
-#: vat-number.php:141
+#: vat-number.php:149
 msgid "Require: customers without a valid EU VAT number will not be permitted to check out on any order."
 msgstr "Edellytä: asiakkaat joilta puuttuu kelvollinen alv./VAT tunnus eivät voi viedä ostotapahtumaa päätökseen."
 
-#: vat-number.php:347
+#: vat-number.php:401
 msgid "This shop does not allow the entry of EU VAT numbers for VAT exemption."
 msgstr "Kauppa ei salli EU alv./VAT tunnuksen kirjoittamista (alv. verovähennystä varten)."
 
-#: vat-number.php:388
+#: vat-number.php:442
 msgid "For the correct calculation of VAT, please confirm your country of residence:"
 msgstr "Vahvista asuinmaasi jotta arvonlisävero voidaan laskea oikein:"
 
-#: vat-number.php:904
+#: vat-number.php:954
 msgid "This store requires all orders to be accompanied by a valid EU VAT number"
 msgstr "Kaikki tästä kaupasta tehtävät tilaukset edellyttävät kelvollista EU alv./VAT tunnusta."
 
-#: vat-number.php:910
+#: vat-number.php:960
 msgid "You must certify your country of residence in order to complete your order."
 msgstr "Asuinpaikka on vahvistettava, jotta tilaus saadaan valmiiksi."
 
@@ -406,131 +442,131 @@ msgstr "Euroopan keskuspankki (EKP, ECB)"
 msgid "Official exchange rates from the European Central Bank (ECB)."
 msgstr "Viralliset valuuttakurssit Euroopan keskuspankilta (EKP, ECB)."
 
-#: vat-number.php:148
+#: vat-number.php:156
 msgid "The title that appears at checkout above the VAT Number box."
 msgstr "Otsikko, joka näkyy kassalla alv./VAT tunnus -kentän yllä."
 
-#: vat-number.php:153
+#: vat-number.php:161
 msgid "EU VAT Message"
 msgstr "EU alv. viesti"
 
-#: vat-number.php:154
+#: vat-number.php:162
 msgid "The message that appears at checkout above the VAT Number box."
 msgstr "Viesti joka näkyy kassalla alv./VAT tunnus -kentän yllä."
 
-#: vat-number.php:160
+#: vat-number.php:168
 msgid "Show field for base country"
 msgstr "Näytä kenttä kaupan maalle"
 
-#: vat-number.php:161
+#: vat-number.php:169
 msgid "Show the VAT field even when the customer is in your base country"
 msgstr "Näytä alv./VAT tunnuskenttä vaikka asiakas on samassa maassa kuin kauppa."
 
-#: vat-number.php:166
+#: vat-number.php:174
 msgid "Deduct VAT for base country"
 msgstr "Alv. verovähennys kaupan maassa"
 
-#: vat-number.php:167
+#: vat-number.php:175
 msgid "Deduct the VAT even when the customer is in your base country and has a valid number"
 msgstr "Vähennä arvonlisävero kun alv./VAT tunnus on kelvollinen ja vaikka asiakas on on samassa maassa kuin kauppa."
 
-#: vat-number.php:172
+#: vat-number.php:180
 msgid "Store non-valid numbers"
 msgstr "Tallenna epäkelvot numerot"
 
-#: vat-number.php:173
+#: vat-number.php:181
 msgid "Enable this option to store numbers which don't pass validation, rather than reject them. Tax will not be made exempt."
 msgstr "Ota tämä käyttöön, jos epäkelvot numerot tallennetaan eikä vain hylätä. Verovähennystä ei tehdä."
 
-#: vat-number.php:178
+#: vat-number.php:186
 msgid "Resolving conflicting VAT data"
 msgstr "Ristiriitaisen alv. tiedon ratkaisu"
 
-#: vat-number.php:179
+#: vat-number.php:187
 msgid "This option determines what will happen if the customer's apparent country (according to their IP address) conflicts with the country used to determine their taxes (i.e. shipping or billing country, depending upon the setting further up this page)."
 msgstr "Tässä asetetaan kuinka toimitaan tilanteessa, jossa asiakkaan ilmeinen maa (IP numeron perusteella) poikkeaa valtiosta jonka mukaan verot lasketaan (siis toimitus- tai laskutusmaa, riippuen asetuksesta yllä)."
 
-#: vat-number.php:179
+#: vat-number.php:187
 msgid "Which is the correct option for you depends upon the particular evidence your local taxman is happy with to verify the country of purchase."
 msgstr "Paikallisen veroviranomaisen edellyttämä näyttö ostomaasta määrää sen, mikä asetus on sopiva. "
 
-#: vat-number.php:183
+#: vat-number.php:191
 msgid "Require the customer to indicate the correct country when there is a conflict"
 msgstr "Vaadi asiakasta ilmoittamaan oikea maa kun tiedoissa on ristiriita."
 
-#: vat-number.php:184
+#: vat-number.php:192
 msgid "Always show the customer the VAT country, even if there was no conflict"
 msgstr "Näytä aina asiakkaan alv. verotusmaa, vaikka ristiriitaa ei olisi"
 
-#: vat-number.php:185
+#: vat-number.php:193
 msgid "Always use the WooCommerce tax settings to indicate the country (never ask the customer)"
 msgstr "WooCommercen veroasetusta käytetään aina maan selvittämiseen (asiakkaalta ei kysytä koskaan)"
 
-#: vat-number.php:126
+#: vat-number.php:134
 msgid "Invoice footer text (B2B)"
 msgstr "Laskun alateksti (yritys myy yritykselle, B2B)"
 
-#: vat-number.php:46
+#: vat-number.php:48
 msgid "EU VAT Number (if any)"
 msgstr "EU alv./VAT tunnus (jos on)"
 
-#: vat-number.php:47
+#: vat-number.php:49
 msgid "If you are in the EU and have a valid EU VAT registration number please enter it below."
 msgstr "Kirjoita alle EU alv./VAT tunnus, jos sinulla on tunnus ja asuinpaikkasi on EU:ssa."
 
-#: vat-number.php:217 vat-number.php:246
+#: vat-number.php:225 vat-number.php:254
 msgid "VAT #:"
 msgstr "Alv./VAT #:"
 
-#: vat-number.php:279
+#: vat-number.php:287
 msgid "N.B. The final country used may be modified according to your EU VAT settings, further down this page."
 msgstr "Huom.: maatietoa voidaan muuttaa. Muuttamisen tapa on määritetty EU alv. asetuksissa, ks. alla."
 
-#: vat-number.php:352 vat-number.php:353
+#: vat-number.php:406 vat-number.php:407
 msgid "VAT Number"
 msgstr "Alv./VAT tunnus"
 
-#: vat-number.php:376
+#: vat-number.php:430
 msgid "%s (detected)"
 msgstr "%s (havaittu)"
 
-#: vat-number.php:381
+#: vat-number.php:435
 msgid "Billing country"
 msgstr "Laskutusmaa"
 
-#: vat-number.php:384
+#: vat-number.php:438
 msgid "Shipping country"
 msgstr "Toimitusmaa"
 
-#: vat-number.php:605
+#: vat-number.php:659
 msgid "billing country"
 msgstr "laskutusmaa"
 
-#: vat-number.php:679
+#: vat-number.php:733
 msgid "shipping country"
 msgstr "toimitusmaa"
 
-#: vat-number.php:936
+#: vat-number.php:985
 msgid "You cannot use a VAT number since your country (%s) is outside of the EU."
 msgstr "Alv./VAT tunnusta ei voi käyttää, koska valtio (%s) ei kuulu EU:hun."
 
-#: vat-number.php:1006 vat-number.php:1033
+#: vat-number.php:1055 vat-number.php:1082
 msgid "You have entered an invalid VAT number (%s) for your country."
 msgstr "Kirjoittamasi alv./VAT tunnus (%s) ei kelpaa tälle valtiolle."
 
-#: rates.php:160
+#: rates.php:169
 msgid "Note: for any tax you enter below to be recognised as VAT for EU VAT purposes, its name will need to contain one of the following words or phrases:"
 msgstr "Huom.: Jotta alle kirjoittamsi vero tunnistetaan EU alv. veroksi, veron nimessä tulee olla jokin näistä merkkijonoista:"
 
-#: rates.php:160
+#: rates.php:169
 msgid "You can configure this list in the tax options."
 msgstr "Tätä voi muutta Verot asetuksissa."
 
-#: rates.php:194
+#: rates.php:203
 msgid "reduced rate"
 msgstr "alennettu veroprosentti"
 
-#: rates.php:299
+#: rates.php:308
 msgid "Isle of Man"
 msgstr "Man saari (Isle of Man)"
 
@@ -840,7 +876,7 @@ msgstr "Jos olet asentanut maksuttoman WooCommerce PDF Invoices & Packing Slips 
 
 #: premium.php:278 premium.php:290 premium.php:294 premium.php:300
 #: premium.php:304 premium.php:311 reports.php:492 bootstrap.php:666
-#: vat-number.php:369 record-order-country.php:279 record-order-country.php:296
+#: vat-number.php:423 record-order-country.php:279 record-order-country.php:296
 #: record-order-country.php:298 record-order-country.php:300
 #: record-order-country.php:308 record-order-country.php:312
 msgid "Unknown"
@@ -954,31 +990,7 @@ msgstr "EU alv. hallintapaneeli"
 msgid "Premium Version"
 msgstr "Lisämaksullinen versio"
 
-#: bootstrap.php:653
-msgid "Pending Payment"
-msgstr "Odottaa maksua"
-
-#: bootstrap.php:654
-msgid "Processing"
-msgstr "Käsittelyssä"
-
-#: bootstrap.php:655
-msgid "On Hold"
-msgstr "Jonossa"
-
-#: bootstrap.php:656
-msgid "Completed"
-msgstr "Valmistunut"
-
-#: bootstrap.php:657
-msgid "Cancelled"
-msgstr "Peruttu"
-
-#: bootstrap.php:658
-msgid "Refunded"
-msgstr "Hyvitetty"
-
-#: bootstrap.php:659 readiness-tests.php:10
+#: readiness-tests.php:10
 msgid "Failed"
 msgstr "Epäonnistui"
 
@@ -1010,6 +1022,6 @@ msgstr "Voit asentaa tästä linkistä"
 msgid "Follow this link to activate it."
 msgstr "Ota käyttöön tästä linkistä."
 
-#: vat-number.php:147
+#: vat-number.php:155
 msgid "EU VAT Title"
 msgstr "EU alv. otsikko"

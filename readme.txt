@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.7.8
+Stable tag: 1.8.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -31,7 +31,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
-- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, currency and order status.
+- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, VAT rate, VAT type (traditional/variable) and order status.
 
 - <strong>Central control:</strong> brings all settings, reports and other information into a single centralised location, so that you don't have to deal with items spread all over the WordPress dashboard.
 
@@ -47,7 +47,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Optionally allow B2B sales only</strong> - for shop owners who wish to only make sales that are VAT-exempt (i.e. B2B sales only), you can require that any EU customers enter a valid EU VAT number at the check-out.
 
-- <strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).
+- <strong>CSV download:</strong> A CSV containing comprehensive information on all orders with EU VAT data can be downloaded (including full compliance information). Manipulate in your spreadsheet program to make arbitrary calculations.
 
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
@@ -110,6 +110,20 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.8.0 - 2015-03-05 =
+
+* FIX: Reports table now sorts on click on column headings again (unknown when it was broken)
+* FEATURE: EU VAT report now re-coded to show data in the configured reporting currency (only), and to show shipping VAT separately
+* FEATURE: Downloadable CSV now shows separate VAT totals for each rate in separate rows, and shows separate rows for variable and traditional non-variable VAT (if your shop sells both kinds of goods)
+directory due to licensing complications.
+* FEATURE: Downloadable CSV now shows information on the configured reporting currency (as well as the order currency)
+* TWEAK: Removed the static 'rates' column from the VAT report table (which only showed the current configured rates), and instead show a row for each rate actually charged.
+* TWEAK: Reports page now uses the built-in WooCommerce layout, including quick-click buttons for recent quarters (some code used from Diego Zanella, gratefully acknowledged)
+* TWEAK: Columns in downloadable CSV are now translatable (translations welcome)
+* TWEAK: Re-ordered and re-labelled some columns in CSV download for clarity
+* TWEAK: Provide link to download location for geoip-detect plugin, if relevant - it is no longer present in the wordpress.org
+* TRANSLATION: New POT file
 
 = 1.7.8 - 2015-02-28 =
 
@@ -383,4 +397,4 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.7.8 : Finnish translation - thanks to Arhi Paivarinta
+* 1.8.0 : Major re-work/improvement of EU VAT reports feature
