@@ -85,7 +85,7 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 		// Record order number; see: http://docs.woothemes.com/document/sequential-order-numbers/
 		update_post_meta($order_id, 'order_time_order_number', $order->get_order_number());
 
-		$conversion_provider = get_option('woocommerce_eu_vat_compliance_exchange_rate_provider');
+		$conversion_provider = get_option('woocommerce_eu_vat_compliance_exchange_rate_provider', 'ecb');
 
 		$providers = $compliance->get_rate_providers();
 		if (!is_array($providers) || !isset($providers[$conversion_provider])) return;

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce EU Vat Compliance\n"
-"POT-Creation-Date: 2015-03-05 15:40+0100\n"
-"PO-Revision-Date: 2015-03-05 15:40+0100\n"
+"POT-Creation-Date: 2015-03-16 11:33+0100\n"
+"PO-Revision-Date: 2015-03-16 11:33+0100\n"
 "Last-Translator: David Anderson <contact@updraftplus.com>\n"
 "Language-Team:  <contact@simbahosting.co.uk>\n"
 "MIME-Version: 1.0\n"
@@ -230,7 +230,7 @@ msgstr ""
 
 #: premium.php:317 premium.php:331 premium.php:335 premium.php:341
 #: premium.php:345 premium.php:352 reports.php:602 reports.php:656
-#: bootstrap.php:668 vat-number.php:423 record-order-country.php:279
+#: bootstrap.php:670 vat-number.php:423 record-order-country.php:279
 #: record-order-country.php:295 record-order-country.php:297
 #: record-order-country.php:299 record-order-country.php:307
 #: record-order-country.php:311
@@ -343,38 +343,38 @@ msgstr ""
 msgid "MaxMind GeoIP database"
 msgstr ""
 
-#: bootstrap.php:123
+#: bootstrap.php:125
 msgid ""
 "Depending on your country, it may not be possible to purchase all the items "
 "in this cart. This is because this store does not sell items liable to EU "
 "VAT to EU customers (due to the high costs of complying with EU VAT laws)."
 msgstr ""
 
-#: bootstrap.php:127
+#: bootstrap.php:129
 msgid ""
 "This order cannot be processed. Due to the high costs of complying with EU "
 "VAT laws, we do not sell items liable to EU VAT to EU customers."
 msgstr ""
 
-#: bootstrap.php:138 rates.php:31
+#: bootstrap.php:140 rates.php:31
 msgid "Standard Rate"
 msgstr ""
 
-#: bootstrap.php:182 bootstrap.php:702
+#: bootstrap.php:184 bootstrap.php:704
 msgid "Relevant tax classes"
 msgstr ""
 
-#: bootstrap.php:185
+#: bootstrap.php:187
 msgid ""
 "Indicate all the WooCommerce tax classes for which variable-by-country EU "
 "VAT is charged."
 msgstr ""
 
-#: bootstrap.php:185
+#: bootstrap.php:187
 msgid "To create additional tax classes, go to the WooCommerce tax settings."
 msgstr ""
 
-#: bootstrap.php:185
+#: bootstrap.php:187
 msgid ""
 "Products which are not in one of these tax classes will be excluded from per-"
 "country VAT calculations recorded by this plugin (though they may still have "
@@ -382,79 +382,79 @@ msgid ""
 "purpose of this setting is to allow you to have a shop selling mixed goods)."
 msgstr ""
 
-#: bootstrap.php:634
+#: bootstrap.php:636
 msgid "EU VAT Compliance Dashboard"
 msgstr ""
 
-#: bootstrap.php:637 control-centre.php:228
+#: bootstrap.php:639 control-centre.php:228
 msgid "Premium Version"
-msgstr ""
-
-#: bootstrap.php:655
-msgctxt "Order status"
-msgid "Pending Payment"
-msgstr ""
-
-#: bootstrap.php:656
-msgctxt "Order status"
-msgid "Processing"
 msgstr ""
 
 #: bootstrap.php:657
 msgctxt "Order status"
-msgid "On Hold"
+msgid "Pending Payment"
 msgstr ""
 
 #: bootstrap.php:658
 msgctxt "Order status"
-msgid "Completed"
+msgid "Processing"
 msgstr ""
 
 #: bootstrap.php:659
 msgctxt "Order status"
-msgid "Cancelled"
+msgid "On Hold"
 msgstr ""
 
 #: bootstrap.php:660
 msgctxt "Order status"
-msgid "Refunded"
+msgid "Completed"
 msgstr ""
 
 #: bootstrap.php:661
 msgctxt "Order status"
+msgid "Cancelled"
+msgstr ""
+
+#: bootstrap.php:662
+msgctxt "Order status"
+msgid "Refunded"
+msgstr ""
+
+#: bootstrap.php:663
+msgctxt "Order status"
 msgid "Failed"
 msgstr ""
 
-#: bootstrap.php:685
+#: bootstrap.php:687
 msgid "Forbid EU VAT checkout"
 msgstr ""
 
-#: bootstrap.php:686
+#: bootstrap.php:688
 msgid ""
 "If this option is selected, then <strong>all</strong> orders by EU customers "
 "(whether consumer or business) which contain goods subject to variable EU "
 "VAT (whether the customer is exempt or not) will be forbidden."
 msgstr ""
 
-#: bootstrap.php:687
+#: bootstrap.php:689
 msgid ""
 "This feature is intended only for sellers who wish to avoid issues from EU "
 "variable VAT regulations entirely, by not selling any qualifying goods to EU "
 "customers (even ones who are potentially VAT exempt)."
 msgstr ""
 
-#: bootstrap.php:687
+#: bootstrap.php:689
 msgid ""
 "Check-out will be forbidden if the cart contains any goods from the relevant "
 "tax classes indicated below, and if the customer's VAT country is part of "
 "the EU."
 msgstr ""
 
-#: bootstrap.php:694
+#: bootstrap.php:696
 msgid "Phrase matches used to identify VAT"
 msgstr ""
 
-#: bootstrap.php:695
+#: bootstrap.php:697
 msgid ""
 "A comma-separated (optional spaces) list of strings (phrases) used to "
 "identify taxes which are EU VAT taxes. One of these strings must be used in "
@@ -462,52 +462,52 @@ msgid ""
 "the tax to be identified as EU VAT."
 msgstr ""
 
-#: bootstrap.php:703
+#: bootstrap.php:705
 msgid ""
 "Select all tax classes which are used in your store for products sold under "
 "EU Digital VAT regulations"
 msgstr ""
 
-#: bootstrap.php:721
+#: bootstrap.php:723
 msgid "Invoice footer text (B2C)"
 msgstr ""
 
-#: bootstrap.php:722
+#: bootstrap.php:724
 msgid ""
 "Text to prepend to the footer of your PDF invoice for transactions with VAT "
 "paid and non-zero (for supported PDF invoicing plugins)"
 msgstr ""
 
-#: bootstrap.php:821
+#: bootstrap.php:823
 msgid "GeoIP database not found"
 msgstr ""
 
-#: bootstrap.php:822
+#: bootstrap.php:824
 msgid ""
 "You have the GeoIP plugin installed, but it has not yet downloaded its "
 "database. This is needed for country detection to work."
 msgstr ""
 
-#: bootstrap.php:823
+#: bootstrap.php:825
 msgid "Follow this link and press the Update Now button to download it"
 msgstr ""
 
-#: bootstrap.php:829
+#: bootstrap.php:831
 msgid "Required Plugin Not Found"
 msgstr ""
 
-#: bootstrap.php:830
+#: bootstrap.php:832
 msgid ""
 "For the WooCommerce EU VAT compliance module to be able to record the "
 "country that a customer is ordering from, the (free) GeoIP Detection plugin "
 "must be installed and activated."
 msgstr ""
 
-#: bootstrap.php:835
+#: bootstrap.php:837
 msgid "Follow this link to get it"
 msgstr ""
 
-#: bootstrap.php:837
+#: bootstrap.php:839
 msgid "Follow this link to activate it."
 msgstr ""
 
@@ -1306,6 +1306,168 @@ msgstr ""
 
 #: record-order-country.php:320
 msgid "Source:"
+msgstr ""
+
+#: updater/class-udm-updater.php:120 updater/class-udm-updater.php:123
+#: updater/class-udm-updater.php:168 updater/class-udm-updater.php:171
+msgid "Errors occurred:"
+msgstr ""
+
+#: updater/class-udm-updater.php:202
+#, php-format
+msgid "Dismiss from main dashboard (for %s weeks)"
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+msgid "Warning"
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+#, php-format
+msgid ""
+"The installed version of %s has not been tested on your version of WordPress "
+"(%s)."
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+#, php-format
+msgid "It has been tested up to version %s."
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+msgid ""
+"You should update to make sure that you have a version that has been tested "
+"for compatibility."
+msgstr ""
+
+#: updater/class-udm-updater.php:240
+#, php-format
+msgid ""
+"Your paid access to %s updates for this site has expired. You will no longer "
+"receive updates."
+msgstr ""
+
+#: updater/class-udm-updater.php:240 updater/class-udm-updater.php:242
+msgid ""
+"To regain access to updates (including future features and compatibility "
+"with future WordPress releases) and support, please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:242
+#, php-format
+msgid "Your paid access to %s updates for %s add-ons on this site has expired."
+msgstr ""
+
+#: updater/class-udm-updater.php:246
+#, php-format
+msgid ""
+"Your paid access to %s updates for %s of the %s add-ons on this site will "
+"soon expire."
+msgstr ""
+
+#: updater/class-udm-updater.php:246 updater/class-udm-updater.php:248
+msgid ""
+"To retain your access, and maintain access to updates (including future "
+"features and compatibility with future WordPress releases) and support, "
+"please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:248
+#, php-format
+msgid "Your paid access to %s updates for this site will soon expire."
+msgstr ""
+
+#: updater/class-udm-updater.php:252
+#, php-format
+msgid "Your paid access to %s support has expired."
+msgstr ""
+
+#: updater/class-udm-updater.php:252
+msgid "To regain your access, please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:254
+#, php-format
+msgid "Your paid access to %s support will soon expire."
+msgstr ""
+
+#: updater/class-udm-updater.php:254
+msgid "To maintain your access to support, please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:311
+#, php-format
+msgid "Access to plugin updates (%s)"
+msgstr ""
+
+#: updater/class-udm-updater.php:346
+msgid "You need to enter both an email address and a password"
+msgstr ""
+
+#: updater/class-udm-updater.php:358
+msgid "Connecting..."
+msgstr ""
+
+#: updater/class-udm-updater.php:360 updater/class-udm-updater.php:466
+msgid "Connect"
+msgstr ""
+
+#: updater/class-udm-updater.php:366 updater/class-udm-updater.php:383
+#: updater/class-udm-updater.php:388 updater/class-udm-updater.php:416
+#: updater/class-udm-updater.php:421
+msgid ""
+"The response from the remote site could not be decoded. (More information is "
+"recorded in the browser console)."
+msgstr ""
+
+#: updater/class-udm-updater.php:372
+msgid "Your email address and password were not recognised."
+msgstr ""
+
+#: updater/class-udm-updater.php:376
+msgid "You have successfully connected for access to updates to this plugin."
+msgstr ""
+
+#: updater/class-udm-updater.php:379
+msgid ""
+"Your login was accepted, but no available entitlement for this plugin was "
+"found."
+msgstr ""
+
+#: updater/class-udm-updater.php:379
+msgid ""
+"Has your licence expired, or have you used all your available licences "
+"elsewhere?"
+msgstr ""
+
+#: updater/class-udm-updater.php:407
+msgid "Disconnecting..."
+msgstr ""
+
+#: updater/class-udm-updater.php:409 updater/class-udm-updater.php:457
+msgid "Disconnect"
+msgstr ""
+
+#: updater/class-udm-updater.php:413
+msgid "You have successfully disconnected access to updates to this plugin."
+msgstr ""
+
+#: updater/class-udm-updater.php:454
+#, php-format
+msgid "You are connected to received updates for %s (login: %s)"
+msgstr ""
+
+#: updater/class-udm-updater.php:461
+#, php-format
+msgid "Please enter your customer login to access updates for %s"
+msgstr ""
+
+#: updater/class-udm-updater.php:464
+msgid "Email"
+msgstr ""
+
+#: updater/class-udm-updater.php:465
+msgid "Password"
 msgstr ""
 
 #: rate-providers/base-xml.php:43

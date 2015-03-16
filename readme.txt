@@ -2,9 +2,9 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.8.0
+Stable tag: 1.8.2
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
-License: GPLv3
+License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
 
 Assists with EU VAT compliance for WooCommerce, for the new VAT regime beginning 1st January 2015, including for with the MOSS system.
@@ -111,6 +111,16 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 
 == Changelog ==
 
+= 1.8.2 - 2015-03-16 =
+
+* FIX: Prevent fatal error on reports page if the user had never saved their settings.
+* TWEAK: If the user has never saved their settings, then default to using ECB as the exchange rate provider (instead of saving no currency conversion information).
+* TRANSLATION: Updated POT file, and updated French and Finnish translations.
+
+= 1.8.1 - 2015-03-13 =
+
+* FIX: Fix issue in updater that could cause blank page on some sites
+
 = 1.8.0 - 2015-03-05 =
 
 * FIX: Reports table now sorts on click on column headings again (unknown when it was broken)
@@ -118,6 +128,7 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 * FEATURE: Downloadable CSV now shows separate VAT totals for each rate in separate rows, and shows separate rows for variable and traditional non-variable VAT (if your shop sells both kinds of goods)
 directory due to licensing complications.
 * FEATURE: Downloadable CSV now shows information on the configured reporting currency (as well as the order currency)
+* FEATURE: (Premium) - updater now added so that the plugin integrates fully with the WP dashboard's updates mechanism
 * TWEAK: Removed the static 'rates' column from the VAT report table (which only showed the current configured rates), and instead show a row for each rate actually charged.
 * TWEAK: Reports page now uses the built-in WooCommerce layout, including quick-click buttons for recent quarters (some code used from Diego Zanella, gratefully acknowledged)
 * TWEAK: Columns in downloadable CSV are now translatable (translations welcome)
@@ -397,4 +408,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.8.0 : Major re-work/improvement of EU VAT reports feature
+* 1.8.2 : Small fix for users who have never saved their settings.

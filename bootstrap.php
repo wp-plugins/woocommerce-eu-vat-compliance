@@ -85,6 +85,8 @@ class WC_EU_VAT_Compliance {
 		add_action('woocommerce_check_cart_items', array($this, 'woocommerce_check_cart_items'));
 		add_action('woocommerce_checkout_process', array($this, 'woocommerce_check_cart_items'));
 
+		if (file_exists(WC_EU_VAT_COMPLIANCE_DIR.'/updater/updater.php')) include_once(WC_EU_VAT_COMPLIANCE_DIR.'/updater/updater.php');
+
 	}
 
 	// If EU VAT checkout is forbidden, then this function is where the work is done to prevent it

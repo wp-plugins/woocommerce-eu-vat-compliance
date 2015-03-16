@@ -527,9 +527,9 @@ class WC_EU_VAT_Compliance_Reports {
 	public function initialise_rate_provider() {
 		$compliance =  WooCommerce_EU_VAT_Compliance();
 		$providers = $compliance->get_rate_providers();
-		$conversion_provider = get_option('woocommerce_eu_vat_compliance_exchange_rate_provider');
+		$conversion_provider = get_option('woocommerce_eu_vat_compliance_exchange_rate_provider', 'ecb');
 
-		if (!is_array($providers) || !isset($providers[$conversion_provider])) throw new WP_Error('no_such_provider', 'Conversion provider not found: '.$conversion_provider);
+		if (!is_array($providers) || !isset($providers[$conversion_provider])) throw new Exception('Conversion provider not found: '.$conversion_provider);
 
 		$this->conversion_provider = $providers[$conversion_provider];
 	}

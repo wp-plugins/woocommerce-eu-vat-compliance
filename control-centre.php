@@ -615,7 +615,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 				'title'    => __( 'Exchange rate provider', 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_eu_vat_compliance_exchange_rate_provider',
 				'css'      => 'min-width:350px;',
-// 				'default'  => $base_currency,
+				'default'  => 'ecb',
 				'type'     => 'select',
 				'class'    => 'chosen_select',
 				'desc_tip' =>  true,

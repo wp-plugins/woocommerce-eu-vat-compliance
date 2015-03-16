@@ -10,7 +10,224 @@ msgstr ""
 "X-Generator: GlotPress/0.1\n"
 "Project-Id-Version: WooCommerce EU VAT Compliance\n"
 
-#: vat-number.php:283 control-centre.php:746
+#: reports.php:854 reports.php:864
+msgid "VAT rate"
+msgstr ""
+
+#: reports.php:855 reports.php:865
+msgid "VAT on items"
+msgstr ""
+
+#: reports.php:856 reports.php:866
+msgid "VAT on shipping"
+msgstr ""
+
+#: reports.php:857 reports.php:867
+msgid "Total VAT"
+msgstr ""
+
+#: bootstrap.php:835
+msgid "Follow this link to get it"
+msgstr ""
+
+#: premium.php:114
+msgid "Export CSV"
+msgstr ""
+
+#: premium.php:237
+msgid "Order ID"
+msgstr ""
+
+#: premium.php:238
+msgid "Order Number"
+msgstr ""
+
+#: premium.php:239
+msgid "Date (local)"
+msgstr ""
+
+#: premium.php:240
+msgid "Date (GMT)"
+msgstr ""
+
+#: premium.php:241
+msgid "Order status"
+msgstr ""
+
+#: premium.php:242
+msgid "Order currency"
+msgstr ""
+
+#: premium.php:243
+msgid "Order currency symbol"
+msgstr ""
+
+#: premium.php:244
+msgid "Reporting currency"
+msgstr ""
+
+#: premium.php:245
+msgid "Reporting currency symbol"
+msgstr ""
+
+#: premium.php:247
+msgid "Billing country (ISO-3166-1)"
+msgstr ""
+
+#: premium.php:249
+msgid "Shipping country (ISO-3166-1)"
+msgstr ""
+
+#: premium.php:250
+msgid "Sales total (order currency)"
+msgstr ""
+
+#: premium.php:251
+msgid "Sales total (reporting currency)"
+msgstr ""
+
+#: premium.php:252
+msgid "Currency conversion rate"
+msgstr ""
+
+#: premium.php:253 premium.php:257 premium.php:261
+msgid "VAT rate (%%, %s)"
+msgstr ""
+
+#: premium.php:254 premium.php:258 premium.php:262
+msgid "VAT paid (%s, order currency)"
+msgstr ""
+
+#: premium.php:255 premium.php:259 premium.php:263
+msgid "VAT paid (%s, reporting currency)"
+msgstr ""
+
+#: premium.php:256 premium.php:260 premium.php:264
+msgid "VAT is variable (%s)"
+msgstr ""
+
+#: premium.php:265
+msgid "VAT paid (total, order currency)"
+msgstr ""
+
+#: premium.php:266
+msgid "VAT paid (items, order currency)"
+msgstr ""
+
+#: premium.php:267
+msgid "VAT paid (shipping, order currency)"
+msgstr ""
+
+#: premium.php:268
+msgid "VAT paid (total, reporting currency)"
+msgstr ""
+
+#: premium.php:269
+msgid "VAT paid (items, reporting currency)"
+msgstr ""
+
+#: premium.php:270
+msgid "VAT paid (shipping, reporting currency)"
+msgstr ""
+
+#: premium.php:271
+msgid "VAT number"
+msgstr ""
+
+#: premium.php:272
+msgid "VAT number valid"
+msgstr ""
+
+#: premium.php:273
+msgid "VAT number validated"
+msgstr ""
+
+#: premium.php:274
+msgid "Country used to calculate VAT (name)"
+msgstr ""
+
+#: premium.php:275
+msgid "Country used to calculate VAT (ISO-3166-1)"
+msgstr ""
+
+#: premium.php:276
+msgid "IP address"
+msgstr ""
+
+#: premium.php:277
+msgid "IP address country"
+msgstr ""
+
+#: premium.php:278
+msgid "IP address country  (ISO-3166-1)"
+msgstr ""
+
+#: premium.php:279
+msgid "IP address country detected via"
+msgstr ""
+
+#: reports.php:411
+msgid "Include statuses (updates instantly):"
+msgstr ""
+
+#: reports.php:493
+msgctxt "Q for quarter (date); e.g. Q1 2014"
+msgid "Q%d %d"
+msgstr ""
+
+#: reports.php:675
+msgid "Fixed - i.e., traditional non-variable VAT"
+msgstr ""
+
+#: reports.php:675
+msgid "fixed"
+msgstr ""
+
+#: record-order-country.php:226
+msgctxt "Traditional VAT = VAT that does not vary by country under the new digital regulations; i.e. the VAT still charged on physical goods until 1 Jan 2016"
+msgid "(Traditional VAT)"
+msgstr ""
+
+#: bootstrap.php:655
+msgctxt "Order status"
+msgid "Pending Payment"
+msgstr ""
+
+#: bootstrap.php:656
+msgctxt "Order status"
+msgid "Processing"
+msgstr ""
+
+#: bootstrap.php:657
+msgctxt "Order status"
+msgid "On Hold"
+msgstr ""
+
+#: bootstrap.php:658
+msgctxt "Order status"
+msgid "Completed"
+msgstr ""
+
+#: bootstrap.php:659
+msgctxt "Order status"
+msgid "Cancelled"
+msgstr ""
+
+#: bootstrap.php:660
+msgctxt "Order status"
+msgid "Refunded"
+msgstr ""
+
+#: bootstrap.php:661
+msgctxt "Order status"
+msgid "Failed"
+msgstr ""
+
+#: bootstrap.php:61
+msgid "WooCommerce 2.3+ built-in geo-location"
+msgstr ""
+
+#: vat-number.php:291 control-centre.php:744
 msgid "N.B. The WooCommerce EU VAT Compliance plugin causes geo-location to identify the default address, regardless of whether you also activate the geo-location built into WooCommerce (2.3+) here. We recommend choosing \"Shop Base Address\" here (though, choosing \"Geolocate address\" should be harmless, as both geo-locations should have the same result)."
 msgstr "  N.B. Le plugin WooCommerce EU VAT Compliance utilise la géo-localisation pour identifier l'adresse par défaut, peu importe si vous activez également la géo-localisation intégrée dans WooCommerce (2.3+) ici. Nous vous recommandons de choisir \"adresse de base de la boutique\" ici (même si le choix de \"géolocaliser l'adresse\" devrait être inoffensive, car les deux géolocalisations devraient avoir le même résultat)."
 
@@ -34,55 +251,51 @@ msgstr "Inclure une option de menu pour le client afficher les prix sans TVA."
 msgid "Include menu option and separate checkbox for the customer to show prices with no VAT."
 msgstr "Inclure une option de menu et une case à cocher distincte pour le client afficher les prix sans TVA"
 
-#: record-order-country.php:222
-msgid "(Traditional VAT)"
-msgstr "TVA traditionnelle"
-
-#: bootstrap.php:122
+#: bootstrap.php:123
 msgid "Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws)."
 msgstr "Selon votre pays, il peut ne pas être possible d'acheter tous les articles de ce panier. Ceci parce que cette boutique ne vend pas les produits assujettis à la TVA de l'UE à des clients de l'UE (en raison des coûts élevés de mise en conformité avec les lois de l'UE sur la TVA)."
 
-#: bootstrap.php:126
+#: bootstrap.php:127
 msgid "This order cannot be processed. Due to the high costs of complying with EU VAT laws, we do not sell items liable to EU VAT to EU customers."
 msgstr "Cette commande ne peut être traitée. En raison des coûts élevés pour se conformer aux lois de l'UE sur la TVA , nous ne vendons pas de produits assujettis à la TVA de l'UE à des clients de l'UE."
 
-#: bootstrap.php:181 bootstrap.php:699
+#: bootstrap.php:182 bootstrap.php:702
 msgid "Relevant tax classes"
 msgstr "Catégories de taxe pertinentes"
 
-#: bootstrap.php:184
+#: bootstrap.php:185
 msgid "Indicate all the WooCommerce tax classes for which variable-by-country EU VAT is charged."
 msgstr "Indiquer toutes les catégories de taxes sur WooCommerce pour lesquelles la TVA variable par pays de l'UE est applicable."
 
-#: bootstrap.php:184
+#: bootstrap.php:185
 msgid "To create additional tax classes, go to the WooCommerce tax settings."
 msgstr "Pour créer des catégories de taxe supplémentaires, allez dans les paramètres de taxes de WooCommerce. "
 
-#: bootstrap.php:184
+#: bootstrap.php:185
 msgid "Products which are not in one of these tax classes will be excluded from per-country VAT calculations recorded by this plugin (though they may still have traditional EU VAT charged if you have configured them to do so - i.e., the purpose of this setting is to allow you to have a shop selling mixed goods)."
 msgstr "Les produits qui ne sont pas dans une de ces catégories de taxe seront exclus des calculs de TVA par pays enregistrés par ce plugin (ils peuvent encore avoir la TVA traditionnelle appliquée si vous l'avez configuré pour le faire - c'est à dire que le but de ce paramètre est de vous permettre d'avoir une boutique vendant des produits mixtes)."
 
-#: bootstrap.php:682
+#: bootstrap.php:685
 msgid "Forbid EU VAT checkout"
 msgstr "Interdire commande TVA UE"
 
-#: bootstrap.php:683
+#: bootstrap.php:686
 msgid "If this option is selected, then <strong>all</strong> orders by EU customers (whether consumer or business) which contain goods subject to variable EU VAT (whether the customer is exempt or not) will be forbidden."
 msgstr "Si cette option est sélectionnée, <strong> toutes </strong> les commandes de clients de l'UE (consommateur ou entreprise) qui contiennent des marchandises soumises à la TVA variable de l'UE (si le client est exonéré ou non) sera interdite."
 
-#: bootstrap.php:684
+#: bootstrap.php:687
 msgid "This feature is intended only for sellers who wish to avoid issues from EU variable VAT regulations entirely, by not selling any qualifying goods to EU customers (even ones who are potentially VAT exempt)."
 msgstr "Cette fonction est destinée uniquement aux vendeurs qui souhaitent complètement éviter les problèmes de l'UE en matière de TVA variable, en ne vendant pas des marchandises admissibles aux clients de l'UE (même ceux qui sont potentiellement exonérés de la TVA). "
 
-#: bootstrap.php:684
+#: bootstrap.php:687
 msgid "Check-out will be forbidden if the cart contains any goods from the relevant tax classes indicated below, and if the customer's VAT country is part of the EU."
 msgstr "La commande sera interdite si le panier contient des produits appartenant aux catégories fiscales indiquées ci-dessous, et si le pays de TVA du client fait partie de l'UE."
 
-#: bootstrap.php:691
+#: bootstrap.php:694
 msgid "Phrase matches used to identify VAT"
 msgstr "Termes utilisés pour identifier la TVA"
 
-#: bootstrap.php:700
+#: bootstrap.php:703
 msgid "Select all tax classes which are used in your store for products sold under EU Digital VAT regulations"
 msgstr "Sélectionnez toutes les catégories de taxes qui sont utilisées dans votre boutique pour les produits vendus en vertu des règlements de la TVA EU sur les produits numériques."
 
@@ -94,23 +307,23 @@ msgstr "Utiliser <code>{country_with_brackets}</code> pour afficher le pays seul
 msgid "Download all orders with VAT data (from the chosen date range) in CSV format"
 msgstr "Télécharger toutes les commandes avec données de la TVA (pour la période choisie) au format CSV"
 
-#: vat-number.php:464
+#: vat-number.php:518
 msgid "The number entered was successfully validated."
 msgstr "Le numéro saisi a été validé."
 
-#: vat-number.php:466
+#: vat-number.php:520
 msgid "The number entered was not successfully validated for the chosen country."
 msgstr "Le numéro saisi n'a pas été validé avec succès pour le pays choisi."
 
-#: vat-number.php:470
+#: vat-number.php:524
 msgid "The number entered is not long enough to be valid for the chosen country."
 msgstr "Le numéro saisi n'est pas assez long pour être valide pour le pays choisi."
 
-#: vat-number.php:472
+#: vat-number.php:526
 msgid "The validity of the number entered could not be ascertained."
 msgstr "La validité du numéro inscrit n'a pas pu être établie."
 
-#: vat-number.php:537
+#: vat-number.php:591
 msgid "The number entered is being checked..."
 msgstr "Le numéro saisi est en cours de vérification ..."
 
@@ -126,7 +339,7 @@ msgstr "Le plugin %s est actif, mais le soutien des abonnements ne fait pas part
 msgid "WooCommerce subscriptions"
 msgstr "Abonnements WooCommerce"
 
-#: control-centre.php:479
+#: control-centre.php:477
 msgid "Official EU documentation on current VAT rates."
 msgstr "La documentation officielle de l'UE sur les taux de TVA en vigueur. "
 
@@ -214,7 +427,7 @@ msgstr "Ils ne peuvent pas être basées sur l'adresse de base de la boutique."
 msgid "Taxes need to be enabled in the WooCommerce tax settings."
 msgstr "Les taxes doivent être activées dans les paramètres de taxe de WooCommerce."
 
-#: bootstrap.php:137 rates.php:31
+#: bootstrap.php:138 rates.php:31
 msgid "Standard Rate"
 msgstr "Taux ​​Standard"
 
@@ -226,7 +439,7 @@ msgstr "Taux réduit"
 msgid "Add / Update EU VAT Rates"
 msgstr "Ajouter / Mettre à jour les taux de TVA de l'UE"
 
-#: rates.php:175
+#: rates.php:184
 msgid "Use rates:"
 msgstr "Taux utilisé:"
 
@@ -234,7 +447,7 @@ msgstr "Taux utilisé:"
 msgid "Define text to show after your product prices. This could be, for example, \"inc. Vat\" to explain your pricing. You can also have prices substituted here using one of the following: <code>{price_including_tax}, {price_excluding_tax}</code>. Content wrapped in-between <code>{iftax}</code> and <code>{/iftax}</code> will display only if there was tax; within that, <code>{country}</code> will be replaced by the name of the country used to calculate tax."
 msgstr "Définir le texte à afficher après le prix de vos produits. Ce pourrait être, par exemple, «inc. TVA\" pour expliquer votre prix. Vous pouvez également indiquer le prix ici en utilisant une des options suivantes <code>{price_including_tax}, {price_excluding_tax}</code>. Le contenu inscrit entre <code>{iftax}</code> et <code>{/iftax}</code> ne affichera que si il y avait des taxes; dans ce cadre, <code>{country}</code> sera remplacé par le nom du pays utilisé pour calculer l'impôt."
 
-#: record-order-country.php:266
+#: record-order-country.php:270
 msgid "Currency conversion source:"
 msgstr "Source de conversion de devises:"
 
@@ -250,47 +463,47 @@ msgstr "Banque Nationale Danoise"
 msgid "Official exchange rates from the Danish National Bank."
 msgstr "Taux de change officiels de la Banque Nationale Danoise. "
 
-#: bootstrap.php:719
+#: bootstrap.php:722
 msgid "Text to prepend to the footer of your PDF invoice for transactions with VAT paid and non-zero (for supported PDF invoicing plugins)"
 msgstr "Texte à ajouter avant le pied de page de votre facture au format PDF pour les transactions avec TVA payée et non zéro (pour les prises en charge des plugins de facturation PDF)"
 
-#: vat-number.php:127
+#: vat-number.php:135
 msgid "Text to prepend to the footer of your PDF invoice for transactions with validated VAT numbers (for supported PDF invoicing plugins). If you include {vat_number}, then it will be replaced with the validated number."
 msgstr "Texte à ajouter avant le pied de page de votre facture au format PDF pour les transactions avec des numéros de TVA (validés pour le plugins PDF de facturation). Si vous incluez {vat_number}, alors il sera remplacé par le numéro validé."
 
-#: vat-number.php:134
+#: vat-number.php:142
 msgid "Allow VAT numbers to be entered"
 msgstr "Autoriser la saisie des numéros de TVA "
 
-#: vat-number.php:135
+#: vat-number.php:143
 msgid "N.B. Some of the options further down the page are irrelevant, if you choose \"Never\" here."
 msgstr "NB Certaines des options plus bas dans la page ne sont pas pertinents si vous choisissez \"Jamais\" ici."
 
-#: vat-number.php:139
+#: vat-number.php:147
 msgid "Permit: customers with valid EU VAT numbers can enter them, and become VAT-exempt."
 msgstr "Permis: clients avec numéros de TVA de l&#39;UE valides peuvent entrer et être exonéré de la TVA."
 
-#: vat-number.php:140
+#: vat-number.php:148
 msgid "Never: VAT will always be charged whenever VAT-able items are present."
 msgstr "Jamais: la TVA sera toujours ajoutée à chaque fois que des articles avec TVA sont présents."
 
-#: vat-number.php:141
+#: vat-number.php:149
 msgid "Require: customers without a valid EU VAT number will not be permitted to check out on any order."
 msgstr "Exiger: clients sans un numéro valide de TVA de l&#39;UE ne seront pas autorisés à commander."
 
-#: vat-number.php:347
+#: vat-number.php:401
 msgid "This shop does not allow the entry of EU VAT numbers for VAT exemption."
 msgstr "Cette boutique ne permet pas l&#39;entrée des numéros de TVA de l&#39;UE pour l&#39;exemption de la TVA."
 
-#: vat-number.php:388
+#: vat-number.php:442
 msgid "For the correct calculation of VAT, please confirm your country of residence:"
 msgstr "Pour le calcul correct de la TVA, veuillez confirmer votre pays de résidence:"
 
-#: vat-number.php:904
+#: vat-number.php:954
 msgid "This store requires all orders to be accompanied by a valid EU VAT number"
 msgstr "Ce magasin nécessite que les commandes soient accompagnées par un numéro valide de TVA de l&#39;UE"
 
-#: vat-number.php:910
+#: vat-number.php:960
 msgid "You must certify your country of residence in order to complete your order."
 msgstr "Vous devez certifier votre pays de résidence afin de compléter votre commande."
 
@@ -310,19 +523,19 @@ msgstr "Votre version de WooCommerce (%s) est suffisamment élevée pour souteni
 msgid "Tax calculations must be based on either the customer billing or shipping address."
 msgstr "Le calcul des taxes doit être basé soit sur la facturation des clients ou l&#39;adresse d&#39;expédition."
 
-#: control-centre.php:437
+#: control-centre.php:435
 msgid "Many settings below can also be found in other parts of your WordPress dashboard; they are brought together here also for convenience."
 msgstr "Beaucoup de paramètres ci-dessous peuvent également être trouvés dans d&#39;autres parties de votre tableau de bord WordPress; ils sont ici réunis également pour plus de commodité."
 
-#: control-centre.php:698
+#: control-centre.php:696
 msgid "Test"
 msgstr "Test"
 
-#: control-centre.php:699
+#: control-centre.php:697
 msgid "Result"
 msgstr "Résultat"
 
-#: control-centre.php:700
+#: control-centre.php:698
 msgid "Futher information"
 msgstr "Information Complémentaire"
 
@@ -354,31 +567,31 @@ msgstr "Titre"
 msgid "Explanatory text (HTML accepted):"
 msgstr "Texte explicatif (HTML acceptée):"
 
-#: record-order-country.php:242
+#: record-order-country.php:246
 msgid "All VAT charges"
 msgstr "Toute TVA incluse"
 
-#: record-order-country.php:259
+#: record-order-country.php:263
 msgid "Validated VAT number: %s"
 msgstr "Numéro de TVA:%s validé "
 
-#: record-order-country.php:275
+#: record-order-country.php:279
 msgid "VAT paid:"
 msgstr "TVA"
 
-#: record-order-country.php:298
+#: record-order-country.php:301
 msgid "Raw information:"
 msgstr "Information Complémentaire"
 
-#: record-order-country.php:306
+#: record-order-country.php:309
 msgid "Country used to calculate tax:"
 msgstr "Pays utilisé pour le calcul TVA:"
 
-#: record-order-country.php:316
+#: record-order-country.php:319
 msgid "IP Country:"
 msgstr "IP Pays:"
 
-#: record-order-country.php:317
+#: record-order-country.php:320
 msgid "Source:"
 msgstr "Source:"
 
@@ -402,131 +615,131 @@ msgstr "Banque Centrale Européenne"
 msgid "Official exchange rates from the European Central Bank (ECB)."
 msgstr "Taux de change officiel de la Banque Centrale Européenne (BCE)"
 
-#: vat-number.php:148
+#: vat-number.php:156
 msgid "The title that appears at checkout above the VAT Number box."
 msgstr "Le titre qui apparaît dans le formulaire de commande au-dessus du champ de numéro de TVA."
 
-#: vat-number.php:153
+#: vat-number.php:161
 msgid "EU VAT Message"
 msgstr "UE TVA message"
 
-#: vat-number.php:154
+#: vat-number.php:162
 msgid "The message that appears at checkout above the VAT Number box."
 msgstr "Le message qui se affiche dans le formulaire de commande au-dessus du champs de numéro de TVA."
 
-#: vat-number.php:160
+#: vat-number.php:168
 msgid "Show field for base country"
 msgstr "Montrer le champ pour le pays de base"
 
-#: vat-number.php:161
+#: vat-number.php:169
 msgid "Show the VAT field even when the customer is in your base country"
 msgstr "Afficher le champ TVA, même lorsque le client est dans votre pays de base"
 
-#: vat-number.php:166
+#: vat-number.php:174
 msgid "Deduct VAT for base country"
 msgstr "Déduction de la TVA pour le pays de base"
 
-#: vat-number.php:167
+#: vat-number.php:175
 msgid "Deduct the VAT even when the customer is in your base country and has a valid number"
 msgstr "Déduire la TVA même lorsque le client est dans votre pays de base et possède un numéro valide"
 
-#: vat-number.php:172
+#: vat-number.php:180
 msgid "Store non-valid numbers"
 msgstr "Stocker les numéros non valides"
 
-#: vat-number.php:173
+#: vat-number.php:181
 msgid "Enable this option to store numbers which don't pass validation, rather than reject them. Tax will not be made exempt."
 msgstr "Activer cette option pour stocker les numéros qui ne passent pas la validation, plutôt que de les rejeter. La TVA ne sera pas déduite."
 
-#: vat-number.php:178
+#: vat-number.php:186
 msgid "Resolving conflicting VAT data"
 msgstr "Résoudre les données de TVA contradictoires"
 
-#: vat-number.php:179
+#: vat-number.php:187
 msgid "This option determines what will happen if the customer's apparent country (according to their IP address) conflicts with the country used to determine their taxes (i.e. shipping or billing country, depending upon the setting further up this page)."
 msgstr "Cette option détermine ce qui se passera si le pays apparent du client (en fonction de leur adresse IP) entre en conflit avec le pays utilisés pour déterminer leurs taxes (c&#39;est à dire les données d&#39;expédition ou le pays de facturation, selon la mise en place ultérieure cette page)."
 
-#: vat-number.php:179
+#: vat-number.php:187
 msgid "Which is the correct option for you depends upon the particular evidence your local taxman is happy with to verify the country of purchase."
 msgstr "Quelle est la bonne option pour vous dépend de la preuve notamment votre fisc local est heureux avec de vérifier le pays d&#39;achat."
 
-#: vat-number.php:183
+#: vat-number.php:191
 msgid "Require the customer to indicate the correct country when there is a conflict"
 msgstr "Exiger que le client indique le bon pays quand il y a un conflit"
 
-#: vat-number.php:184
+#: vat-number.php:192
 msgid "Always show the customer the VAT country, even if there was no conflict"
 msgstr "Toujours afficher la TVA du pays du client, même si il n&#39;y a pas de conflit"
 
-#: vat-number.php:185
+#: vat-number.php:193
 msgid "Always use the WooCommerce tax settings to indicate the country (never ask the customer)"
 msgstr "Toujours utiliser les paramètres de taxes de WooCommerce pour indiquer le pays (ne jamais demander au client)"
 
-#: vat-number.php:126
+#: vat-number.php:134
 msgid "Invoice footer text (B2B)"
 msgstr "Pied de page de la facture (B2B)"
 
-#: vat-number.php:46
+#: vat-number.php:48
 msgid "EU VAT Number (if any)"
 msgstr "Numéro de TVA de l&#39;UE (le cas échéant)"
 
-#: vat-number.php:47
+#: vat-number.php:49
 msgid "If you are in the EU and have a valid EU VAT registration number please enter it below."
 msgstr "Si vous êtes dans l&#39;UE et avez un numéro d&#39;enregistrement TVA UE valide, veuillez le saisir ci-dessous."
 
-#: vat-number.php:217 vat-number.php:246
+#: vat-number.php:225 vat-number.php:254
 msgid "VAT #:"
 msgstr "TVA #:"
 
-#: vat-number.php:279
+#: vat-number.php:287
 msgid "N.B. The final country used may be modified according to your EU VAT settings, further down this page."
 msgstr "NB Le pays final utilisé peut être modifié en fonction de vos paramètres de TVA de l&#39;UE, plus bas sur cette page."
 
-#: vat-number.php:352 vat-number.php:353
+#: vat-number.php:406 vat-number.php:407
 msgid "VAT Number"
 msgstr "Numéro TVA"
 
-#: vat-number.php:376
+#: vat-number.php:430
 msgid "%s (detected)"
 msgstr "%s (détecté)"
 
-#: vat-number.php:381
+#: premium.php:246 vat-number.php:435
 msgid "Billing country"
 msgstr "Pays de facturation"
 
-#: vat-number.php:384
+#: premium.php:248 vat-number.php:438
 msgid "Shipping country"
 msgstr "Pays de livraison"
 
-#: vat-number.php:605
+#: vat-number.php:659
 msgid "billing country"
 msgstr "pays de facturation"
 
-#: vat-number.php:679
+#: vat-number.php:733
 msgid "shipping country"
 msgstr "pays de livraison"
 
-#: vat-number.php:936
+#: vat-number.php:985
 msgid "You cannot use a VAT number since your country (%s) is outside of the EU."
 msgstr "Vous ne pouvez pas utiliser un numéro de TVA depuis votre pays, (%s) est en dehors de l&#39;UE."
 
-#: vat-number.php:1006 vat-number.php:1033
+#: vat-number.php:1055 vat-number.php:1082
 msgid "You have entered an invalid VAT number (%s) for your country."
 msgstr "Vous avez entré un numéro de TVA invalide (%s) pour votre pays."
 
-#: rates.php:160
+#: rates.php:169
 msgid "Note: for any tax you enter below to be recognised as VAT for EU VAT purposes, its name will need to contain one of the following words or phrases:"
 msgstr "Remarque: pour que toute taxe que vous entrez ci-dessous soit reconnue comme de la TVA pour l&#39;UE, son nom devra contenir l&#39;un des mots ou des phrases suivantes:"
 
-#: rates.php:160
+#: rates.php:169
 msgid "You can configure this list in the tax options."
 msgstr "Vous pouvez configurer cette liste dans les options de taxes."
 
-#: rates.php:194
+#: rates.php:203
 msgid "reduced rate"
 msgstr "Taux réduit"
 
-#: rates.php:299
+#: rates.php:308
 msgid "Isle of Man"
 msgstr "Île de Man"
 
@@ -682,103 +895,99 @@ msgstr "Comme un seul total"
 msgid "Itemized"
 msgstr "Détaillé"
 
-#: control-centre.php:435
-msgid "This control panel is under rapid development. Please make sure you keep this plugin up-to-date with any available updates that WordPress tells you are available."
-msgstr "Ce panneau de contrôle est en cours de développement rapide. Veuillez garder ce plugin à jour avec les mises à jour disponibles que WordPress vous indique."
-
-#: control-centre.php:467
+#: control-centre.php:465
 msgid "VAT reporting currency"
 msgstr "Rapports TVA"
 
-#: control-centre.php:475
+#: control-centre.php:473
 msgid "Tax tables (set up tax rates for each country)"
 msgstr "Tables de taxes (taux d&#39;imposition pour chaque pays)"
 
-#: control-centre.php:482
+#: control-centre.php:480
 msgid "Standard-rate tax table"
 msgstr "Table de taux de taxes (standard)"
 
-#: control-centre.php:482 control-centre.php:484
+#: control-centre.php:480 control-centre.php:482
 msgid "Follow this link."
 msgstr "Suivre ce lien"
 
-#: control-centre.php:484
+#: control-centre.php:482
 msgid "Reduced-rate tax table"
 msgstr "Table de taux de taxes (réduit)"
 
-#: control-centre.php:508
+#: control-centre.php:506
 msgid "Save Settings"
 msgstr "Enregistrer les paramètres"
 
-#: control-centre.php:527
+#: control-centre.php:525
 msgid "Saving..."
 msgstr "﻿Enregistrement en cours"
 
-#: control-centre.php:554
+#: control-centre.php:552
 msgid "Settings Saved."
 msgstr "﻿Paramètres enregistrés."
 
-#: control-centre.php:557 control-centre.php:560 control-centre.php:750
+#: control-centre.php:555 control-centre.php:558 control-centre.php:748
 msgid "Response:"
 msgstr "Réponse:"
 
-#: control-centre.php:605
+#: control-centre.php:603
 msgid "Currency"
 msgstr "Monnaie"
 
-#: control-centre.php:606
+#: control-centre.php:604
 msgid "When an order is made, exchange rate information will be added to the order, allowing all amounts to be converted into the currency chosen here. This is necessary if orders may be made in a different currency than the currency you are required to report VAT in."
 msgstr "Quand une commande est faite, l&#39;information des taux de change sera ajouté à la commande, permettant à tous les montants d&#39;être convertis dans la monnaie choisie ici. Cela est nécessaire si les commandes peuvent être faites dans une autre devise que la devise que vous êtes tenu de déclarer la TVA."
 
-#: control-centre.php:617
+#: control-centre.php:615
 msgid "Exchange rate provider"
 msgstr "Fournisseur de taux de change"
 
-#: control-centre.php:637
+#: control-centre.php:635
 msgid "Set the currency that you have to use when making VAT reports. If this is not the same as your base currency (%s), then when orders are placed, the exchange rate will be recorded as part of the order information, allowing accurate VAT reports to be made."
 msgstr "Réglez la monnaie que vous avez à utiliser lors de rapports de la TVA. Si ce ne est pas le même que votre monnaie de base (%s), puis quand les commandes sont passées, le taux de change sera enregistré dans le cadre de l&#39;information de commande, ce qui permet de faire des rapports de TVA plus précis."
 
-#: control-centre.php:637
+#: control-centre.php:635
 msgid "If using a currency other than your base currency, then you must configure an exchange rate provider."
 msgstr "Si vous utilisez une devise autre que votre devise de base, alors vous devez configurer un fournisseur de taux de change."
 
-#: control-centre.php:639
+#: control-centre.php:637
 msgid "N.B. If you have a need for a specific provider, then please let us know."
 msgstr "NB Si vous avez besoin d&#39;un fournisseur spécifique, faites-le nous savoir."
 
-#: control-centre.php:656
+#: control-centre.php:654
 msgid "Configure exchange rate provider"
 msgstr "Configurez fournisseur de taux de change"
 
-#: control-centre.php:658
+#: control-centre.php:656
 msgid "Follow this link for more information."
 msgstr "Suivez ce lien pour plus d&#39;informations."
 
-#: control-centre.php:667 control-centre.php:748
+#: control-centre.php:665 control-centre.php:746
 msgid "Test Provider"
 msgstr "Test Provider"
 
-#: control-centre.php:674
+#: control-centre.php:672
 msgid "EU VAT Compliance Readiness"
 msgstr "Préparation Conformité à la TVA de l&#39;UE"
 
-#: control-centre.php:678
+#: control-centre.php:676
 msgid "N.B. Items listed below are listed as suggestions only, and it is not claimed that all apply to every situation. Items listed do not constitute legal or financial advice. For all decisions on which settings are right for you in your location and setup, final responsibility is yours."
 msgstr "NB  Articles énumérés ci-dessous sont répertoriés comme des suggestions, et il est pas certain que tous sont appliqué à toutes les situations. Éléments énumérés ne constituent pas des conseils juridiques ou financiers. Pour toutes les décisions sur les paramètres qui vous conviennent dans votre emplacement et la configuration, la responsabilité finale vous appartient."
 
-#: control-centre.php:682
+#: control-centre.php:680
 msgid "N.B. It is not yet the 1st of January 2015; so, you may not want to act on all the items mentioned below yet."
 msgstr "NB Il ne est pas encore le 1er Janvier 2015; oui, vous voudrez peut-être de ne pas agir sur tous les points mentionnés ci-dessous encore."
 
-#: control-centre.php:686
+#: control-centre.php:684
 msgid "Please come back here after your next plugin update, to see what has been added - this feature is still under development. When done, it will advise you on which of your WooCommerce and other settings may need adjusting for EU VAT compliance."
 msgstr "Veuillez revenir ici après votre prochaine mise à jour du plug-in pour voir ce qui a été ajouté - cette fonctionnalité est encore en développement. Quand cela sera fait, il vous sera conseillé quels autres paramètres peuvent nécessiter un ajustement pour la conformité de TVA de l&#39;UE."
 
-#: control-centre.php:745
+#: control-centre.php:743
 msgid "N.B. The final country used may be modified according to your EU VAT settings."
 msgstr "NB Le pays final utilisé peut être modifié en fonction de vos paramètres de TVA de l&#39;UE."
 
-#: control-centre.php:747
+#: control-centre.php:745
 msgid "Testing..."
 msgstr "En test..."
 
@@ -786,11 +995,11 @@ msgstr "En test..."
 msgid "CloudFlare Geo-Location"
 msgstr "CloudFlare Geo-Location"
 
-#: bootstrap.php:61
+#: bootstrap.php:62
 msgid "MaxMind GeoIP database was not installed"
 msgstr "La base de donnée MaxMind GeoIP n'est pas installée"
 
-#: bootstrap.php:62
+#: bootstrap.php:63
 msgid "MaxMind GeoIP database"
 msgstr "Base de donnée MaxMind GeoIP "
 
@@ -798,23 +1007,23 @@ msgstr "Base de donnée MaxMind GeoIP "
 msgid "EU VAT compliance information"
 msgstr "TVA EU informations de conformité"
 
-#: record-order-country.php:145
+#: record-order-country.php:149
 msgid "No further information recorded (the EU VAT Compliance plugin was not active when this order was made)."
 msgstr "Pas d'autres informations enregistrées (le plugin EU VAT Compliance n'était pas actif quand la commande a été faite)."
 
-#: record-order-country.php:149
+#: record-order-country.php:153
 msgid "The following information is based upon looking up the customer's IP address now."
 msgstr "L'information suivante est basée sur la recherche de l'adresse IP du client."
 
-#: record-order-country.php:228 record-order-country.php:243
+#: record-order-country.php:232 record-order-country.php:247
 msgid "Items"
 msgstr "Objets"
 
-#: record-order-country.php:229 record-order-country.php:244
+#: record-order-country.php:233 record-order-country.php:248
 msgid "Shipping"
 msgstr "Livraison"
 
-#: record-order-country.php:230 record-order-country.php:245
+#: record-order-country.php:234 record-order-country.php:249
 msgid "Total"
 msgstr "Total"
 
@@ -834,178 +1043,113 @@ msgstr "Ajouter le montant du change sur la facture"
 msgid "If you have the free WooCommerce PDF packing slips and invoices plugin, then this option will add the foreign currency VAT amount to your PDF invoices (for supported PDF invoicing plugins)."
 msgstr "Si vous avez le plugin gratuit WooCommerce PDF packing slips and invoices, alors cette option ajoutera le montant de la TVA de devises à vos factures PDF (pour supporter le plugins PDF de facturation)."
 
-#: premium.php:278 premium.php:290 premium.php:294 premium.php:300
-#: premium.php:304 premium.php:311 reports.php:492 bootstrap.php:665
-#: vat-number.php:369 record-order-country.php:275 record-order-country.php:292
-#: record-order-country.php:294 record-order-country.php:296
-#: record-order-country.php:304 record-order-country.php:308
+#: premium.php:317 premium.php:331 premium.php:335 premium.php:341
+#: premium.php:345 premium.php:352 reports.php:602 reports.php:656
+#: bootstrap.php:668 vat-number.php:423 record-order-country.php:279
+#: record-order-country.php:295 record-order-country.php:297
+#: record-order-country.php:299 record-order-country.php:307
+#: record-order-country.php:311
 msgid "Unknown"
 msgstr "Inconnu"
 
-#: premium.php:341
+#: premium.php:452
 msgid "None supplied"
 msgstr "Aucun fourni"
 
-#: premium.php:342 premium.php:343
+#: premium.php:453 premium.php:454
 msgid "n/a"
 msgstr "n/a"
 
-#: premium.php:342 premium.php:343
+#: premium.php:437 premium.php:441 premium.php:445 premium.php:453
+#: premium.php:454
 msgid "Yes"
 msgstr "Oui"
 
-#: premium.php:342 premium.php:343
+#: premium.php:437 premium.php:441 premium.php:445 premium.php:453
+#: premium.php:454
 msgid "No"
 msgstr "Non"
 
-#: premium.php:399
+#: premium.php:524
 msgid "You can delete the free version of the WooCommerce EU VAT Compliance plugin"
 msgstr "Vous pouvez supprimer la version gratuite du plugin WooCommerce EU VAT Compliance "
 
-#: premium.php:400
+#: premium.php:525
 msgid "all of its features are part of the premium version."
 msgstr "toutes ces fonctions font partie de la version premium."
 
-#: reports.php:21 reports.php:53 reports.php:63
+#: reports.php:29 reports.php:75 reports.php:85
 msgid "EU VAT Report"
 msgstr "Rapport TVA EU"
 
-#: reports.php:31
-msgid "Date range:"
-msgstr "Période :"
-
-#: reports.php:34
-msgid "to"
-msgstr "à"
-
-#: reports.php:37
-msgid "Update"
-msgstr "Actualiser"
-
-#: reports.php:320
+#: reports.php:359
 msgid "The report below indicates the taxes actually charged on orders, when they were processed: it does not take into account later alterations manually made to order data."
 msgstr "Le rapport ci-dessous indique les taxes actuellement facturées sur les commandes, quand elles ont été traitées: il ne prend pas en compte les modifications apportées manuellement plus tard."
 
-#: reports.php:321
-msgid "The sales total below includes shipping (if any); similarly, the VAT shown includes VAT charged upon shipping (if any)."
-msgstr "Le total des ventes ci-dessous inclut l&#39;expédition (le cas échéant); de même, la TVA indiquée comprend la TVA perçue lors de l&#39;expédition (le cas échéant)."
-
-#: reports.php:323
+#: reports.php:361
 msgid "Downloading all orders with VAT data in CSV format is a feature of the Premium version of this plugin."
 msgstr "Le téléchargement au format CSV de toutes les commandes avec TVA  est une caractéristique de la version Premium de ce plugin."
 
-#: reports.php:372
-msgid "Statuses (updates instantly):"
-msgstr "Statuts (mises à jour immédiatement):"
-
-#: reports.php:558 reports.php:574 reports.php:644
+#: reports.php:705 reports.php:814
 msgid "Grand Total"
 msgstr "Total général"
 
-#: reports.php:558 reports.php:574 reports.php:644
-msgid "orders"
-msgstr "commandes"
-
-#: reports.php:671 reports.php:682
+#: reports.php:852 reports.php:862
 msgid "Order Status"
 msgstr "Suivi de commande"
 
-#: reports.php:672 reports.php:683
+#: reports.php:853 reports.php:863
 msgid "Country"
 msgstr "Pays"
 
-#: reports.php:673 reports.php:684
-msgid "VAT rate (standard)"
-msgstr "Taux de TVA (standard)"
-
-#: reports.php:674 reports.php:685
-msgid "VAT rate (reduced)"
-msgstr "Taux de TVA (réduit)"
-
-#: reports.php:675 reports.php:686
-msgid "Sales (without VAT)"
-msgstr "Ventes (sans TVA)"
-
-#: reports.php:676 reports.php:687 record-order-country.php:163
+#: record-order-country.php:167
 msgid "VAT"
 msgstr "TVA"
 
-#: reports.php:677 reports.php:688
-msgid "Total paid"
-msgstr "Total :"
-
-#: bootstrap.php:692
+#: bootstrap.php:695
 msgid "A comma-separated (optional spaces) list of strings (phrases) used to identify taxes which are EU VAT taxes. One of these strings must be used in your tax name labels (i.e. the names used in your tax tables) if you wish the tax to be identified as EU VAT."
 msgstr "Un liste séparée par des virgules (espaces facultatifs)  des mots (abréviations) utilisés pour identifier les taxes qui sont des taxes de TVA de l&#39;UE. Un de ces mots doit être utilisé comme nom de taxe (les noms utilisés dans vos tables de taxes) si vous souhaitez que la taxe soit identifiée comme TVA de l&#39;UE."
 
-#: bootstrap.php:718
+#: bootstrap.php:721
 msgid "Invoice footer text (B2C)"
 msgstr "Texte du pied de page de la facture (B2C)"
 
-#: bootstrap.php:631
+#: bootstrap.php:634
 msgid "EU VAT Compliance Dashboard"
 msgstr "Tableau de bord TVA Conformité UE"
 
-#: bootstrap.php:634 control-centre.php:228
+#: bootstrap.php:637 control-centre.php:228
 msgid "Premium Version"
 msgstr "Version Premium"
 
-#: bootstrap.php:652
-msgid "Pending Payment"
-msgstr "En attende de paiement"
-
-#: bootstrap.php:653
-msgid "Processing"
-msgstr "En cours"
-
-#: bootstrap.php:654
-msgid "On Hold"
-msgstr "En attente"
-
-#: bootstrap.php:655
-msgid "Completed"
-msgstr "Terminée"
-
-#: bootstrap.php:656
-msgid "Cancelled"
-msgstr "Annulée"
-
-#: bootstrap.php:657
-msgid "Refunded"
-msgstr "Remboursée"
-
-#: bootstrap.php:658 readiness-tests.php:10
+#: readiness-tests.php:10
 msgid "Failed"
 msgstr "Échouée"
 
-#: bootstrap.php:812
+#: bootstrap.php:821
 msgid "GeoIP database not found"
 msgstr "Base de donnée Geoip non trouvée"
 
-#: bootstrap.php:813
+#: bootstrap.php:822
 msgid "You have the GeoIP plugin installed, but it has not yet downloaded its database. This is needed for country detection to work."
 msgstr "Vous avez le plugin GeoIP installé, mais il n&#39;a pas encore installé sa base de données. Cela est nécessaire pour que la présélection du pays fonctionne."
 
-#: bootstrap.php:814
+#: bootstrap.php:823
 msgid "Follow this link and press the Update Now button to download it"
 msgstr "Suivez ce lien et appuyez sur le bouton Mettre à jour pour le télécharger"
 
-#: bootstrap.php:820
+#: bootstrap.php:829
 msgid "Required Plugin Not Found"
 msgstr "Plugin nécessaire Introuvable"
 
-#: bootstrap.php:821
+#: bootstrap.php:830
 msgid "For the WooCommerce EU VAT compliance module to be able to record the country that a customer is ordering from, the (free) GeoIP Detection plugin must be installed and activated."
 msgstr "Pour fonctionner le plugin WooCommerce EU VAT Compliance doit être en mesure d&#39;enregistrer le pays de commande du client. Le plug-in (gratuit) de détection GeoIP doit être installé et activé."
 
-#: bootstrap.php:825
-msgid "Follow this link to install it"
-msgstr "Suivez ce lien pour l&#39;installer"
-
-#: bootstrap.php:827
+#: bootstrap.php:837
 msgid "Follow this link to activate it."
 msgstr "Suivez ce lien pour l&#39;activer."
 
-#: vat-number.php:147
+#: vat-number.php:155
 msgid "EU VAT Title"
 msgstr "UE TVA Titre"
