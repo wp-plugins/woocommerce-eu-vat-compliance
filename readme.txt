@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.8.2
+Stable tag: 1.8.4
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -111,8 +111,16 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 
 == Changelog ==
 
-= 1.8.2 - 2015-03-16 =
+= 1.8.4 - 2015-03-24 =
 
+* TWEAK: Prevent PHP notice when collating report data on orders recorded by older versions of the plugin
+* TWEAK: Change the default order statuses selected on the reports page to 'completed' and 'processing' only. (It's unlikely that data for orders with statuses like 'failed' or 'pending payment' are what people want to see at first).
+* TWEAK: Cause selected status boxes on the report page to be retained when selecting a different quarter
+
+= 1.8.3 - 2015-03-16 =
+
+* FIX: Correct one of the VAT column names in the CSV download
+* FIX: Display 0, not 1, where relevant in secondary VAT columns in the CSV download
 * FIX: Prevent fatal error on reports page if the user had never saved their settings.
 * TWEAK: If the user has never saved their settings, then default to using ECB as the exchange rate provider (instead of saving no currency conversion information).
 * TRANSLATION: Updated POT file, and updated French and Finnish translations.
@@ -408,4 +416,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.8.2 : Small fix for users who have never saved their settings.
+* 1.8.4 : Minor improvements to the working of the reports page

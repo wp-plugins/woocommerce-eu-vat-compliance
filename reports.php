@@ -91,6 +91,100 @@ class WC_EU_VAT_Compliance_Reports {
 		return $reports;
 	}
 
+	// WC 2.2+ only
+	private function get_items_data($start_date, $end_date, $status) {
+
+		if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) return false;
+
+		global $wpdb;
+
+		$fetch_more = true;
+		$page = 0;
+		$page_size = 1000;
+
+		$found_items = array();
+		$final_results = array();
+
+		while ($fetch_more) {
+			$page_start = $page_size * $page;
+			$results_this_time = 0;
+			$sql = $this->get_items_sql($page_start, $page_size, $start_date, $end_date, $status);
+			if (empty($sql)) break;
+
+			$results = $wpdb->get_results($sql);
+			if (!empty($results)) {
+				$page++;
+				foreach ($results as $r) {
+					if (empty($r->ID) || empty($r->k) || empty($r->v) || empty($r->oi)) continue;
+					
+					$current_order_id = $r->ID;
+					$current_order_item_id = $r->oi;
+					if (!isset($found_items[$current_order_id][$current_order_item_id])) {
+						$current_total = false;
+						$current_line_tax_data = false;
+						$found_items[$current_order_id][$current_order_item_id] = true;
+					}
+					
+					if ('_line_total' == $r->k) {
+						$current_total = $r->v;
+					} elseif ('_line_tax_data' == $r->k) {
+						$current_line_tax_data = maybe_unserialize($r->v);
+						if (empty($current_line_tax_data['total'])) continue;
+					}
+
+					if (false !== $current_total && is_array($current_line_tax_data)) {
+						$total = $current_line_tax_data['total'];
+						foreach ($total as $tax_rate_id => $item_amount) {
+							if (!isset($final_results[$tax_rate_id])) $final_results[$tax_rate_id] = 0;
+							$final_results[$tax_rate_id] += $current_total;
+						}
+					}
+
+				}
+			} else {
+				$fetch_more = false;
+			}
+			// Parse results further
+		}
+
+	}
+
+	// WC 2.2+ only (the _line_tax_data itemmeta only exists here)
+	private function get_items_sql($page_start, $page_size, $start_date, $end_date, $status) {
+
+		global $table_prefix, $wpdb;
+
+		// '_order_tax_base_currency', '_order_total_base_currency', 
+// 			,item_meta.meta_key
+		$sql = "SELECT
+			orders.ID
+			,items.order_item_id AS oi
+			,item_meta.meta_key AS k
+			,item_meta.meta_value AS v
+		FROM
+			".$wpdb->posts." AS orders
+		LEFT JOIN
+			${table_prefix}woocommerce_order_items AS items ON
+				(orders.id = items.order_id)
+		LEFT JOIN
+			${table_prefix}woocommerce_order_itemmeta AS item_meta ON
+				(item_meta.order_item_id = items.order_item_id)
+		WHERE
+			(orders.post_type = 'shop_order')
+			AND orders.post_status = 'wc-$status'
+			AND orders.post_date >= '$start_date 00:00:00'
+			AND orders.post_date <= '$end_date 23:59:59'
+			AND items.order_item_type = 'line_item'
+			AND item_meta.meta_key IN('_line_tax_data', '_line_total')
+		ORDER BY oi ASC
+		LIMIT $page_start, $page_size
+		";
+
+		if (!$sql) return false;
+
+		return $sql;
+	}
+
 	private function get_report_sql($page_start, $page_size, $start_date, $end_date, $tax_based_on_extra, $select_extra) {
 
 		global $table_prefix, $wpdb;
@@ -176,7 +270,6 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$page = 0;
 		$page_size = 1000;
-
 		$fetch_more = true;
 
 		$normalised_results = array();
@@ -342,7 +435,6 @@ class WC_EU_VAT_Compliance_Reports {
 
 	public function wc_eu_vat_compliance_report() {
 
-
 		$ranges = $this->get_report_ranges();
 		$current_range = !empty($_GET['range']) ? sanitize_text_field($_GET['range']) : 'quarter';
 
@@ -412,10 +504,12 @@ class WC_EU_VAT_Compliance_Reports {
 
 				$statuses = WooCommerce_EU_VAT_Compliance()->order_status_to_text(true);
 
+				$default_statuses = array('wc-processing', 'wc-completed');
+
 				foreach ($statuses as $label => $text) {
 
 					$use_label = (substr($label, 0, 3) == 'wc-') ? substr($label, 3) : $label;
-					$checked = (!isset($_REQUEST['wceuvat_go']) && !isset($_REQUEST['range'])) ? ' checked="checked"' : ((isset($_REQUEST['order_statuses']) && is_array($_REQUEST['order_statuses']) && in_array($use_label, $_REQUEST['order_statuses'])) ? ' checked="checked"' : '');
+					$checked = (!isset($_REQUEST['wceuvat_go']) && !isset($_REQUEST['range'])) ? (in_array($label, $default_statuses) ? ' checked="checked"' : '') : ((isset($_REQUEST['order_statuses']) && is_array($_REQUEST['order_statuses']) && in_array($use_label, $_REQUEST['order_statuses'])) ? ' checked="checked"' : '');
 
 					echo "\n".'<input type="checkbox"'.$checked.' class="wceuvat_report_status" name="order_statuses[]" id="order_status_'.$use_label.'" value="'.$use_label.'"><label for="order_status_'.$use_label.'" style="margin-right: 10px;">'.$text.'</label> ';
 				}
@@ -600,7 +694,7 @@ class WC_EU_VAT_Compliance_Reports {
 				} else {
 					// Legacy: no "by_rates" plugin versions also only allowed variable VAT
 					$rate_key = 'V-'.__('Unknown', 'wc_eu_vat_compliance');
-					if (!isset($by_rate[$rate_key]['vat'])) $by_rate[$rate_key]['vat'] = 0;
+					if (!isset($by_rate[$rate_key])) $by_rate[$rate_key] = array('vat' => 0, 'vat_shipping' => 0);
 					$by_rate[$rate_key]['vat'] += $vat_paid['total'];
 					$by_rate[$rate_key]['vat_shipping'] += $vat_paid['shipping_total'];
 				}
@@ -644,13 +738,17 @@ class WC_EU_VAT_Compliance_Reports {
 
 // var_dump($tabulated_results);
 // return;
+
+
 		foreach ($tabulated_results as $order_status => $results) {
 			$status_text = $compliance->order_status_to_text($order_status);
 
-// 			$refund_factor = ($order_status == 'refunded' || $order_status == 'wc-refunded') ? -1 : 1;
+			// TODO: Not yet used. Use it to display, on WC2.2+ only, the data on item sales that generated the corresponding VAT amounts
+			// This returns an array; keys = tax rate IDs, values = total amount of orders taxed at these rates
+			// N.B. The "total" column has no meaning when totaling those totals, as a single item may have attracted multiple taxes (theoretically)
+			$get_items_data = $this->get_items_data($start_date, $end_date, $order_status);
 
 			foreach ($results as $country => $per_rate_totals) {
-
 				foreach ($per_rate_totals as $rate_key => $totals) {
 
 					$country_label = isset($all_countries[$country]) ? $all_countries[$country] : __('Unknown', 'wc_eu_vat_compliance').' ('.$country.')';
@@ -784,7 +882,7 @@ class WC_EU_VAT_Compliance_Reports {
 					var total_vat_shipping = 0;
 					var total_vat = 0;
 					var total_items = 0;
-					jQuery('.stats_range input.wceuvat_report_status_hidden').remove();
+					jQuery('.stats_range input[name="order_statuses[]"]').remove();
 					jQuery('#wceuvat_report_form input.wceuvat_report_status').each(function(ind, item) {
 						var status_id = jQuery(item).attr('id');
 						if (status_id.substring(0, 13) == 'order_status_' && jQuery(item).prop('checked')) {
@@ -837,6 +935,31 @@ class WC_EU_VAT_Compliance_Reports {
 
 				jQuery('#wceuvat_report_form .wceuvat_report_status').change(function() {
 					update_table();
+				});
+				<?php
+					$base_url = admin_url('admin.php?page='.$_REQUEST['page']);
+					if ('wc_eu_vat_compliance_cc' == $_REQUEST['page']) $base_url .= '&tab=reports';
+				?>
+				jQuery('.stats_range li a').click(function(e) {
+					var href = jQuery(this).attr('href');
+					var get_range = href.match(/range=([_A-Za-z0-9]+)/);
+
+					if (get_range instanceof Array) {
+						var range = get_range[1];
+						var newhref = '<?php echo esc_js($base_url);?>&range='+range;
+// 						e.preventDefault();
+						var st_id = 0;
+						jQuery('#wceuvat_report_form input.wceuvat_report_status').each(function(ind, item) {
+							var status_id = jQuery(item).attr('id');
+							if (status_id.substring(0, 13) == 'order_status_' && jQuery(item).prop('checked')) {
+								var status_label = status_id.substring(13);
+								newhref += '&order_statuses['+st_id+']='+status_label;
+								st_id++;
+							}
+						});
+						// This feels hacky, but appears to be acceptable
+						jQuery(this).attr('href', newhref);
+					}
 				});
 			});
 		</script>
