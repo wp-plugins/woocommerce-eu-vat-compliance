@@ -88,11 +88,14 @@ abstract class WC_EU_VAT_Compliance_Rate_Provider_base_xml {
 						$fetched = wp_remote_get($url_base.$u);
 						if (!is_wp_error($fetched)) {
 							if (!empty($fetched['response']) || $fetched['response']['code'] < 300) $new_xml = $fetched['body'];
-							//if (strpos($new_xml, '<!DOCTYPE HTML') !== false) unset($new_xml);
+							if (isset($new_xml) && strpos($new_xml, '<!DOCTYPE HTML') !== false) {
+								unset($new_xml);
+							}
 						}
 					}
 // 				}
 			}
+
 			if (empty($new_xml) && false != ($on_disk_file = apply_filters('wc_eu_vat_'.$this->key.'_file', false, $the_time)) && file_exists($on_disk_file)) {
 				$new_xml = file_get_contents($on_disk_file);
 			}
