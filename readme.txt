@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.1
-Stable tag: 1.8.4
+Stable tag: 1.8.5
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -110,6 +110,11 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+* 1.8.5 - 2015-04-02 =
+
+* FEATURE: Add "Items (without VAT)" column to dashboard VAT report. (Requires all orders in the selected period to have been made with WC 2.2 or later).
+* TWEAK: Tested + compatible with WP 4.2 and later (tested on beta3-31975)
 
 = 1.8.4 - 2015-03-24 =
 
@@ -416,4 +421,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.8.4 : Minor improvements to the working of the reports page
+* 1.8.5 : Added column to dashboard report. Tested on WP 4.2.

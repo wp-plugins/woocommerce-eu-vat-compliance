@@ -17,6 +17,8 @@ class WC_EU_VAT_Compliance_Reports {
 	public $last_rate_used = 1;
 	private $fallback_conversion_rates = array();
 	private $conversion_provider;
+	private $at_least_22 = false;
+	private $pre_wc22_order_parsed = false;
 
 	public function __construct() {
 		add_action('admin_init', array($this, 'admin_init'));
@@ -50,6 +52,9 @@ class WC_EU_VAT_Compliance_Reports {
 */
 
 	public function admin_init() {
+
+		$this->at_least_22 = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2', '>=')) ? true : false;
+
 		if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) {
 			add_filter('woocommerce_reports_charts', array($this, 'eu_vat_report_wc20'));
 		} else {
@@ -91,10 +96,10 @@ class WC_EU_VAT_Compliance_Reports {
 		return $reports;
 	}
 
-	// WC 2.2+ only
 	private function get_items_data($start_date, $end_date, $status) {
 
-		if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) return false;
+		// WC 2.2+ only
+		if (!$this->at_least_22) return array();
 
 		global $wpdb;
 
@@ -114,9 +119,10 @@ class WC_EU_VAT_Compliance_Reports {
 			$results = $wpdb->get_results($sql);
 			if (!empty($results)) {
 				$page++;
+
 				foreach ($results as $r) {
 					if (empty($r->ID) || empty($r->k) || empty($r->v) || empty($r->oi)) continue;
-					
+
 					$current_order_id = $r->ID;
 					$current_order_item_id = $r->oi;
 					if (!isset($found_items[$current_order_id][$current_order_item_id])) {
@@ -124,19 +130,28 @@ class WC_EU_VAT_Compliance_Reports {
 						$current_line_tax_data = false;
 						$found_items[$current_order_id][$current_order_item_id] = true;
 					}
-					
+
 					if ('_line_total' == $r->k) {
 						$current_total = $r->v;
 					} elseif ('_line_tax_data' == $r->k) {
 						$current_line_tax_data = maybe_unserialize($r->v);
-						if (empty($current_line_tax_data['total'])) continue;
+						// Don't skip - we want to know that some data was there (detecting pre-WC2.2 orders)
+// 						if (empty($current_line_tax_data['total'])) continue;
 					}
 
 					if (false !== $current_total && is_array($current_line_tax_data)) {
 						$total = $current_line_tax_data['total'];
-						foreach ($total as $tax_rate_id => $item_amount) {
-							if (!isset($final_results[$tax_rate_id])) $final_results[$tax_rate_id] = 0;
-							$final_results[$tax_rate_id] += $current_total;
+						if (empty($total)) {
+							// Record something - it's used to confirm that all orders had data, later
+							if (!isset($final_results[$current_order_id])) $final_results[$current_order_id] = array();
+						} else {
+							foreach ($total as $tax_rate_id => $item_amount) {
+	// 							if (!isset($final_results[$tax_rate_id])) $final_results[$tax_rate_id] = 0;
+	// 							$final_results[$tax_rate_id] += $current_total;
+								// Needs to still be broken down by ID so that it can then be linked back to country
+								if (!isset($final_results[$current_order_id][$tax_rate_id])) $final_results[$current_order_id][$tax_rate_id] = 0;
+								$final_results[$current_order_id][$tax_rate_id] += $current_total;
+							}
 						}
 					}
 
@@ -145,7 +160,14 @@ class WC_EU_VAT_Compliance_Reports {
 				$fetch_more = false;
 			}
 			// Parse results further
+			foreach ($found_items as $order_id => $order_items) {
+				if (!isset($final_results[$order_id])) {
+					$this->pre_wc22_order_parsed = true;
+				}
+			}
 		}
+
+		return $final_results;
 
 	}
 
@@ -650,11 +672,6 @@ class WC_EU_VAT_Compliance_Reports {
 		$base_currency = get_option('woocommerce_currency');
 		$base_currency_symbol = get_woocommerce_currency_symbol($base_currency);
 
-// echo print_r_pre($results);
-
-// var_dump($results['on-hold'][174]);
-// return;
-
 		$this->initialise_rate_provider();
 
 		$this->reporting_currency = apply_filters('wc_eu_vat_vat_reporting_currency', get_option('woocommerce_eu_vat_compliance_vat_recording_currency'));
@@ -663,7 +680,16 @@ class WC_EU_VAT_Compliance_Reports {
 		$reporting_currency_symbol = get_woocommerce_currency_symbol($this->reporting_currency);
 
 		foreach ($results as $order_status => $result_set) {
-			foreach ($result_set as $res) {
+
+			// This returns an array of arrays; keys = order IDs; second key = tax rate IDs, values = total amount of orders taxed at these rates
+			// N.B. The "total" column potentially has no meaning when totaling item totals, as a single item may have attracted multiple taxes (theoretically). Note also that the totals are *for orders with VAT*.
+			$get_items_data = $this->get_items_data($start_date, $end_date, $order_status);
+
+// echo "$order_status\n";
+// var_dump($get_items_data);
+
+			foreach ($result_set as $order_id => $res) {
+
 				if (!is_array($res) || empty($res['taxable_country']) || empty($res['vat_paid']) || !is_array($res['vat_paid']) || empty($res['vat_paid']['total'])) continue;
 
 				$order_currency = (isset($res['_order_currency'])) ? $res['_order_currency'] : $base_currency;
@@ -671,13 +697,16 @@ class WC_EU_VAT_Compliance_Reports {
 
 				$conversion_rates = isset($res['conversion_rates']) ? $res['conversion_rates'] : array();
 				// Convert the 'vat_paid' array so that its values in the reporting currency, according to the conversion rates stored with the order
-				$res_converted = $this->get_converted_vat_paid($res, $order_currency, $conversion_rates);
+
+				$get_items_data_for_order = (isset($get_items_data[$order_id])) ? $get_items_data[$order_id] : array();
+
+				list($res_converted, $converted_items_data_for_order) = $this->get_converted_order_data($res, $order_currency, $conversion_rates, $get_items_data_for_order);
+
 				$vat_paid = $res_converted['vat_paid'];
 
 				$by_rate = array();
 				if (isset($vat_paid['by_rates'])) {
 					foreach ($vat_paid['by_rates'] as $tax_rate_id => $rinfo) {
-
 
 						$rate = sprintf('%0.2f', $rinfo['rate']);
 						$rate_key = $rate;
@@ -686,17 +715,26 @@ class WC_EU_VAT_Compliance_Reports {
 							$rate_key = 'V-'.$rate_key;
 						}
 
-						if (!isset($by_rate[$rate_key])) $by_rate[$rate_key] = array('vat' => 0, 'vat_shipping' => 0);
+						if (!isset($by_rate[$rate_key])) $by_rate[$rate_key] = array('vat' => 0, 'vat_shipping' => 0, 'sales' => 0);
 						$by_rate[$rate_key]['vat'] += $rinfo['items_total']+$rinfo['shipping_total'];
 						$by_rate[$rate_key]['vat_shipping'] += $rinfo['shipping_total'];
 
+						// Add sales from items totals
+						if (isset($converted_items_data_for_order[$tax_rate_id])) {
+							$by_rate[$rate_key]['sales'] += $converted_items_data_for_order[$tax_rate_id];
+						}
 					}
+
 				} else {
 					// Legacy: no "by_rates" plugin versions also only allowed variable VAT
 					$rate_key = 'V-'.__('Unknown', 'wc_eu_vat_compliance');
-					if (!isset($by_rate[$rate_key])) $by_rate[$rate_key] = array('vat' => 0, 'vat_shipping' => 0);
+					if (!isset($by_rate[$rate_key])) $by_rate[$rate_key] = array('vat' => 0, 'vat_shipping' => 0, 'sales' => 0);
 					$by_rate[$rate_key]['vat'] += $vat_paid['total'];
 					$by_rate[$rate_key]['vat_shipping'] += $vat_paid['shipping_total'];
+
+					foreach ($converted_items_data_for_order as $tax_rate_id => $sales_amount) {
+						$by_rate[$rate_key]['sales'] += $sales_amount;
+					}
 				}
 
 				foreach ($by_rate as $rate_key => $rate_data) {
@@ -708,15 +746,50 @@ class WC_EU_VAT_Compliance_Reports {
 					if (empty($tabulated_results[$order_status][$country][$rate_key]['vat_shipping'])) $tabulated_results[$order_status][$country][$rate_key]['vat_shipping'] = 0;
 					$tabulated_results[$order_status][$country][$rate_key]['vat_shipping'] += $rate_data['vat_shipping'];
 					
-					# TODO: Items total, using the order_itemmeta and order_items tables
+					# Items total, using the data got from the (current) order_itemmeta and order_items tables
+					if (empty($tabulated_results[$order_status][$country][$rate_key]['sales'])) $tabulated_results[$order_status][$country][$rate_key]['sales'] = 0;
+					$tabulated_results[$order_status][$country][$rate_key]['sales'] += $rate_data['sales'];
 				}
 
+				// Below is incorrect - it does not separate out by rate. The correct code is above.
 				# Sales (net)
 				// To do this (i.e. item sales per-VAT-rate), involves interrogating the order_itemmeta and order_items tables.
 // 				if (empty($tabulated_results[$order_status][$country]['sales'])) $tabulated_results[$order_status][$country]['sales'] = 0;
 // 				$tabulated_results[$order_status][$country]['sales'] += $res_converted['_order_total'];
 
 			}
+		}
+
+		// Remove the 'sales' column if there are items with no line tax data (i.e. pre-WC 2.2 sales) OR (better?) display a warning about the data being incomplete.
+		if ($this->at_least_22) {
+			if ($this->pre_wc22_order_parsed) {
+				?>
+				<p>
+				<span style="font-weight:bold; color:red;"><?php _e('Note:', 'wc_eu_vat_compliance');?></span> <?php echo __('The selected time period contains order made under WooCommerce 2.1 or earlier.', 'wc_eu_vat_compliance').' '.__('These WooCommerce versions did not record the data used to display the "Items" column, which is therefore incomplete and has been hidden.', 'wc_eu_vat_compliance');?> <a href="#" onclick="jQuery('.wceuvat_itemsdata').slideDown(); wceuvat_itemsdata_show=true; jQuery(this).parent().remove(); return false;"><?php _e('Show', 'wc_eu_vat_compliance');?></a>
+				</p>
+				<script>
+				var wceuvat_itemsdata_show = false;
+				jQuery(document).ready(function($){
+					$('.wceuvat_itemsdata').hide();
+				});
+				</script>
+				<?php
+			} else {
+			?>
+			<script>
+				var wceuvat_itemsdata_show = true;
+			</script>
+			<?php
+			}
+		} else {
+			?>
+			<script>
+				var wceuvat_itemsdata_show = false;
+				jQuery(document).ready(function($){
+					$('.wceuvat_itemsdata').hide();
+				});
+			</script>
+			<?php
 		}
 
 		$this->report_table_header();
@@ -736,17 +809,10 @@ class WC_EU_VAT_Compliance_Reports {
 
 // 		$tbody = '';
 
-// var_dump($tabulated_results);
-// return;
-
+		// var_dump($tabulated_results); return;
 
 		foreach ($tabulated_results as $order_status => $results) {
 			$status_text = $compliance->order_status_to_text($order_status);
-
-			// TODO: Not yet used. Use it to display, on WC2.2+ only, the data on item sales that generated the corresponding VAT amounts
-			// This returns an array; keys = tax rate IDs, values = total amount of orders taxed at these rates
-			// N.B. The "total" column has no meaning when totaling those totals, as a single item may have attracted multiple taxes (theoretically)
-			$get_items_data = $this->get_items_data($start_date, $end_date, $order_status);
 
 			foreach ($results as $country => $per_rate_totals) {
 				foreach ($per_rate_totals as $rate_key => $totals) {
@@ -758,12 +824,13 @@ class WC_EU_VAT_Compliance_Reports {
 					$vat_shipping_amount = $compliance->round_amount($totals['vat_shipping']);
 					$vat_total_amount = $compliance->round_amount($totals['vat']);
 
-// 					$total_amount = $reporting_currency_symbol.' '.sprintf('%.02f', $totals['sales']);
+					$items_amount = $compliance->round_amount($totals['sales']);
 // 					$items_amount = $reporting_currency_symbol.' '.sprintf('%.02f', $totals['sales']-$totals['vat']);
 
 					$total_vat += $vat_total_amount;
 					$total_vat_items += $vat_items_amount;
 // 					$total_items += $totals['sales']-$totals['vat'];
+					$total_items += $items_amount;
 					$total_vat_shipping += $vat_shipping_amount;
 // 					$total_sales += $totals['sales'];
 
@@ -776,10 +843,16 @@ class WC_EU_VAT_Compliance_Reports {
 						$vat_rate_label = htmlspecialchars($rate_key);
 					}
 
+				if ($this->at_least_22) {
+					$extra_col = '<td class="wceuvat_itemsdata">'.$reporting_currency_symbol.' '.$items_amount.'</td>';
+				} else {
+					$extra_col = '';
+				}
+
 //data-items=\"".sprintf('%.05f', $totals['sales']-$totals['vat'])."\"
-					echo "<tr data-vat-items=\"".$compliance->round_amount($vat_items_amount)."\"  data-vat-shipping=\"".$compliance->round_amount($vat_shipping_amount)."\" class=\"statusrow status-$order_status\">
+					echo "<tr data-vat-items=\"".$compliance->round_amount($vat_items_amount)."\"  data-vat-shipping=\"".$compliance->round_amount($vat_shipping_amount)."\" data-items=\"".$compliance->round_amount($items_amount)."\" class=\"statusrow status-$order_status\">
 						<td>$status_text</td>
-						<td>$country_label</td>
+						<td>$country_label</td>".$extra_col."
 						<td>$vat_rate_label</td>
 						<td>$reporting_currency_symbol $vat_items_amount</td>
 						<td>$reporting_currency_symbol $vat_shipping_amount</td>
@@ -802,6 +875,9 @@ class WC_EU_VAT_Compliance_Reports {
 			<tr class="wc_eu_vat_compliance_totals" id="wc_eu_vat_compliance_total">
 				<td><strong><?php echo __('Grand Total', 'wc_eu_vat_compliance');?></strong></td>
 				<td>-</td>
+				<?php if ($this->at_least_22) { ?>
+					<td><strong><?php echo $reporting_currency_symbol.' '.sprintf('%.2f', $total_items); ?></strong></td>
+				<?php } ?>
 				<td>-</td>
 				<td><strong><?php echo $reporting_currency_symbol.' '.sprintf('%.2f', $total_vat_items); ?></strong></td>
 				<td><strong><?php echo $reporting_currency_symbol.' '.sprintf('%.2f', $total_vat_shipping); ?></strong></td>
@@ -814,8 +890,9 @@ class WC_EU_VAT_Compliance_Reports {
 		add_action('admin_footer', array($this, 'admin_footer'));
 	}
 
+	// This takes one or two arrays of order data, and converts the amounts in them to the requested currency
 	// public: used also in the CSV download
-	public function get_converted_vat_paid($raw, $order_currency, $conversion_rates) {
+	public function get_converted_order_data($raw, $order_currency, $conversion_rates, $get_items_data_for_order = array()) {
 
 		if (isset($conversion_rates[$this->reporting_currency])) {
 			$use_rate = $conversion_rates[$this->reporting_currency];
@@ -848,7 +925,11 @@ class WC_EU_VAT_Compliance_Reports {
 			}
 		}
 
-		return $raw;
+		foreach ($get_items_data_for_order as $tax_rate_id => $amount) {
+			$get_items_data_for_order[$tax_rate_id] = $amount * $use_rate;
+		}
+
+		return array($raw, $get_items_data_for_order);
 	}
 
 	private function report_table_footer($reporting_currency_symbol) {
@@ -891,10 +972,11 @@ class WC_EU_VAT_Compliance_Reports {
 							var row_items = jQuery('#wc_eu_vat_compliance_report tbody tr.status-'+status_label);
 							jQuery(row_items).show();
 							jQuery(row_items).each(function(cind, citem) {
-// 								var items = parseFloat(jQuery(citem).data('items'));
+								var items = parseFloat(jQuery(citem).data('items'));
 								var vat_items = parseFloat(jQuery(citem).data('vat-items'));
 								var vat_shipping = parseFloat(jQuery(citem).data('vat-shipping'));
 								var vat = vat_items + vat_shipping;
+								total_items += items;
 								total_vat += vat;
 								total_vat_items += vat_items;
 								total_vat_shipping += vat_shipping;
@@ -911,6 +993,11 @@ class WC_EU_VAT_Compliance_Reports {
 		<tr class="wc_eu_vat_compliance_total" id="wc_eu_vat_compliance_total">\
 			<td><strong><?php echo __('Grand Total', 'wc_eu_vat_compliance');?></strong></td>\
 			<td>-</td>\
+			<?php
+				if ($this->at_least_22) {
+					echo "<td class=\"wceuvat_itemsdata\"><strong>'+currency_symbol+' '+parseFloat(total_items).toFixed(2)+'</strong></td>\\";
+				}
+			?>
 			<td>-</td>\
 			<td><strong>'+currency_symbol+' '+parseFloat(total_vat_items).toFixed(2)+'</strong></td>\
 			<td><strong>'+currency_symbol+' '+parseFloat(total_vat_shipping).toFixed(2)+'</strong></td>\
@@ -918,6 +1005,12 @@ class WC_EU_VAT_Compliance_Reports {
 		</tr>\
 					');
 // 			<td><strong>'+currency_symbol+' '+parseFloat(total_items).toFixed(2)+'</strong></td>\
+
+					if (typeof wceuvat_itemsdata_show != 'undefined' && wceuvat_itemsdata_show) {
+						jQuery('.wceuvat_itemsdata').show();
+					} else {
+						jQuery('.wceuvat_itemsdata').hide();
+					}
 
 					if (!tablesorter_created) {
 						jQuery('#wc_eu_vat_compliance_report').tablesorter({
@@ -967,13 +1060,16 @@ class WC_EU_VAT_Compliance_Reports {
 	}
 
 	private function report_table_header() {
-/* 				<th><?php _e('Items (without VAT)', 'wc_eu_vat_compliance');?></th> */
+/* 				<th><?php _e('Items (before VAT)', 'wc_eu_vat_compliance');?></th> */
 	?>
 		<table class="widefat" id="wc_eu_vat_compliance_report">
 		<thead>
 			<tr>
 				<th><?php _e('Order Status', 'wc_eu_vat_compliance');?></th>
 				<th><?php _e('Country', 'wc_eu_vat_compliance');?></th>
+				<?php if ($this->at_least_22) { ?>
+					<th class="wceuvat_itemsdata"><?php _e('Items (before VAT)', 'wc_eu_vat_compliance');?></th>
+				<?php } ?>
 				<th><?php _e('VAT rate', 'wc_eu_vat_compliance');?></th>
 				<th><?php _e('VAT on items', 'wc_eu_vat_compliance');?></th>
 				<th><?php _e('VAT on shipping', 'wc_eu_vat_compliance');?></th>
@@ -984,6 +1080,9 @@ class WC_EU_VAT_Compliance_Reports {
 			<tr>
 				<th><?php _e('Order Status', 'wc_eu_vat_compliance');?></th>
 				<th><?php _e('Country', 'wc_eu_vat_compliance');?></th>
+				<?php if ($this->at_least_22) { ?>
+					<th class="wceuvat_itemsdata"><?php _e('Items (before VAT)', 'wc_eu_vat_compliance');?></th>
+				<?php } ?>
 				<th><?php _e('VAT rate', 'wc_eu_vat_compliance');?></th>
 				<th><?php _e('VAT on items', 'wc_eu_vat_compliance');?></th>
 				<th><?php _e('VAT on shipping', 'wc_eu_vat_compliance');?></th>

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce EU Vat Compliance\n"
-"POT-Creation-Date: 2015-03-16 11:33+0100\n"
-"PO-Revision-Date: 2015-03-16 11:33+0100\n"
+"POT-Creation-Date: 2015-04-02 13:10+0100\n"
+"PO-Revision-Date: 2015-04-02 13:10+0100\n"
 "Last-Translator: David Anderson <contact@updraftplus.com>\n"
 "Language-Team:  <contact@simbahosting.co.uk>\n"
 "MIME-Version: 1.0\n"
@@ -228,8 +228,8 @@ msgstr ""
 msgid "IP address country detected via"
 msgstr ""
 
-#: premium.php:317 premium.php:331 premium.php:335 premium.php:341
-#: premium.php:345 premium.php:352 reports.php:602 reports.php:656
+#: premium.php:315 premium.php:329 premium.php:333 premium.php:339
+#: premium.php:343 premium.php:350 reports.php:730 reports.php:820
 #: bootstrap.php:670 vat-number.php:423 record-order-country.php:279
 #: record-order-country.php:295 record-order-country.php:297
 #: record-order-country.php:299 record-order-country.php:307
@@ -237,93 +237,117 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: premium.php:437 premium.php:441 premium.php:445 premium.php:453
-#: premium.php:454
+#: premium.php:435 premium.php:439 premium.php:443 premium.php:451
+#: premium.php:452
 msgid "No"
 msgstr ""
 
-#: premium.php:437 premium.php:441 premium.php:445 premium.php:453
-#: premium.php:454
+#: premium.php:435 premium.php:439 premium.php:443 premium.php:451
+#: premium.php:452
 msgid "Yes"
 msgstr ""
 
-#: premium.php:452
+#: premium.php:450
 msgid "None supplied"
 msgstr ""
 
-#: premium.php:453 premium.php:454
+#: premium.php:451 premium.php:452
 msgid "n/a"
 msgstr ""
 
-#: premium.php:524
+#: premium.php:522
 msgid ""
 "You can delete the free version of the WooCommerce EU VAT Compliance plugin"
 msgstr ""
 
-#: premium.php:525
+#: premium.php:523
 msgid "all of its features are part of the premium version."
 msgstr ""
 
-#: reports.php:29 reports.php:75 reports.php:85
+#: reports.php:31 reports.php:80 reports.php:90
 msgid "EU VAT Report"
 msgstr ""
 
-#: reports.php:359
+#: reports.php:473
 msgid ""
 "The report below indicates the taxes actually charged on orders, when they "
 "were processed: it does not take into account later alterations manually "
 "made to order data."
 msgstr ""
 
-#: reports.php:361
+#: reports.php:475
 msgid ""
 "Downloading all orders with VAT data in CSV format is a feature of the "
 "Premium version of this plugin."
 msgstr ""
 
-#: reports.php:411
+#: reports.php:525
 msgid "Include statuses (updates instantly):"
 msgstr ""
 
-#: reports.php:493
+#: reports.php:609
 #, php-format
 msgctxt "Q for quarter (date); e.g. Q1 2014"
 msgid "Q%d %d"
 msgstr ""
 
-#: reports.php:675
+#: reports.php:768
+msgid "Note:"
+msgstr ""
+
+#: reports.php:768
+msgid ""
+"The selected time period contains order made under WooCommerce 2.1 or "
+"earlier."
+msgstr ""
+
+#: reports.php:768
+msgid ""
+"These WooCommerce versions did not record the data used to display the "
+"\"Items\" column, which is therefore incomplete and has been hidden."
+msgstr ""
+
+#: reports.php:768
+msgid "Show"
+msgstr ""
+
+#: reports.php:840
 msgid "Fixed - i.e., traditional non-variable VAT"
 msgstr ""
 
-#: reports.php:675
+#: reports.php:840
 msgid "fixed"
 msgstr ""
 
-#: reports.php:705 reports.php:814
+#: reports.php:876 reports.php:994
 msgid "Grand Total"
 msgstr ""
 
-#: reports.php:852 reports.php:862
+#: reports.php:1068 reports.php:1081
 msgid "Order Status"
 msgstr ""
 
-#: reports.php:853 reports.php:863
+#: reports.php:1069 reports.php:1082
 msgid "Country"
 msgstr ""
 
-#: reports.php:854 reports.php:864
+#: reports.php:1071 reports.php:1084
+msgid "Items (before VAT)"
+msgstr ""
+
+#: reports.php:1073 reports.php:1086
 msgid "VAT rate"
 msgstr ""
 
-#: reports.php:855 reports.php:865
+#: reports.php:1074 reports.php:1087
 msgid "VAT on items"
 msgstr ""
 
-#: reports.php:856 reports.php:866
+#: reports.php:1075 reports.php:1088
 msgid "VAT on shipping"
 msgstr ""
 
-#: reports.php:857 reports.php:867
+#: reports.php:1076 reports.php:1089
 msgid "Total VAT"
 msgstr ""
 
