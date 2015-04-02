@@ -1,7 +1,7 @@
 === WooCommerce EU VAT Compliance ===
 Contributors: DavidAnderson
 Requires at least: 3.1
-Tested up to: 4.1
+Tested up to: 4.2
 Stable tag: 1.8.5
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
