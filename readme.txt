@@ -111,7 +111,7 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 
 == Changelog ==
 
-* 1.8.5 - 2015-04-02 =
+= 1.8.5 - 2015-04-02 =
 
 * FEATURE: Add "Items (without VAT)" column to dashboard VAT report. (Requires all orders in the selected period to have been made with WC 2.2 or later).
 * TWEAK: Tested + compatible with WP 4.2 and later (tested on beta3-31975)
