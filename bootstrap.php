@@ -48,6 +48,8 @@ class WC_EU_VAT_Compliance {
 
 	private $default_vat_matches = 'VAT, V.A.T, IVA, I.V.A., Value Added Tax, TVA, T.V.A.';
 	public $wc;
+
+	public $at_least_22 = true;
 	public $settings;
 
 	private $wcpdf_order_id;
@@ -347,6 +349,7 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		return $order;
 	}
 
+	// This function is for output - it will add on conversions into the indicate currencies
 	public function get_amount_in_conversion_currencies($amount, $conversion_currencies, $conversion_rates, $order_currency, $paid = false) {
 		foreach ($conversion_currencies as $currency) {
 			$rate = ($currency == $order_currency) ? 1 : (isset($conversion_rates['rates'][$currency]) ? $conversion_rates['rates'][$currency] : '??');
@@ -680,6 +683,8 @@ Array
 	}
 
 	public function plugins_loaded() {
+
+		$this->at_least_22 = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) ? false : true;
 
 		load_plugin_textdomain('wc_eu_vat_compliance', false, basename(WC_EU_VAT_COMPLIANCE_DIR).'/languages');
 

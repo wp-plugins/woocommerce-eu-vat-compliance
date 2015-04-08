@@ -209,16 +209,77 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 			$shipping_total = false;
 			$total_total = false;
 
-			foreach ($vat_paid['by_rates'] as $vat) {
+			$refunded_items_total = false;
+			$refunded_shipping_total = false;
+			$refunded_shipping_tax_total = false;
+			$refunded_total_total = false;
+
+			// Any tax refunds?
+			if ($compliance->at_least_22) {
+				// This method only exists on WC 2.3+
+				$total_tax_refunded = (method_exists($order, 'get_total_tax_refunded')) ? $order->get_total_tax_refunded() : $this->get_total_tax_refunded($order->id);
+				if ($total_tax_refunded > 0) {
+					$any_tax_refunds_exist = true;
+				}
+			}
+
+			foreach ($vat_paid['by_rates'] as $rate_id => $vat) {
+
+				$refunded_item_amount = 0;
+				$refunded_shipping_amount = 0;
+				$refunded_tax_amount = 0;
+				$refunded_shipping_tax_amount = 0;
+
+				if (!empty($any_tax_refunds_exist)) {
+					// This loop is adapted from WC_Order::get_total_tax_refunded_by_rate_id() (WC 2.3+)
+					foreach ( $order->get_refunds() as $refund ) {
+						foreach ( $refund->get_items( 'tax' ) as $refunded_item ) {
+							if ( isset( $refunded_item['rate_id'] ) && $refunded_item['rate_id'] == $rate_id ) {
+								$refunded_tax_amount += abs( $refunded_item['tax_amount'] );
+								$refunded_shipping_tax_amount += abs( $refunded_item['shipping_tax_amount'] );
+							}
+						}
+						foreach ( $refund->get_items( 'shipping' ) as $refunded_item ) {
+							if (!isset($refunded_item['taxes'])) continue;
+							$tax_data = maybe_unserialize($refunded_item['taxes']);
+							// Was the current tax rate ID used on this item?
+							if ( !empty( $tax_data[$rate_id] )) {
+								// Minus, because we want to end up with a positive amount, so that all the $refunded_ variables are consistent.
+								$refunded_shipping_amount -= $refunded_item['cost'];
+								// Don't add it again here - it's already added above
+// 								$refunded_shipping_tax_amount -= $tax_data[$rate_id];
+							}
+						}
+						foreach ( $refund->get_items() as $refunded_item ) {
+							if (!isset($refunded_item['line_tax_data'])) continue;
+							$tax_data = maybe_unserialize($refunded_item['line_tax_data']);
+							// Was the current tax rate ID used on this item?
+							if ( !empty( $tax_data['total'][$rate_id] )) {
+								// Minus, because we want to end up with a positive amount, so that all the $refunded_ variables are consistent.
+								$refunded_item_amount -= $refunded_item['line_total'];
+							}
+						}
+// 						if ($refunded_item_amount >0 || $refunded_tax_amount>0 || $refunded_shipping_amount || $refunded_shipping_tax_amount) {
+// 							var_dump($refunded_item_amount);
+// 							var_dump($refunded_tax_amount);
+// 							var_dump($refunded_shipping_amount);
+// 							var_dump($refunded_shipping_tax_amount);
+// 						}
+					}
+				}
 
 				$items_total += $vat['items_total'];
 				$shipping_total += $vat['shipping_total'];
 				$total_total += $vat['items_total'] + $vat['shipping_total'];
 
+				$refunded_items_total += $refunded_item_amount;
+				$refunded_shipping_total += $refunded_shipping_amount;
+				$refunded_shipping_tax_total += $refunded_shipping_tax_amount;
+				$refunded_total_total += $refunded_tax_amount + $refunded_shipping_tax_amount;
+
 				$items = $compliance->get_amount_in_conversion_currencies($vat['items_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
 				$shipping = $compliance->get_amount_in_conversion_currencies($vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
-
 				$total = $compliance->get_amount_in_conversion_currencies($vat['items_total']+$vat['shipping_total'], $conversion_currencies, $conversion_rates, $order_currency);
 
 				// When it is not set, we have legacy data format (pre 1.7.0), where all VAT-able items were assumed to be digital
@@ -229,9 +290,28 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 				}
 
 				echo '<strong>'.$vat['name'].' ('.sprintf('%0.2f', $vat['rate']).' %)</strong><br>'.$extra_title;
+
 				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';
+				if ($refunded_tax_amount) {
+					$refunded_taxes = $compliance->get_amount_in_conversion_currencies($refunded_tax_amount*-1, $conversion_currencies, $conversion_rates, $order_currency);
+					echo __('Items refunded', 'wc_eu_vat_compliance').': '.$refunded_taxes;
+					echo '<br>';
+				}
+
 				echo __('Shipping', 'wc_eu_vat_compliance').': '.$shipping.'<br>';
-				echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
+				if ($refunded_shipping_tax_amount) {
+					echo __('Shipping refunded', 'wc_eu_vat_compliance').': '.$compliance->get_amount_in_conversion_currencies($refunded_shipping_tax_amount*-1, $conversion_currencies, $conversion_rates, $order_currency).'';
+					echo '<br>';
+				}
+
+				if ($refunded_tax_amount || $refunded_shipping_tax_amount) {
+					$total_after_refunds = $vat['items_total']+$vat['shipping_total'] - ($refunded_tax_amount + $refunded_shipping_tax_amount);
+					$total_after_refunds_converted = $compliance->get_amount_in_conversion_currencies($total_after_refunds, $conversion_currencies, $conversion_rates, $order_currency);
+					echo __('Total (including refunds)', 'wc_eu_vat_compliance').': '.$total_after_refunds_converted;
+					echo '<br>';
+				} else {
+					echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
+				}
 
 			}
 
@@ -246,7 +326,14 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 				echo '<strong>'.__('All VAT charges', 'wc_eu_vat_compliance').'</strong><br>';
 				echo __('Items', 'wc_eu_vat_compliance').': '.$items.'<br>';
 				echo __('Shipping', 'wc_eu_vat_compliance').': '.$shipping.'<br>';
-				echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
+				if ($refunded_total_total) {
+					echo __('Net total', 'wc_eu_vat_compliance').': '.$total.'<br>';
+					echo __('Refund total', 'wc_eu_vat_compliance').': '.$compliance->get_amount_in_conversion_currencies($refunded_total_total*-1, $conversion_currencies, $conversion_rates, $order_currency).'<br>';
+					$grand_total = $total_total - $refunded_total_total;
+					echo __('Grand total', 'wc_eu_vat_compliance').': '.$compliance->get_amount_in_conversion_currencies($grand_total, $conversion_currencies, $conversion_rates, $order_currency).'<br>';
+				} else {
+					echo __('Total', 'wc_eu_vat_compliance').': '.$total.'<br>';
+				}
 			}
 
 	
@@ -352,6 +439,23 @@ array (size=3)
 		// $time
 		echo "</p>";
 
+	}
+
+	// This is for WC 2.2 - the method was not added until WC 2.3 (though the data exists) - the below copies over the method from 2.3
+	// http://docs.woothemes.com/wc-apidocs/source-class-WC_Order.html#61-80
+	private function get_total_tax_refunded($order_id) {
+		global $wpdb;
+
+		$total = $wpdb->get_var( $wpdb->prepare( "
+		SELECT SUM( order_itemmeta.meta_value )
+		FROM {$wpdb->prefix}woocommerce_order_itemmeta AS order_itemmeta
+		INNER JOIN $wpdb->posts AS posts ON ( posts.post_type = 'shop_order_refund' AND posts.post_parent = %d )
+		INNER JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON ( order_items.order_id = posts.ID AND order_items.order_item_type = 'tax' )
+		WHERE order_itemmeta.order_item_id = order_items.order_item_id
+		AND order_itemmeta.meta_key IN ('tax_amount', 'shipping_tax_amount')
+		", $order_id ) );
+
+		return abs( $total );
 	}
 
 }

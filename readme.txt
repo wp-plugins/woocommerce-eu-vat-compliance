@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.1
 Tested up to: 4.2
-Stable tag: 1.8.5
+Stable tag: 1.9.0
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -41,6 +41,8 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Add line to invoices:</strong> If VAT was paid on the order, then an extra, configurable line can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
 
+- <strong>Refund support:</strong> includes information on refunded VAT, on relevant orders (WooCommerce 2.2 introduced the capability to refund and partially refund orders)
+
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">A Premium version is on sale at this link</a>, and currently has these *additional* features ready:
 
 - <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained. The customer's VAT number will be appended to the billing address where shown (e.g. order summary email, PDF invoices). An extra, configurable line specific to this situation can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
@@ -57,7 +59,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">Read more about the Premium version of this plugin at this link.</a>
 
-Other features are still being weighed up and considered. It is believed (but not legally guaranteed), that armed with the above capabilities, a WooCommerce shop owner will be in a position to fulfil all the requirements of the EU VAT law: identifying the customer's location and collecting multiple pieces of evidence, applying the correct VAT rate, validating VAT numbers for B2B transactions, and having the data needed to create returns. (If in the EU, then you will also need to make sure that you are issuing your customers with VAT invoices containing the information required in your jurisdiction, via <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">a suitable WooCommerce invoice plugin</a>).
+It is believed (but not legally guaranteed), that armed with the above capabilities, a WooCommerce shop owner will be in a position to fulfil all the requirements of the EU VAT law: identifying the customer's location and collecting multiple pieces of evidence, applying the correct VAT rate, validating VAT numbers for B2B transactions, and having the data needed to create returns. (If in the EU, then you will also need to make sure that you are issuing your customers with VAT invoices containing the information required in your jurisdiction, via <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">a suitable WooCommerce invoice plugin</a>).
 
 Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT / IVA regime will continue to operate.
 
@@ -110,6 +112,14 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.9.0 - 2015-04-08 =
+
+* FEATURE: The order-page widget now additionally displays VAT refund information, if a refund exists on the order
+* FEATURE: The CSV download (Premium) now contains additional column with VAT refund information (per-rate, and total, in both order and reporting currencies)
+* TWEAK: Premium version now contains support link to the proper place (not to wordpress.org's free forum)
+* FIX: "Export CSV" button/link did not handle the chosen date range correctly in all situations
+* FIX: Bug that caused items in orders with the same VAT rate, but which differed through some being digital VAT and others traditional VAT (i.e. physical goods), being wrongly banded together in CSV download VAT summaries.
 
 = 1.8.5 - 2015-04-02 =
 
@@ -213,7 +223,7 @@ directory due to licensing complications.
 
 = 1.6.12 - 2015-01-06 =
 
-* FEATURE: CSV downloads now take notice of the chosen dates in the date selector widget (reports) (i.e. so you can now alsop download selected data, instead of only downloading all data)
+* FEATURE: CSV downloads now take notice of the chosen dates in the date selector widget (reports) (i.e. so you can now also download selected data, instead of only downloading all data)
 * FIX: Some more translated strings are now translated in the admin interface.
 * FIX: Restore functionality on WooCommerce < 2.2 (checkout broken in 1.6.0)
 * FIX: Don't tweak the "taxes estimated for" message on the cart page on WooCommerce < 2.2.9, since the country choice widget requires this version
@@ -421,4 +431,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.8.5 : Added column to dashboard report. Tested on WP 4.2.
+* 1.9.0 : Refund information now included in order-page widget, and CSV download

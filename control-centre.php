@@ -92,11 +92,9 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 				if (!is_null($value)) {
 					$any_found = true;
-// error_log($setting['id'].": ".serialize($value));
 					update_option($setting['id'], $value);
 				}
 
-	// 			error_log($setting['id'].": ".serialize($value)." - GO");
 			}
 
 			if (!$any_found) {
@@ -186,7 +184,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 // .' - '.sprintf(__('version %s', 'wc_eu_vat_compliance'), $version);
 		?>
 		<h1><?php echo __('EU VAT Compliance', 'wc_eu_vat_compliance').' '.__('for WooCommerce', 'wc_eu_vat_compliance');?></h1>
-		<a href="https://wordpress.org/support/plugin/woocommerce-eu-vat-compliance/"><?php _e('Support', 'wc_eu_vat_compliance');?></a> | 
+		<a href="<?php echo apply_filters('wceuvat_support_url', 'https://wordpress.org/support/plugin/woocommerce-eu-vat-compliance/');?>"><?php _e('Support', 'wc_eu_vat_compliance');?></a> | 
 		<?php if (!$premium) {
 			?><a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/"><?php _e("Premium", 'wc_eu_vat_compliance');?></a> |
 		<?php } ?>

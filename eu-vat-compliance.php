@@ -3,13 +3,13 @@
 Plugin Name: WooCommerce EU VAT Compliance (Free)
 Plugin URI: https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/
 Description: Provides features to assist WooCommerce with EU VAT compliance
-Version: 1.8.5
+Version: 1.9.0
 Text Domain: wc_eu_vat_compliance
 Domain Path: /languages
 Author: David Anderson
 Author URI: http://www.simbahosting.co.uk/s3/shop/
 Requires at least: 3.1
-Tested up to: 4.1
+Tested up to: 4.2
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

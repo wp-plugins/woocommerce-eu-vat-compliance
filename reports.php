@@ -20,7 +20,11 @@ class WC_EU_VAT_Compliance_Reports {
 	private $at_least_22 = false;
 	private $pre_wc22_order_parsed = false;
 
+	public $start_date;
+	public $end_date;
+
 	public function __construct() {
+		add_action('plugins_loaded', array($this, 'plugins_loaded'));
 		add_action('admin_init', array($this, 'admin_init'));
 		add_action('wc_eu_vat_compliance_cc_tab_reports', array($this, 'wc_eu_vat_compliance_cc_tab_reports'));
 // 		add_action('wc_eu_vat_report_begin', array($this, 'wc_eu_vat_report_begin'), 10, 2);
@@ -30,6 +34,10 @@ class WC_EU_VAT_Compliance_Reports {
 	public function wc_eu_vat_compliance_cc_tab_reports() {
 		echo '<h2>'.__('EU VAT Report', 'wc_eu_vat_compliance').'</h2>';
 		$this->wc_eu_vat_compliance_report();
+	}
+
+	public function plugins_loaded() {
+		$this->at_least_22 = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2', '>=')) ? true : false;
 	}
 
 /*
@@ -52,8 +60,6 @@ class WC_EU_VAT_Compliance_Reports {
 */
 
 	public function admin_init() {
-
-		$this->at_least_22 = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2', '>=')) ? true : false;
 
 		if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.1', '<')) {
 			add_filter('woocommerce_reports_charts', array($this, 'eu_vat_report_wc20'));
@@ -207,6 +213,48 @@ class WC_EU_VAT_Compliance_Reports {
 		return $sql;
 	}
 
+	// WC 2.2+ only (the _line_tax_data itemmeta only exists here, and order refunds were a new feature in 2.2)
+	private function get_refunds_sql($page_start, $page_size, $start_date, $end_date) {
+
+		global $table_prefix, $wpdb;
+
+// , '_refunded_item_id'
+
+		// '_order_tax_base_currency', '_order_total_base_currency', 
+// 			,item_meta.meta_key
+// 			orders.ID
+// 			,items.order_item_type AS ty
+
+		$sql = "SELECT
+			orders.post_parent AS id
+			,items.order_item_id AS oid
+			,item_meta.meta_key AS k
+			,item_meta.meta_value AS v
+		FROM
+			".$wpdb->posts." AS orders
+		LEFT JOIN
+			${table_prefix}woocommerce_order_items AS items ON
+				(orders.id = items.order_id)
+		LEFT JOIN
+			${table_prefix}woocommerce_order_itemmeta AS item_meta ON
+				(item_meta.order_item_id = items.order_item_id)
+		WHERE
+			(orders.post_type = 'shop_order_refund')
+			AND orders.post_date >= '$start_date 00:00:00'
+			AND orders.post_date <= '$end_date 23:59:59'
+			AND item_meta.meta_key IN('tax_amount', 'shipping_tax_amount', 'rate_id')
+			AND items.order_item_type IN('tax')
+			AND item_meta.meta_value != '0'
+		ORDER BY oid ASC, v ASC
+		";
+
+		if ($page_start !== false && $page_size !== false) $sql .= "		LIMIT $page_start, $page_size";
+
+		if (!$sql) return false;
+
+		return $sql;
+	}
+
 	private function get_report_sql($page_start, $page_size, $start_date, $end_date, $tax_based_on_extra, $select_extra) {
 
 		global $table_prefix, $wpdb;
@@ -280,7 +328,92 @@ class WC_EU_VAT_Compliance_Reports {
 		return $sql;
 	}
 
-	// $print_as_csv will print and return nothing
+	// We assume that the total number of refunds won't be enough to cause memory problems - so, we just get them all and then filter them afterwards
+	// Returns an array of arrays of arrays: keys: $order_id -> $tax_rate_id -> (string)"items_vat"|"shipping_vat" -> (numeric)amount - or, in combined format, the last array is dropped out and you just get a total amount.
+	public function get_refund_report_results($start_date, $end_date, $combined_format = false) {
+
+		// Refunds don't exist before WC 2.2
+		if (!$this->at_least_22) return array();
+
+		global $wpdb;
+
+		$compliance = WooCommerce_EU_VAT_Compliance();
+
+		$normalised_results = array();
+
+		$sql = $this->get_refunds_sql(false, false, $start_date, $end_date);
+
+		if (!$sql) return array();
+
+		$results = $wpdb->get_results($sql);
+		if (!is_array($results)) return array();
+
+		$current_order_item_id = false;
+
+		// This forces the loop to go round oen more time, so that the last object in the DB results gets processed
+		$res_terminator = new stdClass;
+		$res_terminator->oid = -1;
+		$res_terminator->id = -1;
+		$res_terminator->v = false;
+		$res_terminator->k = false;
+		$results[] = $res_terminator;
+
+		$default_result = ($combined_format) ? 0 : array('items_vat' => 0, 'shipping_vat' => 0);
+
+		// The search results are sorted by order item ID (oid) and then by meta_key. We rely on both these facts in the following loop.
+
+		foreach ($results as $res) {
+			$order_id = $res->id;
+			$order_item_id = $res->oid;
+			$meta_value = $res->v;
+			$meta_key = $res->k;
+
+			if ($current_order_item_id !== $order_item_id) {
+				if ($current_order_item_id !== false) {
+					// Process previous record
+					if (false !== $current_rate_id) {
+						if (false != $current_tax_amount) {
+							if (!isset($normalised_results[$current_order_id][$current_rate_id])) $normalised_results[$current_order_id][$current_rate_id] = $default_result;
+							if ($combined_format) {
+								$normalised_results[$current_order_id][$current_rate_id] += $current_tax_amount;
+							} else {
+								$normalised_results[$current_order_id][$current_rate_id]['items_vat'] += $current_tax_amount;
+							}
+						}
+						if (false != $current_shipping_tax_amount) {
+							if (!isset($normalised_results[$current_order_id][$current_rate_id])) $normalised_results[$current_order_id][$current_rate_id] = $default_result;
+							if ($combined_format) {
+								$normalised_results[$current_order_id][$current_rate_id] += $current_shipping_tax_amount;
+							} else {
+								$normalised_results[$current_order_id][$current_rate_id]['shipping_vat'] += $current_shipping_tax_amount;
+							}
+						}
+					}
+				}
+
+				// Reset other values for the new item
+				$current_order_item_id = $order_item_id;
+				$current_order_id = $order_id;
+				$current_rate_id = false;
+				$current_tax_amount = false;
+				$current_shipping_tax_amount = false;
+
+			}
+
+			if ('rate_id' == $meta_key) {
+				$current_rate_id = $meta_value;
+			} elseif ('tax_amount' == $meta_key) {
+				$current_tax_amount = $meta_value;
+			} elseif ('shipping_tax_amount' == $meta_key) {
+				$current_shipping_tax_amount = $meta_value;
+			}
+
+		}
+
+		return $normalised_results;
+
+	}
+
 	public function get_report_results($start_date, $end_date, $remove_non_eu_countries = true, $print_as_csv = false) {
 		global $wpdb;
 
@@ -888,6 +1021,28 @@ class WC_EU_VAT_Compliance_Reports {
 		$this->report_table_footer($reporting_currency_symbol);
 
 		add_action('admin_footer', array($this, 'admin_footer'));
+	}
+
+	public function get_converted_refunds_data($refunds_for_order, $order_currency, $conversion_rates) {
+
+		if (!is_array($refunds_for_order)) return $refunds_for_order;
+
+		if (isset($conversion_rates[$this->reporting_currency])) {
+			$use_rate = $conversion_rates[$this->reporting_currency];
+		} elseif (isset($this->fallback_conversion_rates[$order_currency])) {
+			$use_rate = $this->fallback_conversion_rates[$order_currency];
+		} else {
+			// Returns the conversion for 1 unit of the order currency.
+			$use_rate = $this->conversion_provider->convert($order_currency, $this->reporting_currency, 1);
+			$this->fallback_conversion_rates[$order_currency] = $use_rate;
+		}
+
+		foreach ($refunds_for_order as $tax_rate_id => $refunded_amount) {
+			$refunds_for_order[$tax_rate_id] = $refunded_amount * $use_rate;
+		}
+		
+		return $refunds_for_order;
+
 	}
 
 	// This takes one or two arrays of order data, and converts the amounts in them to the requested currency
