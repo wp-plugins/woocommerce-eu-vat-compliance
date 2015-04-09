@@ -1,8 +1,8 @@
 === WooCommerce EU VAT Compliance ===
 Contributors: DavidAnderson
-Requires at least: 3.1
+Requires at least: 3.2
 Tested up to: 4.2
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -65,7 +65,7 @@ Before January 1st 2015, of course, you will want to be careful about which feat
 
 = Footnotes and legalese =
 
-This plugin is tested on WooCommerce 2.1 up to 2.3 (releases up to 1.7.1 were also tested on WC 2.0). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
+This plugin is tested on WooCommerce 2.1 up to 2.3 (releases up to 1.7.1 were also tested on WC 2.0 - you can still download those versions if you wish). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
 
 Geographical IP lookups are performed via WooCommerce's built-in geo-location features (WC 2.3+), or if on WC 2.2 or earlier then via the MaxMind GeoIP database via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
 
@@ -112,6 +112,16 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.9.1 - 2015-04-09 =
+
+* FEATURE: In-dashboard reports table now includes "refunds" column
+* TWEAK: Added explanatory note and link to WooCommerce refunds documentation, to help users understand the meaning/derivation of refunds data
+* TWEAK: Updated a couple of the plugin screenshots
+* TWEAK: Added free/Premium comparison table to free version
+* TRANSLATIONS: Updated POT file
+* FIX: Fix a bug in 1.9.0 that caused 100% discounted orders (i.e. 100% coupon) to result in an erronenous message appearing in the reports dashboard
+* FIX: Fix a bug in 1.9.0 that WHAT?
 
 = 1.9.0 - 2015-04-08 =
 
@@ -431,4 +441,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.9.0 : Refund information now included in order-page widget, and CSV download
+* 1.9.1 : Refund information now included in dashboard report, order-page widget, and CSV download. Free/Premium comparison table added.

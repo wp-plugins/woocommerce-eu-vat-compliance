@@ -4,12 +4,6 @@ if (!defined('WC_EU_VAT_COMPLIANCE_DIR')) die('No direct access');
 
 // Purpose: provide a report on VAT paid, to help with EU VAT compliance
 
-// TODO: Test refunds.
-
-// TODO: Report needs to have option to display only MOSS taxes, or display all VAT - or, just do MOSS only, and tell them to go to the traditional WC tax report for other taxes (but what about currency conversions)
-
-// TODO: Option as to which exchange rate to use (whether stored rate, or over-ride with an end-of-quarter rate from named provider).
-
 class WC_EU_VAT_Compliance_Reports {
 
 	// Public: is used in the CSV download code
@@ -127,7 +121,8 @@ class WC_EU_VAT_Compliance_Reports {
 				$page++;
 
 				foreach ($results as $r) {
-					if (empty($r->ID) || empty($r->k) || empty($r->v) || empty($r->oi)) continue;
+					// Don't check on empty($r->v) - this causes orders 100% discounted (_line_total = 0) to be detected as non-WC-2.2 orders, as $current_total then never gets off (bool)false.
+					if (empty($r->ID) || empty($r->k) || empty($r->oi)) continue;
 
 					$current_order_id = $r->ID;
 					$current_order_item_id = $r->oi;
@@ -214,7 +209,7 @@ class WC_EU_VAT_Compliance_Reports {
 	}
 
 	// WC 2.2+ only (the _line_tax_data itemmeta only exists here, and order refunds were a new feature in 2.2)
-	private function get_refunds_sql($page_start, $page_size, $start_date, $end_date) {
+	private function get_refunds_sql($page_start, $page_size, $start_date, $end_date, $order_status = false) {
 
 		global $table_prefix, $wpdb;
 
@@ -224,6 +219,8 @@ class WC_EU_VAT_Compliance_Reports {
 // 			,item_meta.meta_key
 // 			orders.ID
 // 			,items.order_item_type AS ty
+
+		$status_extra = ($order_status !== false) ? "\t\t\tAND orders.post_status = 'wc-$order_status'" : '';
 
 		$sql = "SELECT
 			orders.post_parent AS id
@@ -241,6 +238,7 @@ class WC_EU_VAT_Compliance_Reports {
 		WHERE
 			(orders.post_type = 'shop_order_refund')
 			AND orders.post_date >= '$start_date 00:00:00'
+			$status_extra
 			AND orders.post_date <= '$end_date 23:59:59'
 			AND item_meta.meta_key IN('tax_amount', 'shipping_tax_amount', 'rate_id')
 			AND items.order_item_type IN('tax')
@@ -330,7 +328,7 @@ class WC_EU_VAT_Compliance_Reports {
 
 	// We assume that the total number of refunds won't be enough to cause memory problems - so, we just get them all and then filter them afterwards
 	// Returns an array of arrays of arrays: keys: $order_id -> $tax_rate_id -> (string)"items_vat"|"shipping_vat" -> (numeric)amount - or, in combined format, the last array is dropped out and you just get a total amount.
-	public function get_refund_report_results($start_date, $end_date, $combined_format = false) {
+	public function get_refund_report_results($start_date, $end_date, $combined_format = false, $order_status = false) {
 
 		// Refunds don't exist before WC 2.2
 		if (!$this->at_least_22) return array();
@@ -341,7 +339,7 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$normalised_results = array();
 
-		$sql = $this->get_refunds_sql(false, false, $start_date, $end_date);
+		$sql = $this->get_refunds_sql(false, false, $start_date, $end_date, $order_status);
 
 		if (!$sql) return array();
 
@@ -599,9 +597,9 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$this->calculate_current_range($current_range);
 
+		// This variable is used by the included WC file below, so do not remove on account of its apparent non-use.
 		$hide_sidebar = true;
 
-// 		echo '<p><strong>'.__('Notes:', 'wc_eu_vat_compliance').'</strong></p>';
 		echo "<ul style=\"list-style-type: disc; list-style-position: inside;\">";
 		echo '<li>'.__('The report below indicates the taxes actually charged on orders, when they were processed: it does not take into account later alterations manually made to order data.', 'wc_eu_vat_compliance').'</li>';
 
@@ -609,7 +607,10 @@ class WC_EU_VAT_Compliance_Reports {
 
 		echo "<li>$csv_message</li>";
 
-// 		echo '<li>'.__('', 'wc_eu_vat_compliance').'</li>';
+		if ($this->at_least_22) {
+			echo "<li>".__('The refund column in the table and CSV download is calculated from WooCommerce refunds.', 'wc_eu_vat_compliance').' <a href="#" onclick="jQuery(this).hide(); jQuery(\'#wceuvat_refunds_moreexplanation\').fadeIn(); return false;">'.ucfirst(__('more information', 'wc_eu_vat_compliance')).'...</a>'.'<span id="wceuvat_refunds_moreexplanation" style="display:none;"> '.__('These can be complete or partial refunds, and are separate to whether or not you have marked the order status as "refunded"', 'wc_eu_vat_compliance').' (<a href="http://docs.woothemes.com/document/woocommerce-refunds/">'.__('more information', 'wc_eu_vat_compliance').'</a>). '.__('Note that the refund column only includes refunds made within the chosen date range.', 'wc_eu_vat_compliance')." ".__('i.e. This is a true VAT report for the chosen period.', 'wc_eu_vat_compliance')." ".__('If you want to download data that includes refunds made at any time, then the best option is to choose a date range up until the current time, download the data by CSV, and perform spreadsheet calculations on the rows whose order date matches the period you are interested in.', 'wc_eu_vat_compliance')."</span></li>";
+		}
+
 		echo "</ul>";
 
 		$script = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'jquery.tablesorter.js' : 'jquery.tablesorter.min.js';
@@ -675,9 +676,12 @@ class WC_EU_VAT_Compliance_Reports {
 
 		</form>
 
-		<?php
+		<div style="max-width:1160px;">
 
+		<?php
 		include(WooCommerce_EU_VAT_Compliance()->wc->plugin_path() . '/includes/admin/views/html-report-by-date.php');
+
+		echo '</div>';
 
 	}
 
@@ -804,6 +808,7 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$base_currency = get_option('woocommerce_currency');
 		$base_currency_symbol = get_woocommerce_currency_symbol($base_currency);
+		$eu_countries = $compliance->get_european_union_vat_countries();
 
 		$this->initialise_rate_provider();
 
@@ -812,18 +817,70 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$reporting_currency_symbol = get_woocommerce_currency_symbol($this->reporting_currency);
 
+		// We need to make sure that the outer foreach() loop does go round for each status, because otherwise refunds on orders made in different accounting periods may be missed
+		// These have the wc- prefix.
+		$all_possible_statuses = $compliance->order_status_to_text(true);
+		foreach ($all_possible_statuses as $wc_status => $status_text) {
+			$order_status = substr($wc_status, 3);
+			if (!isset($results[$order_status])) $results[$order_status] = array();
+		}
+
 		foreach ($results as $order_status => $result_set) {
 
 			// This returns an array of arrays; keys = order IDs; second key = tax rate IDs, values = total amount of orders taxed at these rates
 			// N.B. The "total" column potentially has no meaning when totaling item totals, as a single item may have attracted multiple taxes (theoretically). Note also that the totals are *for orders with VAT*.
 			$get_items_data = $this->get_items_data($start_date, $end_date, $order_status);
 
-// echo "$order_status\n";
-// var_dump($get_items_data);
+			// Refunds data is keyed by ID, and then by tax-rate. This isn't maximally efficient for the reports table, but since we are not expecting tens of thousands of refunds, this should have no significant performance or memory impact.
+			$refunds_data = $this->get_refund_report_results($start_date, $end_date, true, $order_status);
+
+			// We need to make sure that refunds still get processed when they are from a different account period (i.e. when the order is not in the results set)
+			foreach ($refunds_data as $order_id => $refunds_by_rate) {
+				if (empty($result_set[$order_id])) {
+					// Though this taxes the database more, it should be a very rare occurrence
+					// Can use wc_get_order() : there are no refunds until WC 2.2
+
+					$refunded_order = $compliance->get_order($order_id);
+
+					$post_id = (isset($refunded_order->post)) ? $refunded_order->post->ID : $refunded_order->id;
+					$rates = get_post_meta($post_id, 'wceuvat_conversion_rates', true);
+					$cinfo = get_post_meta($post_id, 'vat_compliance_country_info', true);
+					$vat_compliance_vat_paid = get_post_meta($post_id, 'vat_compliance_vat_paid', true);
+
+					$by_rates = array();
+					foreach ($refunds_by_rate as $tax_rate_id => $tax_refunded) {
+						if (isset($vat_compliance_vat_paid['by_rates'][$tax_rate_id])) {
+							$by_rates[$tax_rate_id] = array(
+								'is_variable_eu_vat' => isset($vat_compliance_vat_paid['by_rates'][$tax_rate_id]) ? $vat_compliance_vat_paid['by_rates'][$tax_rate_id] : true,
+								'items_total' => 0,
+								'shipping_total' => 0,
+								'rate' => $vat_compliance_vat_paid['by_rates'][$tax_rate_id]['rate'],
+								'name' => $vat_compliance_vat_paid['by_rates'][$tax_rate_id]['name'],
+							);
+						}
+					}
+
+					$result_set[$order_id] = array(
+						'vat_paid' => array('total' => 0, 'by_rates' => $by_rates),
+						'_order_currency' => $refunded_order->get_order_currency(),
+					);
+
+					$vat_country = (empty($cinfo['taxable_address'])) ? '??' : $cinfo['taxable_address'];
+					if (!empty($vat_country[0])) {
+						if (in_array($vat_country[0], $eu_countries)) {
+							$result_set[$order_id]['taxable_country'] = $vat_country[0];
+						}
+					}
+
+					if (is_array($rates) && isset($rates['rates'])) $result_set[$order_id]['conversion_rates'] = $rates['rates'];
+
+				}
+			}
 
 			foreach ($result_set as $order_id => $res) {
 
-				if (!is_array($res) || empty($res['taxable_country']) || empty($res['vat_paid']) || !is_array($res['vat_paid']) || empty($res['vat_paid']['total'])) continue;
+				// Don't test empty($res['vat_paid']['total']), as this can cause refunds to be not included
+				if (!is_array($res) || empty($res['taxable_country']) || empty($res['vat_paid']) || !is_array($res['vat_paid']) || !isset($res['vat_paid']['total'])) continue;
 
 				$order_currency = (isset($res['_order_currency'])) ? $res['_order_currency'] : $base_currency;
 				$country = $res['taxable_country'];
@@ -832,8 +889,9 @@ class WC_EU_VAT_Compliance_Reports {
 				// Convert the 'vat_paid' array so that its values in the reporting currency, according to the conversion rates stored with the order
 
 				$get_items_data_for_order = (isset($get_items_data[$order_id])) ? $get_items_data[$order_id] : array();
+				$refunds_data_for_order = (isset($refunds_data[$order_id])) ? $refunds_data[$order_id] : array();
 
-				list($res_converted, $converted_items_data_for_order) = $this->get_converted_order_data($res, $order_currency, $conversion_rates, $get_items_data_for_order);
+				list($res_converted, $converted_items_data_for_order, $converted_refunds_data_for_order) = $this->get_converted_order_data($res, $order_currency, $conversion_rates, $get_items_data_for_order, $refunds_data_for_order);
 
 				$vat_paid = $res_converted['vat_paid'];
 
@@ -848,13 +906,19 @@ class WC_EU_VAT_Compliance_Reports {
 							$rate_key = 'V-'.$rate_key;
 						}
 
-						if (!isset($by_rate[$rate_key])) $by_rate[$rate_key] = array('vat' => 0, 'vat_shipping' => 0, 'sales' => 0);
+						if (!isset($by_rate[$rate_key])) $by_rate[$rate_key] = array('vat' => 0, 'vat_shipping' => 0, 'sales' => 0, 'vat_refunded' => 0);
 						$by_rate[$rate_key]['vat'] += $rinfo['items_total']+$rinfo['shipping_total'];
 						$by_rate[$rate_key]['vat_shipping'] += $rinfo['shipping_total'];
 
 						// Add sales from items totals
 						if (isset($converted_items_data_for_order[$tax_rate_id])) {
 							$by_rate[$rate_key]['sales'] += $converted_items_data_for_order[$tax_rate_id];
+						}
+
+						// Add refunds data
+						// If no VAT was paid at this rate in the accounting period, then that means that the order itself can't have been in this accounting period - and so, the "missing order" detector above will add the necessary blank data. Thus, this code path will be active
+						if (isset($converted_refunds_data_for_order[$tax_rate_id])) {
+							$by_rate[$rate_key]['vat_refunded'] += $converted_refunds_data_for_order[$tax_rate_id];
 						}
 					}
 
@@ -867,6 +931,10 @@ class WC_EU_VAT_Compliance_Reports {
 
 					foreach ($converted_items_data_for_order as $tax_rate_id => $sales_amount) {
 						$by_rate[$rate_key]['sales'] += $sales_amount;
+					}
+
+					foreach ($converted_refunds_data_for_order as $tax_rate_id => $refund_amount) {
+						$by_rate[$rate_key]['vat_refunded'] += $refund_amount;
 					}
 				}
 
@@ -882,6 +950,10 @@ class WC_EU_VAT_Compliance_Reports {
 					# Items total, using the data got from the (current) order_itemmeta and order_items tables
 					if (empty($tabulated_results[$order_status][$country][$rate_key]['sales'])) $tabulated_results[$order_status][$country][$rate_key]['sales'] = 0;
 					$tabulated_results[$order_status][$country][$rate_key]['sales'] += $rate_data['sales'];
+
+					# Refunds total, using the data got from the (current) order_itemmeta and order_items tables
+					if (empty($tabulated_results[$order_status][$country][$rate_key]['vat_refunded'])) $tabulated_results[$order_status][$country][$rate_key]['vat_refunded'] = 0;
+					$tabulated_results[$order_status][$country][$rate_key]['vat_refunded'] += $rate_data['vat_refunded'];
 				}
 
 				// Below is incorrect - it does not separate out by rate. The correct code is above.
@@ -898,7 +970,7 @@ class WC_EU_VAT_Compliance_Reports {
 			if ($this->pre_wc22_order_parsed) {
 				?>
 				<p>
-				<span style="font-weight:bold; color:red;"><?php _e('Note:', 'wc_eu_vat_compliance');?></span> <?php echo __('The selected time period contains order made under WooCommerce 2.1 or earlier.', 'wc_eu_vat_compliance').' '.__('These WooCommerce versions did not record the data used to display the "Items" column, which is therefore incomplete and has been hidden.', 'wc_eu_vat_compliance');?> <a href="#" onclick="jQuery('.wceuvat_itemsdata').slideDown(); wceuvat_itemsdata_show=true; jQuery(this).parent().remove(); return false;"><?php _e('Show', 'wc_eu_vat_compliance');?></a>
+				<span style="font-weight:bold; color:red;"><?php _e('Note:', 'wc_eu_vat_compliance');?></span> <?php echo __('The selected time period contains orders made under WooCommerce 2.1 or earlier.', 'wc_eu_vat_compliance').' '.__('These WooCommerce versions did not record the data used to display the "Items" column, which is therefore incomplete and has been hidden.', 'wc_eu_vat_compliance');?> <a href="#" onclick="jQuery('.wceuvat_itemsdata').slideDown(); wceuvat_itemsdata_show=true; jQuery(this).parent().remove(); return false;"><?php _e('Show', 'wc_eu_vat_compliance');?></a>
 				</p>
 				<script>
 				var wceuvat_itemsdata_show = false;
@@ -931,10 +1003,10 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$countries = $compliance->wc->countries;
 		$all_countries = $countries->countries;
-		$eu_countries = $compliance->get_european_union_vat_countries();
 
 		$total_vat_items = 0;
 		$total_vat_shipping = 0;
+		$total_vat_refunds = 0;
 		$total_vat = 0;
 
 		$total_items = 0;
@@ -955,7 +1027,8 @@ class WC_EU_VAT_Compliance_Reports {
 
 					$vat_items_amount = $compliance->round_amount($totals['vat']-$totals['vat_shipping']);
 					$vat_shipping_amount = $compliance->round_amount($totals['vat_shipping']);
-					$vat_total_amount = $compliance->round_amount($totals['vat']);
+					$vat_total_amount = $compliance->round_amount($totals['vat']+$totals['vat_refunded']);
+					$vat_refund_amount = $compliance->round_amount($totals['vat_refunded']);
 
 					$items_amount = $compliance->round_amount($totals['sales']);
 // 					$items_amount = $reporting_currency_symbol.' '.sprintf('%.02f', $totals['sales']-$totals['vat']);
@@ -965,6 +1038,8 @@ class WC_EU_VAT_Compliance_Reports {
 // 					$total_items += $totals['sales']-$totals['vat'];
 					$total_items += $items_amount;
 					$total_vat_shipping += $vat_shipping_amount;
+					$total_vat_refunds += $vat_refund_amount;
+
 // 					$total_sales += $totals['sales'];
 
 					if (preg_match('/^(V-)?([\d\.]+)$/', $rate_key, $matches)) {
@@ -977,18 +1052,20 @@ class WC_EU_VAT_Compliance_Reports {
 					}
 
 				if ($this->at_least_22) {
-					$extra_col = '<td class="wceuvat_itemsdata">'.$reporting_currency_symbol.' '.$items_amount.'</td>';
+					$extra_col_items = '<td class="wceuvat_itemsdata">'.$reporting_currency_symbol.' '.$items_amount.'</td>';
+					$extra_col_refunds = '<td class="wceuvat_refundsdata">'.$reporting_currency_symbol.' '.$vat_refund_amount.'</td>';
 				} else {
-					$extra_col = '';
+					$extra_col_items = '';
+					$extra_col_refunds = '';
 				}
 
 //data-items=\"".sprintf('%.05f', $totals['sales']-$totals['vat'])."\"
-					echo "<tr data-vat-items=\"".$compliance->round_amount($vat_items_amount)."\"  data-vat-shipping=\"".$compliance->round_amount($vat_shipping_amount)."\" data-items=\"".$compliance->round_amount($items_amount)."\" class=\"statusrow status-$order_status\">
+					echo "<tr data-vat-items=\"".$compliance->round_amount($vat_items_amount)."\"data-vat-refunds=\"".$compliance->round_amount($vat_refund_amount)."\" data-vat-shipping=\"".$compliance->round_amount($vat_shipping_amount)."\" data-items=\"".$compliance->round_amount($items_amount)."\" class=\"statusrow status-$order_status\">
 						<td>$status_text</td>
-						<td>$country_label</td>".$extra_col."
+						<td>$country_label</td>".$extra_col_items."
 						<td>$vat_rate_label</td>
 						<td>$reporting_currency_symbol $vat_items_amount</td>
-						<td>$reporting_currency_symbol $vat_shipping_amount</td>
+						<td>$reporting_currency_symbol $vat_shipping_amount</td>".$extra_col_refunds."
 						<td>$reporting_currency_symbol $vat_total_amount</td>
 					</tr>";
 //						<td>$items_amount</td>
@@ -1014,6 +1091,9 @@ class WC_EU_VAT_Compliance_Reports {
 				<td>-</td>
 				<td><strong><?php echo $reporting_currency_symbol.' '.sprintf('%.2f', $total_vat_items); ?></strong></td>
 				<td><strong><?php echo $reporting_currency_symbol.' '.sprintf('%.2f', $total_vat_shipping); ?></strong></td>
+				<?php if ($this->at_least_22) { ?>
+					<td><strong><?php echo $reporting_currency_symbol.' '.sprintf('%.2f', $total_vat_refunds); ?></strong></td>
+				<?php } ?>
 				<td><strong><?php echo $reporting_currency_symbol.' '.sprintf('%.2f', $total_vat); ?></strong></td>
 			</tr>
 			<?php
@@ -1047,7 +1127,7 @@ class WC_EU_VAT_Compliance_Reports {
 
 	// This takes one or two arrays of order data, and converts the amounts in them to the requested currency
 	// public: used also in the CSV download
-	public function get_converted_order_data($raw, $order_currency, $conversion_rates, $get_items_data_for_order = array()) {
+	public function get_converted_order_data($raw, $order_currency, $conversion_rates, $get_items_data_for_order = array(), $refunds_data_for_order = array()) {
 
 		if (isset($conversion_rates[$this->reporting_currency])) {
 			$use_rate = $conversion_rates[$this->reporting_currency];
@@ -1084,7 +1164,11 @@ class WC_EU_VAT_Compliance_Reports {
 			$get_items_data_for_order[$tax_rate_id] = $amount * $use_rate;
 		}
 
-		return array($raw, $get_items_data_for_order);
+		foreach ($refunds_data_for_order as $tax_rate_id => $amount) {
+			$refunds_data_for_order[$tax_rate_id] = $amount * $use_rate;
+		}
+
+		return array($raw, $get_items_data_for_order, $refunds_data_for_order);
 	}
 
 	private function report_table_footer($reporting_currency_symbol) {
@@ -1117,6 +1201,7 @@ class WC_EU_VAT_Compliance_Reports {
 					var total_vat_items = 0;
 					var total_vat_shipping = 0;
 					var total_vat = 0;
+					var total_vat_refunds = 0;
 					var total_items = 0;
 					jQuery('.stats_range input[name="order_statuses[]"]').remove();
 					jQuery('#wceuvat_report_form input.wceuvat_report_status').each(function(ind, item) {
@@ -1130,11 +1215,14 @@ class WC_EU_VAT_Compliance_Reports {
 								var items = parseFloat(jQuery(citem).data('items'));
 								var vat_items = parseFloat(jQuery(citem).data('vat-items'));
 								var vat_shipping = parseFloat(jQuery(citem).data('vat-shipping'));
+								var vat_refunds = parseFloat(jQuery(citem).data('vat-refunds'));
 								var vat = vat_items + vat_shipping;
 								total_items += items;
 								total_vat += vat;
+								total_vat += vat_refunds;
 								total_vat_items += vat_items;
 								total_vat_shipping += vat_shipping;
+								total_vat_refunds += vat_refunds;
 // 								total_items += items;
 							});
 						};
@@ -1156,6 +1244,11 @@ class WC_EU_VAT_Compliance_Reports {
 			<td>-</td>\
 			<td><strong>'+currency_symbol+' '+parseFloat(total_vat_items).toFixed(2)+'</strong></td>\
 			<td><strong>'+currency_symbol+' '+parseFloat(total_vat_shipping).toFixed(2)+'</strong></td>\
+			<?php
+				if ($this->at_least_22) {
+					echo "<td class=\"wceuvat_refundsdata\"><strong>'+currency_symbol+' '+parseFloat(total_vat_refunds).toFixed(2)+'</strong></td>\\";
+				}
+			?>
 			<td><strong>'+currency_symbol+' '+parseFloat(total_vat).toFixed(2)+'</strong></td>\
 		</tr>\
 					');
@@ -1226,8 +1319,11 @@ class WC_EU_VAT_Compliance_Reports {
 					<th class="wceuvat_itemsdata"><?php _e('Items (before VAT)', 'wc_eu_vat_compliance');?></th>
 				<?php } ?>
 				<th><?php _e('VAT rate', 'wc_eu_vat_compliance');?></th>
-				<th><?php _e('VAT on items', 'wc_eu_vat_compliance');?></th>
-				<th><?php _e('VAT on shipping', 'wc_eu_vat_compliance');?></th>
+				<th><?php _e('VAT (items)', 'wc_eu_vat_compliance');?></th>
+				<th><?php _e('VAT (shipping)', 'wc_eu_vat_compliance');?></th>
+				<?php if ($this->at_least_22) { ?>
+					<th class="wceuvat_refundsdata" title="<?php echo esc_attr(__("N.B. This column shows (only) amounts that were refunded using WooCommerce's refunds feature within the chosen date range - whether the WooCommerce order status is 'refunded' or not, and independently of whether the order that the refund corresponds to is within the same date range.", 'wc_eu_vat_compliance'));?>"><?php _e('VAT refunded', 'wc_eu_vat_compliance');?></th>
+				<?php } ?>
 				<th><?php _e('Total VAT', 'wc_eu_vat_compliance');?></th>
 			</tr>
 		</thead>
@@ -1239,8 +1335,11 @@ class WC_EU_VAT_Compliance_Reports {
 					<th class="wceuvat_itemsdata"><?php _e('Items (before VAT)', 'wc_eu_vat_compliance');?></th>
 				<?php } ?>
 				<th><?php _e('VAT rate', 'wc_eu_vat_compliance');?></th>
-				<th><?php _e('VAT on items', 'wc_eu_vat_compliance');?></th>
-				<th><?php _e('VAT on shipping', 'wc_eu_vat_compliance');?></th>
+				<th><?php _e('VAT (items)', 'wc_eu_vat_compliance');?></th>
+				<th><?php _e('VAT (shipping)', 'wc_eu_vat_compliance');?></th>
+				<?php if ($this->at_least_22) { ?>
+					<th class="wceuvat_refundsdata" title="<?php echo esc_attr(__("N.B. This column shows (only) amounts that were refunded using WooCommerce's refunds feature - whether the WooCommerce order status is 'refunded' or not, and independently of whether the order that the refund corresponds to is within the same date range.", 'wc_eu_vat_compliance'));?>"><?php _e('VAT refunded', 'wc_eu_vat_compliance');?></th>
+				<?php } ?>
 				<th><?php _e('Total VAT', 'wc_eu_vat_compliance');?></th>
 			</tr>
 		</tfoot>
