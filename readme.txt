@@ -119,7 +119,6 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 * TWEAK: Added free/Premium comparison table to free version
 * TRANSLATIONS: Updated POT file
 * FIX: Fix a bug in 1.9.0 that caused 100% discounted orders (i.e. 100% coupon) to result in an erronenous message appearing in the reports dashboard
-* FIX: Fix a bug in 1.9.0 that WHAT?
 
 = 1.9.0 - 2015-04-08 =
 
