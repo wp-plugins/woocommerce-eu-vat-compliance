@@ -105,34 +105,43 @@ class WC_EU_VAT_Compliance_Rates {
 					});
 					if (true == was_updated) return;
 
+					<?php
+					if (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.3', '<')) {
+						echo "var newkey = '[new]['+size+']';\n";
+					} else {
+						// Style changed in WC 2.3
+						echo "var newkey = '[new-'+size+']';\n";
+					}
+					?>
+
 					var code = '<tr class="new">\
 							<td class="sort">&nbsp;</td>\
 							<td class="country" width="8%">\
-								<input type="text" placeholder="*" name="tax_rate_country[new][' + size + ']" class="wc_input_country_iso" value="'+iso+'"/>\
+								<input type="text" placeholder="*" name="tax_rate_country'+newkey+'" class="wc_input_country_iso" value="'+iso+'"/>\
 							</td>\
 							<td class="state" width="8%">\
-								<input type="text" placeholder="*" name="tax_rate_state[new][' + size + ']" />\
+								<input type="text" placeholder="*" name="tax_rate_state'+newkey+'" />\
 							</td>\
 							<td class="postcode">\
-								<input type="text" placeholder="*" name="tax_rate_postcode[new][' + size + ']" />\
+								<input type="text" placeholder="*" name="tax_rate_postcode'+newkey+'" />\
 							</td>\
 							<td class="city">\
-								<input type="text" placeholder="*" name="tax_rate_city[new][' + size + ']" />\
+								<input type="text" placeholder="*" name="tax_rate_city'+newkey+'" />\
 							</td>\
 							<td class="rate" width="8%">\
-								<input type="number" step="any" min="0" placeholder="0" name="tax_rate[new][' + size + ']" value="'+rate+'" />\
+								<input type="number" step="any" min="0" placeholder="0" name="tax_rate'+newkey+'" value="'+rate+'" />\
 							</td>\
 							<td class="name" width="8%">\
-								<input type="text" name="tax_rate_name[new][' + size + ']" value="'+name+'" />\
+								<input type="text" name="tax_rate_name'+newkey+'" value="'+name+'" />\
 							</td>\
 							<td class="priority" width="8%">\
-								<input type="number" step="1" min="1" value="1" name="tax_rate_priority[new][' + size + ']" />\
+								<input type="number" step="1" min="1" value="1" name="tax_rate_priority'+newkey+'" />\
 							</td>\
 							<td class="compound" width="8%">\
-								<input type="checkbox" class="checkbox" name="tax_rate_compound[new][' + size + ']" checked="checked" />\
+								<input type="checkbox" class="checkbox" name="tax_rate_compound'+newkey+'" checked="checked" />\
 							</td>\
 							<td class="apply_to_shipping" width="8%">\
-								<input type="checkbox" class="checkbox" name="tax_rate_shipping[new][' + size + ']" checked="checked" />\
+								<input type="checkbox" class="checkbox" name="tax_rate_shipping'+newkey+'" checked="checked" />\
 							</td>\
 						</tr>';
 
@@ -296,7 +305,7 @@ class WC_EU_VAT_Compliance_Rates {
 			// Add the Isle of Man
 			if (isset($corrected_rates['GB'])) {
 				$corrected_rates['IM'] = $corrected_rates['GB'];
-				$corrected_rates['IM']['country'] = __( 'Isle of Man', 'woocommerce' );
+				$corrected_rates['IM']['country'] = __( 'Isle of Man', 'wc_eu_vat_compliance' );
 			}
 			set_site_transient('wc_euvatrates_rates_byiso', $corrected_rates, 43200);
 			$this->rates = $corrected_rates;
