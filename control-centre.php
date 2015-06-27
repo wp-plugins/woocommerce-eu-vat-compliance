@@ -92,11 +92,9 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 				if (!is_null($value)) {
 					$any_found = true;
-// error_log($setting['id'].": ".serialize($value));
 					update_option($setting['id'], $value);
 				}
 
-	// 			error_log($setting['id'].": ".serialize($value)." - GO");
 			}
 
 			if (!$any_found) {
@@ -169,7 +167,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 		));
 
 		$active_tab = !empty($_REQUEST['tab']) ? $_REQUEST['tab'] : 'settings';
-		if ('taxes' == $active_tab) $active_tab = 'reports';
+		if ('taxes' == $active_tab || !empty($_GET['range'])) $active_tab = 'reports';
 
 		$this->compliance = WooCommerce_EU_VAT_Compliance();
 
@@ -186,7 +184,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 // .' - '.sprintf(__('version %s', 'wc_eu_vat_compliance'), $version);
 		?>
 		<h1><?php echo __('EU VAT Compliance', 'wc_eu_vat_compliance').' '.__('for WooCommerce', 'wc_eu_vat_compliance');?></h1>
-		<a href="https://wordpress.org/support/plugin/woocommerce-eu-vat-compliance/"><?php _e('Support', 'wc_eu_vat_compliance');?></a> | 
+		<a href="<?php echo apply_filters('wceuvat_support_url', 'https://wordpress.org/support/plugin/woocommerce-eu-vat-compliance/');?>"><?php _e('Support', 'wc_eu_vat_compliance');?></a> | 
 		<?php if (!$premium) {
 			?><a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/"><?php _e("Premium", 'wc_eu_vat_compliance');?></a> |
 		<?php } ?>
@@ -225,29 +223,190 @@ class WC_EU_VAT_Compliance_Control_Centre {
 	}
 
 	private function render_tab_premium() {
-		echo '<h2>'.__('Premium Version', 'wc_eu_vat_compliance').'</h2>';
+		echo '<h2>'.__('Premium version', 'wc_eu_vat_compliance').'</h2>';
 
-		echo '<p><em><a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">'.__('A premium version of this plugin is available at this link', 'wc_eu_vat_compliance').'</a></em></p>';
+			$tick = WC_EU_VAT_COMPLIANCE_URL.'/images/tick.png';
+			$cross = WC_EU_VAT_COMPLIANCE_URL.'/images/cross.png';
+			
+			?>
+			<div>
+				<p>
+					<span style="font-size: 115%;"><?php _e('You are currently using the free version of WooCommerce EU VAT Compliance from wordpress.org.', 'wc_eu_vat_compliance');?> <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/"><?php _e('A premium version of this plugin is available at this link.', 'wc_eu_vat_compliance');?></a></span>
+				</p>
+			</div>
+			<div>
+				<div style="margin-top:30px;">
+				<table class="wceuvat_feat_table">
+					<tr>
+						<th class="wceuvat_feat_th" style="text-align:left;"></th>
+						<th class="wceuvat_feat_th"><?php _e('Free version', 'wc_eu_vat_compliance');?></th>
+						<th class="wceuvat_feat_th"><?php _e('Premium version', 'wc_eu_vat_compliance');?></th>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Get it from', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell" style="vertical-align:top; line-height: 120%; margin-top:6px; padding-top:6px;">WordPress.Org</td>
+						<td class="wceuvat_tick_cell" style="padding: 6px; line-height: 120%;">
+							<a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/"><strong><?php _e('Follow this link', 'wc_eu_vat_compliance');?></strong></a><br>
+							</td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e("Identify your customers' locations", 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Evidence is recorded in detail, ready for audit', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Backup to remote storage', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Display prices including correct geographical VAT from the first page', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Currency conversions into reporting currency', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Live exchange rates', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e("Quick entering of each country's VAT rates", 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Advanced dashboard reports', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Option to forbid EU sales if VAT is chargeable', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Central control panel', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Mixed shops (i.e. handle non-digital goods also)', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Extra text on invoices (e.g. VAT notices for business customers)', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Refund support', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Exempt business customers (i.e. B2B) from VAT', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Add B2B VAT numbers to invoices', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Option to allow B2B sales only', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('CSV (i.e. spreadsheet) download of comprehensive information on all orders', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Optionally resolve location conflicts via self-certification', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Show VAT in multiple currencies upon invoices', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Support for the official WooCommerce subscriptions extension', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Helps to fund continued development', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+					<tr>
+						<td class="wceuvat_feature_cell"><?php _e('Personal support', 'wc_eu_vat_compliance');?></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $cross;?>"></td>
+						<td class="wceuvat_tick_cell"><img src="<?php echo $tick;?>"></td>
+					</tr>
+				</table>
+				<p><em><?php echo __('All invoicing features are in conjunction with the free WooCommerce PDF invoices and packing slips plugin.', 'wc_eu_vat_compliance');?> - <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/"><?php _e('link', 'wc_eu_vat_compliance');?></a></em></p>
+				</div>
+			</div>
+			<?php
+			
+		add_action('admin_footer', array($this, 'admin_footer_premiumcss'));
 
-?>
-<h3>Current additional features</h3>
-<ul style="max-width: 800px;list-style-type: disc; list-style-position: inside;">
+	}
 
-
-<li><strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained. The customer's VAT number will be appended to the billing address where shown (e.g. order summary email, PDF invoices). An extra, configurable line specific to this situation can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).</li>
-
-<li><strong>Optionally allow B2B sales only</strong> - for shop owners who wish to only make sales that are VAT-exempt (i.e. B2B sales only), you can require that any EU customers enter a valid EU VAT number at the check-out.</li>
-
-<li><strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).</li>
-
-<li><strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).</li>
-
-<li><strong>Show multiple currencies for VAT taxes on PDF invoices produced by <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>.</li>
-
-
-</ul>
-<?php
-
+	public function admin_footer_premiumcss() {
+		?>
+		<style type="text/css">
+			ul.wceuvat_premium_description_list {
+				list-style: disc inside;
+			}
+			ul.wceuvat_premium_description_list li {
+				display: inline;
+			}
+			ul.wceuvat_premium_description_list li::after {
+				content: " | ";
+			}
+			ul.wceuvat_premium_description_list li.last::after {
+				content: "";
+			}
+			.wceuvat_feature_cell{
+					background-color: #F7D9C9 !important;
+					padding: 5px 10px 5px 10px;
+			}
+			.wceuvat_feat_table, .wceuvat_feat_th, .wceuvat_feat_table td{
+					border: 1px solid black;
+					border-collapse: collapse;
+					font-size: 120%;
+					background-color: white;
+			}
+			.wceuvat_feat_th {
+				padding: 6px;
+			}
+			.wceuvat_tick_cell{
+					padding: 4px;
+					text-align: center;
+			}
+			.wceuvat_tick_cell img{
+					margin: 4px 0;
+					height: 24px;
+			}
+		</style>
+		<?php
 	}
 
 // 	private function render_class_settings($name) {
@@ -306,35 +465,35 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			array( 'title' => __( 'Other WooCommerce tax options potentially relevant for EU VAT compliance', 'wc_eu_vat_compliance' ), 'type' => 'euvat_tax_options_section','desc' => '', 'id' => 'euvat_tax_options' ),
 
 			array(
-				'title'   => __( 'Enable Taxes', 'woocommerce' ),
-				'desc'    => __( 'Enable taxes and tax calculations', 'woocommerce' ),
+				'title'   => __( 'Enable Taxes', 'wc_eu_vat_compliance' ),
+				'desc'    => __( 'Enable taxes and tax calculations', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_calc_taxes',
 				'default' => 'no',
 				'type'    => 'checkbox'
 			),
 
 			array(
-				'title'    => __( 'Prices Entered With Tax', 'woocommerce' ),
+				'title'    => __( 'Prices Entered With Tax', 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_prices_include_tax',
 				'default'  => 'no',
 				'type'     => 'radio',
-				'desc_tip' =>  __( 'This option is important as it will affect how you input prices. Changing it will not update existing products.', 'woocommerce' ),
+				'desc_tip' =>  __( 'This option is important as it will affect how you input prices. Changing it will not update existing products.', 'wc_eu_vat_compliance' ),
 				'options'  => array(
-					'yes' => __( 'Yes, I will enter prices inclusive of tax', 'woocommerce' ),
-					'no'  => __( 'No, I will enter prices exclusive of tax', 'woocommerce' )
+					'yes' => __( 'Yes, I will enter prices inclusive of tax', 'wc_eu_vat_compliance' ),
+					'no'  => __( 'No, I will enter prices exclusive of tax', 'wc_eu_vat_compliance' )
 				),
 			),
 
 			array(
-				'title'    => __( 'Calculate Tax Based On:', 'woocommerce' ),
+				'title'    => __( 'Calculate Tax Based On:', 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_tax_based_on',
-				'desc_tip' =>  __( 'This option determines which address is used to calculate tax.', 'woocommerce' ),
+				'desc_tip' =>  __( 'This option determines which address is used to calculate tax.', 'wc_eu_vat_compliance' ),
 				'default'  => 'shipping',
 				'type'     => 'select',
 				'options'  => array(
-					'shipping' => __( 'Customer shipping address', 'woocommerce' ),
-					'billing'  => __( 'Customer billing address', 'woocommerce' ),
-					'base'     => __( 'Shop base address', 'woocommerce' )
+					'shipping' => __( 'Customer shipping address', 'wc_eu_vat_compliance' ),
+					'billing'  => __( 'Customer billing address', 'wc_eu_vat_compliance' ),
+					'base'     => __( 'Shop base address', 'wc_eu_vat_compliance' )
 				),
 			),
 		);
@@ -342,55 +501,55 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			if (function_exists('WC') && version_compare(WC()->version, '2.3', '>=')) {
 				// WC 2.3 has an extra 'geo-locate' option
 				$tax_settings[] = array(
-					'title'    => __( 'Default Customer Address:', 'woocommerce' ),
+					'title'    => __( 'Default Customer Address:', 'wc_eu_vat_compliance' ),
 					'id'       => 'woocommerce_default_customer_address',
-					'desc_tip' =>  __( 'This option determines the customers default address (before they input their details).', 'woocommerce' ),
+					'desc_tip' =>  __( 'This option determines the customers default address (before they input their details).', 'wc_eu_vat_compliance' ),
 					'default'  => 'geolocation',
 					'type'     => 'select',
 					'class'    => 'wc-enhanced-select',
 					'options'  => array(
-						''            => __( 'No address', 'woocommerce' ),
-						'base'        => __( 'Shop base address', 'woocommerce' ),
-						'geolocation' => __( 'Geolocate address', 'woocommerce' ),
+						''            => __( 'No address', 'wc_eu_vat_compliance' ),
+						'base'        => __( 'Shop base address', 'wc_eu_vat_compliance' ),
+						'geolocation' => __( 'Geolocate address', 'wc_eu_vat_compliance' ),
 					),
 				);
 			} else {
 				$tax_settings[] = array(
-					'title'    => __( 'Default Customer Address:', 'woocommerce' ),
+					'title'    => __( 'Default Customer Address:', 'wc_eu_vat_compliance' ),
 					'id'       => 'woocommerce_default_customer_address',
-					'desc_tip' =>  __( 'This option determines the customers default address (before they input their own).', 'woocommerce' ),
+					'desc_tip' =>  __( 'This option determines the customers default address (before they input their own).', 'wc_eu_vat_compliance' ),
 					'default'  => 'base',
 					'type'     => 'select',
 					'options'  => array(
-						''     => __( 'No address', 'woocommerce' ),
-						'base' => __( 'Shop base address', 'woocommerce' ),
+						''     => __( 'No address', 'wc_eu_vat_compliance' ),
+						'base' => __( 'Shop base address', 'wc_eu_vat_compliance' ),
 					),
 				);
 			}
 
 // 			array(
-// 				'title'   => __( 'Additional Tax Classes', 'woocommerce' ),
-// 				'desc'    => __( 'List additional tax classes below (1 per line). This is in addition to the default <code>Standard Rate</code>. Tax classes can be assigned to products.', 'woocommerce' ),
+// 				'title'   => __( 'Additional Tax Classes', 'wc_eu_vat_compliance' ),
+// 				'desc'    => __( 'List additional tax classes below (1 per line). This is in addition to the default <code>Standard Rate</code>. Tax classes can be assigned to products.', 'wc_eu_vat_compliance' ),
 // 				'id'      => 'woocommerce_tax_classes',
 // 				'css'     => 'width:100%; height: 65px;',
 // 				'type'    => 'textarea',
-// 				'default' => sprintf( __( 'Reduced Rate%sZero Rate', 'woocommerce' ), PHP_EOL )
+// 				'default' => sprintf( __( 'Reduced Rate%sZero Rate', 'wc_eu_vat_compliance' ), PHP_EOL )
 // 			),
 
 			$tax_settings = array_merge($tax_settings, array(
 			array(
-				'title'   => __( 'Display prices in the shop:', 'woocommerce' ),
+				'title'   => __( 'Display prices in the shop:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_tax_display_shop',
 				'default' => 'excl',
 				'type'    => 'select',
 				'options' => array(
-					'incl'   => __( 'Including tax', 'woocommerce' ),
-					'excl'   => __( 'Excluding tax', 'woocommerce' ),
+					'incl'   => __( 'Including tax', 'wc_eu_vat_compliance' ),
+					'excl'   => __( 'Excluding tax', 'wc_eu_vat_compliance' ),
 				)
 			),
 
 			array(
-				'title'   => __( 'Price display suffix:', 'woocommerce' ),
+				'title'   => __( 'Price display suffix:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_price_display_suffix',
 				'default' => '',
 				'class' => 'widefat',
@@ -399,25 +558,25 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			),
 
 			array(
-				'title'   => __( 'Display prices during cart/checkout:', 'woocommerce' ),
+				'title'   => __( 'Display prices during cart/checkout:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_tax_display_cart',
 				'default' => 'excl',
 				'type'    => 'select',
 				'options' => array(
-					'incl'   => __( 'Including tax', 'woocommerce' ),
-					'excl'   => __( 'Excluding tax', 'woocommerce' ),
+					'incl'   => __( 'Including tax', 'wc_eu_vat_compliance' ),
+					'excl'   => __( 'Excluding tax', 'wc_eu_vat_compliance' ),
 				),
 				'autoload'      => false
 			),
 
 			array(
-				'title'   => __( 'Display tax totals:', 'woocommerce' ),
+				'title'   => __( 'Display tax totals:', 'wc_eu_vat_compliance' ),
 				'id'      => 'woocommerce_tax_total_display',
 				'default' => 'itemized',
 				'type'    => 'select',
 				'options' => array(
-					'single'     => __( 'As a single total', 'woocommerce' ),
-					'itemized'   => __( 'Itemized', 'woocommerce' ),
+					'single'     => __( 'As a single total', 'wc_eu_vat_compliance' ),
+					'itemized'   => __( 'Itemized', 'wc_eu_vat_compliance' ),
 				),
 				'autoload' => false
 			),
@@ -431,8 +590,6 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 	private function render_tab_settings() {
 		echo '<h2>'.__('Settings', 'wc_eu_vat_compliance').'</h2>';
-
-		echo '<p><em>'.__('This control panel is under rapid development. Please make sure you keep this plugin up-to-date with any available updates that WordPress tells you are available.', 'wc_eu_vat_compliance').'</em></p>';
 
 		echo '<p><em>'.__('Many settings below can also be found in other parts of your WordPress dashboard; they are brought together here also for convenience.', 'wc_eu_vat_compliance').'</em></p>';
 
@@ -602,7 +759,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 		return apply_filters('wc_euvat_compliance_exchange_settings', array(
 			array(
-				'title'    => __( 'Currency', 'woocommerce' ),
+				'title'    => __( 'Currency', 'wc_eu_vat_compliance' ),
 				'desc'     => __( "When an order is made, exchange rate information will be added to the order, allowing all amounts to be converted into the currency chosen here. This is necessary if orders may be made in a different currency than the currency you are required to report VAT in.", 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_eu_vat_compliance_vat_recording_currency',
 				'css'      => 'min-width:350px;',
@@ -617,7 +774,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 				'title'    => __( 'Exchange rate provider', 'wc_eu_vat_compliance' ),
 				'id'       => 'woocommerce_eu_vat_compliance_exchange_rate_provider',
 				'css'      => 'min-width:350px;',
-// 				'default'  => $base_currency,
+				'default'  => 'ecb',
 				'type'     => 'select',
 				'class'    => 'chosen_select',
 				'desc_tip' =>  true,

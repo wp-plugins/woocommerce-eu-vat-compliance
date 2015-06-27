@@ -1,37 +1,37 @@
 === WooCommerce EU VAT Compliance ===
 Contributors: DavidAnderson
-Requires at least: 3.1
-Tested up to: 4.1
-Stable tag: 1.7.2
+Requires at least: 3.2
+Tested up to: 4.2.2
+Stable tag: 1.9.3
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
-License: GPLv3
+License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
 
-Assists with EU VAT compliance for WooCommerce, for the new VAT regime beginning 1st January 2015, including for with the MOSS system.
+Assists with EU VAT compliance for WooCommerce, for the new VAT regime that began 1st January 2015, including for with the MOSS system.
 
 == Description ==
 
 = The New EU VAT (IVA) law =
 
-From January 1st 2015, all digital goods (including electronic, telecommunications, software, ebook and broadcast services) sold across EU borders are liable under EU law to EU VAT (a.k.a. IVA) charged in the country of *purchase*, at the VAT rate in that country (background information: http://www2.deloitte.com/global/en/pages/tax/articles/eu-2015-place-of-supply-changes-mini-one-stop-shop.html). This applies even if the seller is not based in the EU, and there is no minimum threshold.
+Since January 1st 2015, all digital goods (including electronic, telecommunications, software, ebook and broadcast services) sold across EU borders have been liable under EU law to EU VAT (a.k.a. IVA) charged in the country of *purchase*, at the VAT rate in that country (background information: http://www2.deloitte.com/global/en/pages/tax/articles/eu-2015-place-of-supply-changes-mini-one-stop-shop.html). This applies even if the seller is not based in the EU, and there is no minimum threshold.
 
 = How this plugin can take away the pain =
 
-This WooCommerce plugin provides features to assist with EU VAT law compliance from January 1st 2015. Currently, those features include:
+This WooCommerce plugin provides features to assist with EU VAT law compliance. Currently, those features include:
 
 - <strong>Identify your customers' locations:</strong> this plugin will record evidence of your customer's location, using their billing or shipping address, and their IP address (via a GeoIP lookup).
-
-- <strong>Forbid EU sales if any goods have VAT chargeable</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out if they have selected any goods which are subject to EU VAT (whilst still allowing purchase of other goods, unlike the built-in WooCommerce feature which allows you to forbid check-out from some countries entirely).
 
 - <strong>Evidence is recorded, ready for audit:</strong> full information that was used to calculate VAT and customer location is displayed in the WooCommerce order screen in the back-end.
 
 - <strong>Display prices including correct VAT from the first page:</strong> GeoIP information is also used to show the correct VAT from the first time a customer sees a product. A widget and shortcode are also provided allowing the customer to set their own country (whole feature requires WooCommerce 2.2.9 or later).
 
-- <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. Currently, three official sources of exchange rates are available: the European Central Bank (ECB), the Danish National Bank, the Central Bank of the Russian Federation, and HM Revenue & Customs (UK).
+- <strong>Currency conversions:</strong> Most users (if not everyone) will be required to report VAT information in a specific currency. This may be a different currency from their shop currency. This feature causes conversion rate information to be stored together with the order, at order time. Currently, four official sources of exchange rates are available: the European Central Bank (ECB), the Danish National Bank, the Central Bank of the Russian Federation, and HM Revenue & Customs (UK).
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
-- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, currency and order status.
+- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, VAT rate, VAT type (traditional/variable) and order status.
+
+- <strong>Forbid EU sales if any goods have VAT chargeable</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out if they have selected any goods which are subject to EU VAT (whilst still allowing purchase of other goods, unlike the built-in WooCommerce feature which allows you to forbid check-out from some countries entirely).
 
 - <strong>Central control:</strong> brings all settings, reports and other information into a single centralised location, so that you don't have to deal with items spread all over the WordPress dashboard.
 
@@ -41,31 +41,31 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance f
 
 - <strong>Add line to invoices:</strong> If VAT was paid on the order, then an extra, configurable line can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
 
+- <strong>Refund support:</strong> includes information on refunded VAT, on relevant orders (WooCommerce 2.2 introduced the capability to refund and partially refund orders)
+
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">A Premium version is on sale at this link</a>, and currently has these *additional* features ready:
 
 - <strong>VAT-registered buyers can be exempted, and their numbers validated:</strong> a VAT number can be entered at the check-out, and it will be validated (via VIES). Qualifying customers can then be exempted from VAT on their purchase, and their information recorded. This feature is backwards-compatible with the old official WooCommerce "EU VAT Number" extension, so you will no longer need that plugin, and its data will be maintained. The customer's VAT number will be appended to the billing address where shown (e.g. order summary email, PDF invoices). An extra, configurable line specific to this situation can be added to the footer of the PDF invoice (when using the <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>).
 
 - <strong>Optionally allow B2B sales only</strong> - for shop owners who wish to only make sales that are VAT-exempt (i.e. B2B sales only), you can require that any EU customers enter a valid EU VAT number at the check-out.
 
-- <strong>CSV download:</strong> A CSV containing all orders with EU VAT data can be downloaded (including full compliance information).
+- <strong>CSV download:</strong> A CSV containing comprehensive information on all orders with EU VAT data can be downloaded (including full compliance information). Manipulate in your spreadsheet program to make arbitrary calculations.
 
 - <strong>Non-contradictory evidences:</strong> require two non-contradictory evidences of location (if the customer address and GeoIP lookup contradict, then the customer will be asked to self-certify his location, by choosing between them).
 
 - <strong>Show multiple currencies for VAT taxes on PDF invoices produced by <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>.
 
-- <strong>Support for the WooCommerce subscriptions extension</strong>
+- <strong>Support for the official WooCommerce subscriptions extension, and for Subscriptio (a RightPress/CodeCanyon alternative)</strong>
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">Read more about the Premium version of this plugin at this link.</a>
 
-Other features are still being weighed up and considered. It is believed (but not legally guaranteed), that armed with the above capabilities, a WooCommerce shop owner will be in a position to fulfil all the requirements of the EU VAT law: identifying the customer's location and collecting multiple pieces of evidence, applying the correct VAT rate, validating VAT numbers for B2B transactions, and having the data needed to create returns. (If in the EU, then you will also need to make sure that you are issuing your customers with VAT invoices containing the information required in your jurisdiction, via <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">a suitable WooCommerce invoice plugin</a>).
-
-Before January 1st 2015, of course, you will want to be careful about which features you enable. Before that date, the previous VAT / IVA regime will continue to operate.
+It is believed (but not legally guaranteed), that armed with the above capabilities, a WooCommerce shop owner will be in a position to fulfil all the requirements of the EU VAT law: identifying the customer's location and collecting multiple pieces of evidence, applying the correct VAT rate, validating VAT numbers for B2B transactions, and having the data needed to create returns. (If in the EU, then you will also need to make sure that you are issuing your customers with VAT invoices containing the information required in your jurisdiction, via <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">a suitable WooCommerce invoice plugin</a>).
 
 = Footnotes and legalese =
 
-This plugin is tested on WooCommerce 2.1 up to 2.3 (releases up to 1.7.1 were also tested on WC 2.0). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
+This plugin is tested on WooCommerce 2.1 up to 2.3 (releases up to 1.7.1 were also tested on WC 2.0 - you can still download those versions if you wish). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
 
-Geographical IP lookups are performed via the MaxMind GeoIP database, via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
+Geographical IP lookups are performed via WooCommerce's built-in geo-location features (WC 2.3+), or if on WC 2.2 or earlier then via the MaxMind GeoIP database via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
 
 Please make sure that you review this plugin's installation instructions and have not missed any important information there.
 
@@ -79,7 +79,7 @@ Many thanks to Diego Zanella, for various ideas we have swapped whilst working o
 
 - Some other WooCommerce plugins you may be interested in: https://www.simbahosting.co.uk/s3/shop/
 
-- This plugin is ready for translations (English, French and German are currently available), and we would welcome new translations (please post them in the support forum; <a href="http://plugins.svn.wordpress.org/woocommerce-eu-vat-compliance/trunk/languages/">the POT file is here</a>, or you can contact us and ask for a web-based login for our translation website).
+- This plugin is ready for translations (English, Finnish, French and German are currently available), and we would welcome new translations (please post them in the support forum; <a href="http://plugins.svn.wordpress.org/woocommerce-eu-vat-compliance/trunk/languages/">the POT file is here</a>, or you can contact us and ask for a web-based login for our translation website).
 
 == Installation ==
 
@@ -110,6 +110,92 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.9.3 - 2015-06-27 =
+
+* FEATURE: Support for Subscriptio (Premium) (Subscriptio is an alternative to the official WooCommerce Subscriptions extension) - i.e. repeat orders automatically created on a schedule by Subscriptio will have VAT audit/proof of location information copied over from the original order.
+* TWEAK: Readiness test in the free version will now alert if the Subscriptio extension is active (the free version does not contain the extra code needed to support it)
+
+= 1.9.2 - 2015-05-07 =
+
+* TWEAK: Prevent PHP notice with bbPress due to current_user_can() being called early
+
+= 1.9.1 - 2015-04-09 =
+
+* FEATURE: In-dashboard reports table now includes "refunds" column
+* TWEAK: Added explanatory note and link to WooCommerce refunds documentation, to help users understand the meaning/derivation of refunds data
+* TWEAK: Updated a couple of the plugin screenshots
+* TWEAK: Added free/Premium comparison table to free version
+* TRANSLATIONS: Updated POT file
+* FIX: Fix a bug in 1.9.0 that caused 100% discounted orders (i.e. 100% coupon) to result in an erronenous message appearing in the reports dashboard
+
+= 1.9.0 - 2015-04-08 =
+
+* FEATURE: The order-page widget now additionally displays VAT refund information, if a refund exists on the order
+* FEATURE: The CSV download (Premium) now contains additional column with VAT refund information (per-rate, and total, in both order and reporting currencies)
+* TWEAK: Premium version now contains support link to the proper place (not to wordpress.org's free forum)
+* FIX: "Export CSV" button/link did not handle the chosen date range correctly in all situations
+* FIX: Bug that caused items in orders with the same VAT rate, but which differed through some being digital VAT and others traditional VAT (i.e. physical goods), being wrongly banded together in CSV download VAT summaries.
+
+= 1.8.5 - 2015-04-02 =
+
+* FEATURE: Add "Items (without VAT)" column to dashboard VAT report. (Requires all orders in the selected period to have been made with WC 2.2 or later).
+* TWEAK: Tested + compatible with WP 4.2 and later (tested on beta3-31975)
+
+= 1.8.4 - 2015-03-24 =
+
+* TWEAK: Prevent PHP notice when collating report data on orders recorded by older versions of the plugin
+* TWEAK: Change the default order statuses selected on the reports page to 'completed' and 'processing' only. (It's unlikely that data for orders with statuses like 'failed' or 'pending payment' are what people want to see at first).
+* TWEAK: Cause selected status boxes on the report page to be retained when selecting a different quarter
+
+= 1.8.3 - 2015-03-16 =
+
+* FIX: Correct one of the VAT column names in the CSV download
+* FIX: Display 0, not 1, where relevant in secondary VAT columns in the CSV download
+* FIX: Prevent fatal error on reports page if the user had never saved their settings.
+* TWEAK: If the user has never saved their settings, then default to using ECB as the exchange rate provider (instead of saving no currency conversion information).
+* TRANSLATION: Updated POT file, and updated French and Finnish translations.
+
+= 1.8.1 - 2015-03-13 =
+
+* FIX: Fix issue in updater that could cause blank page on some sites
+
+= 1.8.0 - 2015-03-05 =
+
+* FIX: Reports table now sorts on click on column headings again (unknown when it was broken)
+* FEATURE: EU VAT report now re-coded to show data in the configured reporting currency (only), and to show shipping VAT separately
+* FEATURE: Downloadable CSV now shows separate VAT totals for each rate in separate rows, and shows separate rows for variable and traditional non-variable VAT (if your shop sells both kinds of goods)
+directory due to licensing complications.
+* FEATURE: Downloadable CSV now shows information on the configured reporting currency (as well as the order currency)
+* FEATURE: (Premium) - updater now added so that the plugin integrates fully with the WP dashboard's updates mechanism
+* TWEAK: Removed the static 'rates' column from the VAT report table (which only showed the current configured rates), and instead show a row for each rate actually charged.
+* TWEAK: Reports page now uses the built-in WooCommerce layout, including quick-click buttons for recent quarters (some code used from Diego Zanella, gratefully acknowledged)
+* TWEAK: Columns in downloadable CSV are now translatable (translations welcome)
+* TWEAK: Re-ordered and re-labelled some columns in CSV download for clarity
+* TWEAK: Provide link to download location for geoip-detect plugin, if relevant - it is no longer present in the wordpress.org
+* TRANSLATION: New POT file
+
+= 1.7.8 - 2015-02-28 =
+
+* TRANSLATION: Finnish translation, courtesy of Arhi Paivarinta
+
+= 1.7.7 - 2015-02-23 =
+
+* FIX: Deal with undocumented change in WC's tax tables setup in WC 2.3 - the "add/update rates" feature is now working again on WC 2.3
+
+= 1.7.6 - 2015-02-20 =
+
+* TWEAK: VAT number fields will no longer appear at the check-out if there were no VAT-liable items in the cart
+* TWEAK: Add wc_eu_vat_default_vat_number_field_value filter, allowing developers to pre-fill the VAT number field (e.g. with a previously-used value)
+
+= 1.7.5 - 2015-02-17 =
+
+* TWEAK: If on WC 2.3 or greater, then use WC's built-in geo-location code for geo-locating, and thus avoid requiring either CloudFlare or a second geo-location plugin.
+* TWEAK: Avoided using a deprecated method in WC 2.3
+
+= 1.7.4 - 2015-02-13 =
+
+* FIX: The HMRC (UK) decided to move their rates feed to a new URL this month (again!), removing one of the under-scores from the URL (also see changelog for 1.6.7). This fix will also be OK next month in case this was a mistake and they revert, or even if they switch back to Dec 2014's location. Update in order to make sure you are using current rates.
 
 = 1.7.2 - 2015-02-07 =
 
@@ -153,7 +239,7 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 
 = 1.6.12 - 2015-01-06 =
 
-* FEATURE: CSV downloads now take notice of the chosen dates in the date selector widget (reports) (i.e. so you can now alsop download selected data, instead of only downloading all data)
+* FEATURE: CSV downloads now take notice of the chosen dates in the date selector widget (reports) (i.e. so you can now also download selected data, instead of only downloading all data)
 * FIX: Some more translated strings are now translated in the admin interface.
 * FIX: Restore functionality on WooCommerce < 2.2 (checkout broken in 1.6.0)
 * FIX: Don't tweak the "taxes estimated for" message on the cart page on WooCommerce < 2.2.9, since the country choice widget requires this version
@@ -361,4 +447,4 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.7.2 : Compatible with the forth-coming WooCommerce 2.3. Add order number column to the CSV download (for shops with custom order-numbers).
+* 1.9.3 : Prevent PHP notice with bbPress due to current_user_can() being called early. Subscriptio support (Premium).
