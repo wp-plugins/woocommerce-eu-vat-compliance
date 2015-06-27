@@ -113,7 +113,7 @@ This is not strictly an EU VAT compliance issue, and so does not come under the 
 
 = 1.9.3 - 2015-06-27 =
 
-* FEATURE: Support for Subscriptio (Premium) (Subscriptio is an alternative to the official WooCommerce Subscriptions extension) - i.e. repeat orders automatically created on a schedule by Subscriptio will have VAT audit/proof of location information copied over from the original order.
+* FEATURE: Support for Subscriptio (Premium) (Subscriptio is an alternative to the official WooCommerce Subscriptions extension) - i.e. repeat orders automatically created on a schedule by Subscriptio will have VAT audit/proof of location information copied over from the original order, and the current exchange rates at the order-time will be updated.
 * TWEAK: Readiness test in the free version will now alert if the Subscriptio extension is active (the free version does not contain the extra code needed to support it)
 
 = 1.9.2 - 2015-05-07 =
