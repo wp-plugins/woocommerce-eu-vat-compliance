@@ -68,6 +68,8 @@ class WC_EU_VAT_Compliance {
 		add_action('before_woocommerce_init', array($this, 'before_woocommerce_init'), 1, 1);
 		add_action('plugins_loaded', array($this, 'plugins_loaded'));
 
+		add_action('init', array($this, 'init'));
+
 		add_action( 'woocommerce_settings_tax_options_end', array($this, 'woocommerce_settings_tax_options_end'));
 		add_action( 'woocommerce_update_options_tax', array( $this, 'woocommerce_update_options_tax'));
 
@@ -89,6 +91,19 @@ class WC_EU_VAT_Compliance {
 
 		if (file_exists(WC_EU_VAT_COMPLIANCE_DIR.'/updater/updater.php')) include_once(WC_EU_VAT_COMPLIANCE_DIR.'/updater/updater.php');
 
+	}
+
+	public function init() {
+		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || class_exists('WC_Geolocation') || !is_admin() || !current_user_can('manage_options')) return;
+
+		if (!function_exists('geoip_detect_get_info_from_ip')) {
+			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
+		}
+
+		if (function_exists('geoip_detect_get_database_upload_filename')) {
+			$filename = geoip_detect_get_database_upload_filename();
+			if (!file_exists($filename)) add_action('admin_notices', array($this, 'admin_notice_no_geoip_database'));
+		}
 	}
 
 	// If EU VAT checkout is forbidden, then this function is where the work is done to prevent it
@@ -732,16 +747,6 @@ Array
 			'css'		=> 'width:100%; height: 100px;'
 		);
 
-		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || class_exists('WC_Geolocation') || !is_admin() || !current_user_can('manage_options')) return;
-
-		if (!function_exists('geoip_detect_get_info_from_ip')) {
-			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
-		}
-
-		if (function_exists('geoip_detect_get_database_upload_filename')) {
-			$filename = geoip_detect_get_database_upload_filename();
-			if (!file_exists($filename)) add_action('admin_notices', array($this, 'admin_notice_no_geoip_database'));
-		}
 	}
 
 	# Function adapted from Aelia Currency Switcher under the GPLv3 (http://aelia.co)

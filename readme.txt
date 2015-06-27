@@ -1,8 +1,8 @@
 === WooCommerce EU VAT Compliance ===
 Contributors: DavidAnderson
 Requires at least: 3.2
-Tested up to: 4.2
-Stable tag: 1.9.1
+Tested up to: 4.2.2
+Stable tag: 1.9.3
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -55,7 +55,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance. 
 
 - <strong>Show multiple currencies for VAT taxes on PDF invoices produced by <a href="https://wordpress.org/plugins/woocommerce-pdf-invoices-packing-slips/">the free WooCommerce PDF invoices and packing slips plugin</a>.
 
-- <strong>Support for the WooCommerce subscriptions extension</strong>
+- <strong>Support for the official WooCommerce subscriptions extension, and for Subscriptio (a RightPress/CodeCanyon alternative)</strong>
 
 <a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">Read more about the Premium version of this plugin at this link.</a>
 
@@ -110,6 +110,15 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.9.3 - 2015-06-27 =
+
+* FEATURE: Support for Subscriptio (Premium) (Subscriptio is an alternative to the official WooCommerce Subscriptions extension) - i.e. repeat orders automatically created on a schedule by Subscriptio will have VAT audit/proof of location information copied over from the original order.
+* TWEAK: Readiness test in the free version will now alert if the Subscriptio extension is active (the free version does not contain the extra code needed to support it)
+
+= 1.9.2 - 2015-05-07 =
+
+* TWEAK: Prevent PHP notice with bbPress due to current_user_can() being called early
 
 = 1.9.1 - 2015-04-09 =
 
@@ -438,4 +447,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.9.1 : Refund information now included in dashboard report, order-page widget, and CSV download. Free/Premium comparison table added.
+* 1.9.3 : Prevent PHP notice with bbPress due to current_user_can() being called early. Subscriptio support (Premium).

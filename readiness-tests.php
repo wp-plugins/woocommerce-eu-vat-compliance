@@ -26,6 +26,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 
 		if (!$this->compliance->is_premium()) {
 			$this->tests['subscriptions_plugin_on_free_version'] = __('Support for the WooCommerce Subscriptions extension', 'wc_eu_vat_compliance');
+			$this->tests['subscriptio_plugin_on_free_version'] = __('Support for the RightPress Subscriptio extension', 'wc_eu_vat_compliance');
 		}
 
 		$this->rates_class = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Rates');
@@ -238,15 +239,19 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 	}
 
 	protected function subscriptions_plugin_on_free_version() {
-
 		$active_plugins = (array) get_option( 'active_plugins', array() );
 		if (is_multisite()) $active_plugins = array_merge($active_plugins, get_site_option('active_sitewide_plugins', array()));
-
 		// Return just true: better not to report a non-event
 		if (!in_array('woocommerce-subscriptions/woocommerce-subscriptions.php', $active_plugins ) || array_key_exists('woocommerce-subscriptions/woocommerce-subscriptions.php', $active_plugins)) return true;
-
 		return $this->res(false, sprintf(__('The %s plugin is active, but support for subscription orders is not part of the free version of the EU VAT Compliance plugin. New orders created via subscriptions will not have VAT compliance information attached.', 'wc_eu_vat_compliance'), __('WooCommerce subscriptions', 'wc_eu_vat_compliance')));
+	}
 
+	protected function subscriptio_plugin_on_free_version() {
+		$active_plugins = (array) get_option( 'active_plugins', array() );
+		if (is_multisite()) $active_plugins = array_merge($active_plugins, get_site_option('active_sitewide_plugins', array()));
+		// Return just true: better not to report a non-event
+		if (!in_array('subscriptio/subscriptio.php', $active_plugins ) || array_key_exists('subscriptio/subscriptio.php', $active_plugins)) return true;
+		return $this->res(false, sprintf(__('The %s plugin is active, but support for subscription orders is not part of the free version of the EU VAT Compliance plugin. New orders created via subscriptions will not have VAT compliance information attached.', 'wc_eu_vat_compliance'), __('RightPress Subscriptio', 'wc_eu_vat_compliance')));
 	}
 
 }
