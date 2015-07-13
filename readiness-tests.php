@@ -13,6 +13,7 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 	}
 
 	public function __construct() {
+
 		$this->tests = array(
 			'woo_minver' => __('WooCommerce version', 'wc_eu_vat_compliance'),
 			'tax_based_on' => __('Tax based upon', 'wc_eu_vat_compliance'),
@@ -20,18 +21,20 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 			'tax_enabled' => __('Store has tax enabled', 'wc_eu_vat_compliance'),
 			'rates_remote_fetch' => __('Current rates can be fetched from network', 'wc_eu_vat_compliance'),
 			'rates_exist_and_up_to_date' => __('VAT rates are up-to-date', 'wc_eu_vat_compliance'),
+			'extended_vat_check_id' => __('Extended VAT Check', 'wc_eu_vat_compliance'),
 		);
 
 		$this->compliance = WooCommerce_EU_VAT_Compliance();
+		$this->vatnumber_class = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_VAT_Number');
+		$this->rates_class = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Rates');
 
 		if (!$this->compliance->is_premium()) {
 			$this->tests['subscriptions_plugin_on_free_version'] = __('Support for the WooCommerce Subscriptions extension', 'wc_eu_vat_compliance');
 			$this->tests['subscriptio_plugin_on_free_version'] = __('Support for the RightPress Subscriptio extension', 'wc_eu_vat_compliance');
 		}
 
-		$this->rates_class = WooCommerce_EU_VAT_Compliance('WC_EU_VAT_Compliance_Rates');
 		$this->european_union_vat_countries = $this->compliance->get_european_union_vat_countries();
-// 			'' => __('', 'wc_eu_vat_compliance'),
+
 	}
 
 	public function get_results() {
@@ -226,13 +229,48 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 		return $this->res($result, $info);
 	}
 
+	// With thanks to Sven Auhagen
+	protected function extended_vat_check_id() {
+
+		$result = true;
+		$info = __('The extended VAT check is not enabled (you have not entered your VAT number)', 'wc_eu_vat_compliance');    
+
+		if ( get_option( 'woocommerce_eu_vat_store_id', '' ) != '' ) {
+
+			preg_match('/([A-Z][A-Z])?(\d+)/', str_replace(' ', '', get_option( 'woocommerce_eu_vat_store_id')), $matches);
+			if ($matches[1] == '') {
+				//we look for the country code of the store
+				$storevat_country = $this->compliance->wc->countries->get_base_country();
+			} else {
+				$storevat_country = $matches[1];
+			}
+
+			$storevat_id = $matches[2];
+	
+			//disable extended vat check for now to do this test
+			$response = $this->vatnumber_class->get_validation_result_from_network($storevat_country, $storevat_id, true);
+
+			//if the VAT is valid
+			if (!empty( $response['body'] ) && $response['body'] == "true" ) {
+				$result = true;
+				$info = sprintf(__('The store VAT ID (%s) is valid, so extended VAT checks are possible.', 'wc_eu_vat_compliance'), $storevat_country.' '.$storevat_id);
+			} else {
+				$result = false;
+				$info = sprintf(__('The store VAT ID (%s) is invalid, so the VAT number validity check will always fail.', 'wc_eu_vat_compliance'), $storevat_country.' '.$storevat_id);
+			}
+
+		}
+	
+		return $this->res($result, $info);
+	}
+
 	protected function rates_remote_fetch() {
 		$rates = $this->rates_class->fetch_remote_vat_rates();
 		$info = __('Testing ability to fetch current VAT rates from the network.', 'wc_eu_vat_compliance');
 		if (empty($rates)) $info .= ' '.__('If this fails, then check (with your web hosting company) the network connectivity from your webserver.', 'wc_eu_vat_compliance');
 		return $this->res(!empty($rates), $info);
 	}
-	
+
 	protected function tax_enabled() {
 		$woocommerce_calc_taxes = get_option('woocommerce_calc_taxes');
 		return $this->res('yes' == $woocommerce_calc_taxes, __('Taxes need to be enabled in the WooCommerce tax settings.', 'wc_eu_vat_compliance'));

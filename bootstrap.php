@@ -73,8 +73,6 @@ class WC_EU_VAT_Compliance {
 		add_action( 'woocommerce_settings_tax_options_end', array($this, 'woocommerce_settings_tax_options_end'));
 		add_action( 'woocommerce_update_options_tax', array( $this, 'woocommerce_update_options_tax'));
 
-		add_action('woocommerce_checkout_process', array($this, 'woocommerce_checkout_process'));
-
 		add_filter('network_admin_plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 		add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 
@@ -110,9 +108,11 @@ class WC_EU_VAT_Compliance {
 	public function woocommerce_check_cart_items() {
 
 		// Taxes turned on on the store, and VAT-able orders not forbidden?
-		if ('yes' != get_option('woocommerce_eu_vat_compliance_forbid_vatable_checkout', 'no') || 'yes' != get_option('woocommerce_calc_taxes')) return;
+		if ('yes' != get_option('woocommerce_eu_vat_compliance_forbid_vatable_checkout', 'no') | 'yes' != get_option('woocommerce_calc_taxes')) return;
+
 		$opts_classes = $this->get_euvat_tax_classes();
 
+		$is_forbidden = false;
 		$relevant_products_found = false;
 		$cart = $this->wc->cart->get_cart();
 
@@ -128,24 +128,32 @@ class WC_EU_VAT_Compliance {
 				break;
 			}
 		}
-		if (!$relevant_products_found) return;
 
-		$taxable_address = $this->wc->customer->get_taxable_address();
-		$eu_vat_countries = $this->get_european_union_vat_countries();
+		if ($relevant_products_found) {
+			$taxable_address = $this->wc->customer->get_taxable_address();
+			$eu_vat_countries = $this->get_european_union_vat_countries();
 
-		if (empty($taxable_address[0]) || !in_array($taxable_address[0], $eu_vat_countries)) return;
-
-		// If in cart, then warn - they still may select a different VAT country.
-		$current_filter = current_filter();
-		if ('woocommerce_checkout_process' != $current_filter) {
-			// Cart: just warn
-			echo "<p class=\"woocommerce-info\" id=\"wceuvat_notpossible\">".apply_filters('wceuvat_euvatcart_message', __('Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws).', 'wc_eu_vat_compliance'))."</p>";
-		} else {
-			// Attempting to check-out: prevent
-			$this->add_wc_error(
-				apply_filters('wceuvat_euvatcheckoutforbidden_message', __('This order cannot be processed. Due to the high costs of complying with EU VAT laws, we do not sell items liable to EU VAT to EU customers.', 'wc_eu_vat_compliance'))
-			);
+			if (!empty($taxable_address[0]) && in_array($taxable_address[0], $eu_vat_countries)) {
+				$is_forbidden = true;
+			}
 		}
+
+		$is_forbidden = apply_filters('wceuvat_check_cart_items_is_forbidden', $is_forbidden, $relevant_products_found);
+
+		if ($is_forbidden) {
+			// If in cart, then warn - they still may select a different VAT country.
+			$current_filter = current_filter();
+			if ('woocommerce_checkout_process' != $current_filter) {
+				// Cart: just warn
+				echo "<p class=\"woocommerce-info\" id=\"wceuvat_notpossible\">".apply_filters('wceuvat_euvatcart_message', __('Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws).', 'wc_eu_vat_compliance'))."</p>";
+			} else {
+				// Attempting to check-out: prevent
+				$this->add_wc_error(
+					apply_filters('wceuvat_euvatcheckoutforbidden_message', __('This order cannot be processed. Due to the high costs of complying with EU VAT laws, we do not sell items liable to EU VAT to EU customers.', 'wc_eu_vat_compliance'))
+				);
+			}
+		}
+
 	}
 
 	public function get_tax_classes() {
@@ -263,35 +271,6 @@ class WC_EU_VAT_Compliance {
 		$eu_countries = $this->wc->countries->get_european_union_countries();
 		$extra_countries = array('MC', 'IM');
 		return array_merge($eu_countries, $extra_countries);
-	}
-
-	public function woocommerce_checkout_process() {
-
-		return;
-
-		$classes = get_option('woocommerce_eu_vat_compliance_restricted_classes');
-		if (empty($classes) || !is_array($classes)) return;
-
-		// TODO: Finish this
-		$relevant_products_found = false;
-		$cart = $this->wc->cart->get_cart();
-		foreach ($cart as $item) {
-			$_product = $item['data'];
-			$shipping_class = $_product->get_shipping_class_id();
-			if (!empty($shipping_class) && in_array($shipping_class, $classes)) {
-				$relevant_products_found = true;
-				break;
-			}
-		}
-		if (!$relevant_products_found) return;
-
-		# TODO: Check the country. Call $this->add_wc_error() if checkout needs to be halted.
-		# TODO: Also put up a warning at the cart stage. That is done via simply echoing:
-		/*
-e.g.
-echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filters('openinghours_frontendtext_currentlyclosedinfo', __('We are currently closed; but you will be able to choose a time for later delivery.', 'openinghours'))."</p>";
-		*/
-
 	}
 
 	public function enqueue_jquery_ui_style() {
@@ -728,7 +707,7 @@ Array
 			'default'		=> 'yes'
 		);
 
-# TODO
+# This is always on - there's no reason to make it an option
 // 		if (!defined('WOOCOMMERCE_VERSION') || version_compare(WOOCOMMERCE_VERSION, '2.2.9', '>=')) {
 // 			$this->settings[] = array(
 // 				'name' 		=> __( "Show prices based on visitor's GeoIP-detected country", 'wc_eu_vat_compliance' ),

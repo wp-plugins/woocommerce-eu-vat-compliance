@@ -350,6 +350,21 @@ class WC_EU_VAT_Compliance_Record_Order_Country {
 				echo '<br>'.sprintf(__('Validated VAT number: %s', 'wc_eu_vat_compliance'), $vat_number);
 			}
 
+			$vies_full_result = get_post_meta($post_id, 'VIES Response', true);
+
+			if (!empty($vies_full_result)) {
+				echo '<p><strong title="'.esc_attr($currency_title).'">'.__('VIES extended information:', 'wc_eu_vat_compliance').'</strong><br>';
+				if (!empty($vies_full_result['requestDate'])) echo __('Validated at:', 'wc_eu_vat_compliance').' '.htmlspecialchars($vies_full_result['requestDate']).'<br>';
+				if (!empty($vies_full_result['requestIdentifier'])) echo __('Request ID:', 'wc_eu_vat_compliance').' '.htmlspecialchars($vies_full_result['requestIdentifier']).'<br>';
+				if (!empty($vies_full_result['traderAddress'])) {
+					echo __('Trader address:', 'wc_eu_vat_compliance').' '.htmlspecialchars($vies_full_result['traderAddress']).'<br>';
+				}
+				if (!empty($vies_full_result['traderName'])) {
+					echo __('Trader name:', 'wc_eu_vat_compliance').' '.htmlspecialchars($vies_full_result['traderName']).'<br>';
+				}
+				echo '</p>';
+			}
+
 			$conversion_provider = $compliance->get_rate_providers($conversion_provider_key);
 			if (!empty($conversion_provider_key) && !empty($conversion_provider)) {
 				$provider_info = $conversion_provider->info();

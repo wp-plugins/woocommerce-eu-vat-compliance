@@ -12,7 +12,7 @@ class WC_EU_VAT_Compliance_Reports {
 	private $fallback_conversion_rates = array();
 	private $conversion_provider;
 	private $at_least_22 = false;
-	private $pre_wc22_order_parsed = false;
+	private $pre_wc22_order_parsed = array();
 
 	public $start_date;
 	public $end_date;
@@ -163,7 +163,7 @@ class WC_EU_VAT_Compliance_Reports {
 			// Parse results further
 			foreach ($found_items as $order_id => $order_items) {
 				if (!isset($final_results[$order_id])) {
-					$this->pre_wc22_order_parsed = true;
+					$this->pre_wc22_order_parsed[] = $order_id;
 				}
 			}
 		}
@@ -615,12 +615,14 @@ class WC_EU_VAT_Compliance_Reports {
 
 		$script = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'jquery.tablesorter.js' : 'jquery.tablesorter.min.js';
 		$widgets_script = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'jquery.tablesorter.widgets.js' : 'jquery.tablesorter.widgets.min.js';
+		$widget_output_script = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? 'widget-output.js' : 'widget-output.min.js';
 
-		wp_register_script('jquery-tablesorter', WC_EU_VAT_COMPLIANCE_URL.'/js/'.$script, array('jquery'), '2.17.8', true);
-		wp_register_script('jquery-tablesorter-widgets', WC_EU_VAT_COMPLIANCE_URL.'/js/'.$widgets_script, array('jquery-tablesorter'), '2.17.8', true);
+		wp_register_script('jquery-tablesorter', WC_EU_VAT_COMPLIANCE_URL.'/js/'.$script, array('jquery'), '2.22.3', true);
+		wp_register_script('jquery-tablesorter-widgets', WC_EU_VAT_COMPLIANCE_URL.'/js/'.$widgets_script, array('jquery-tablesorter'), '2.22.2', true);
+		wp_register_script('jquery-tablesorter-widget-output', WC_EU_VAT_COMPLIANCE_URL.'/js/'.$widget_output_script, array('jquery-tablesorter-widgets'), '2.22.0', true);
 
 		wp_enqueue_style( 'tablesorter-style-jui', WC_EU_VAT_COMPLIANCE_URL.'/css/tablesorter-theme.jui.css', array(), '2.17.8');
-		wp_enqueue_script('jquery-tablesorter-widgets');
+		wp_enqueue_script('jquery-tablesorter-widget-output');
 
 		?>
 
@@ -767,6 +769,10 @@ class WC_EU_VAT_Compliance_Reports {
 
 	public function get_export_button() {
 		do_action('wc_eu_vat_compliance_csv_export_button');
+		echo '<a
+			class="wceuvat_downloadcsv_summary export_csv"
+			href="#"
+		>'.__('Export CSV (this table)', 'wc_eu_vat_compliance').'</a>';
 	}
 
 	public function get_chart_legend() {
@@ -967,10 +973,11 @@ class WC_EU_VAT_Compliance_Reports {
 
 		// Remove the 'sales' column if there are items with no line tax data (i.e. pre-WC 2.2 sales) OR (better?) display a warning about the data being incomplete.
 		if ($this->at_least_22) {
-			if ($this->pre_wc22_order_parsed) {
+			if (!empty($this->pre_wc22_order_parsed)) {
+				if (is_array($this->pre_wc22_order_parsed)) $pre_wc22_orders = implode(', ', array_unique($this->pre_wc22_order_parsed));
 				?>
 				<p>
-				<span style="font-weight:bold; color:red;"><?php _e('Note:', 'wc_eu_vat_compliance');?></span> <?php echo __('The selected time period contains orders made under WooCommerce 2.1 or earlier.', 'wc_eu_vat_compliance').' '.__('These WooCommerce versions did not record the data used to display the "Items" column, which is therefore incomplete and has been hidden.', 'wc_eu_vat_compliance');?> <a href="#" onclick="jQuery('.wceuvat_itemsdata').slideDown(); wceuvat_itemsdata_show=true; jQuery(this).parent().remove(); return false;"><?php _e('Show', 'wc_eu_vat_compliance');?></a>
+				<span style="font-weight:bold; color:red;" <?php if (isset($pre_wc22_orders)) echo 'title="'.esc_attr($pre_wc22_orders).'"'; ?>><?php _e('Note:', 'wc_eu_vat_compliance');?></span> <?php echo __('The selected time period contains orders originally placed under WooCommerce 2.1 or earlier.', 'wc_eu_vat_compliance').' '.__('These WooCommerce versions did not record the data used to display the "Items" column, which is therefore incomplete and has been hidden.', 'wc_eu_vat_compliance');?> <a href="#" onclick="jQuery('.wceuvat_itemsdata').slideDown(); wceuvat_itemsdata_show=true; jQuery(this).parent().remove(); return false;"><?php _e('Show', 'wc_eu_vat_compliance');?></a>
 				</p>
 				<script>
 				var wceuvat_itemsdata_show = false;
@@ -1178,8 +1185,14 @@ class WC_EU_VAT_Compliance_Reports {
 		?>
 		</tbody>
 		</table>
+
 		<script>
 			jQuery(document).ready(function() {
+
+				jQuery('.stats_range .wceuvat_downloadcsv_summary').click(function() {
+					jQuery('#wc_eu_vat_compliance_report').trigger('outputTable');
+					return false;
+				});
 
 				var currency_symbol = '<?php echo esc_js($reporting_currency_symbol); ?>';
 				var tablesorter_created = 0;
@@ -1265,7 +1278,34 @@ class WC_EU_VAT_Compliance_Reports {
 							cssInfoBlock : "avoid-sort",
 							theme: 'jui',
 							headerTemplate : '{content} {icon}', // needed to add icon for jui theme
-							widgets : ['uitheme'],
+							widgets : ['uitheme', 'output'],
+							widgetOptions : {
+								output_separator     : ',',         // ',' 'json', 'array' or separator (e.g. ';')
+// 									output_ignoreColumns : [0],          // columns to ignore [0, 1,... ] (zero-based index)
+// 									output_hiddenColumns : false,       // include hidden columns in the output
+								output_includeFooter : false,        // include footer rows in the output
+// 									output_dataAttrib    : 'data-name', // data-attribute containing alternate cell text
+								output_headerRows    : true,        // output all header rows (multiple rows)
+								output_delivery      : 'd',         // (p)opup, (d)ownload
+								output_saveRows      : 'v',         // (a)ll, (v)isible, (f)iltered or jQuery filter selector
+								output_duplicateSpans: true,        // duplicate output data in tbody colspan/rowspan
+								output_replaceQuote  : '\u201c;',   // change quote to left double quote
+// 								output_includeHTML   : true,        // output includes all cell HTML (except the header cells)
+								output_trimSpaces    : true,       // remove extra white-space characters from beginning & end
+								output_wrapQuotes    : false,       // wrap every cell output in quotes
+// 								output_popupStyle    : 'width=580,height=310',
+								output_saveFileName  : 'woocommerce-eu-vat-summary.csv',
+								// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
+// 									output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + cellIndex + ')'; },
+								// callback executed when processing completes
+								// return true to continue download/output
+								// return false to stop delivery & do something else with the data
+// 									output_callback      : function(config, data) { return true; },
+
+								// the need to modify this for Excel no longer exists
+// 									output_encoding      : 'data:application/octet-stream;charset=utf8,'
+
+							}
 						});
 						tablesorter_created = 1;
 					}

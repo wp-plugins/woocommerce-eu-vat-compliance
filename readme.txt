@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.2
 Tested up to: 4.2.2
-Stable tag: 1.9.3
+Stable tag: 1.10.1
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -29,7 +29,7 @@ This WooCommerce plugin provides features to assist with EU VAT law compliance. 
 
 - <strong>Entering and maintaining each country's VAT rates:</strong> this plugin assists with entering EU VAT rates accurately by supplying a single button to press in your WooCommerce tax rates settings, to add or update rates for all countries (standard or reduced) with one click.
 
-- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, VAT rate, VAT type (traditional/variable) and order status.
+- <strong>Reporting:</strong> Advanced reporting capabilities, allowing you to see all the information needed to make a MOSS (mini one-stop shop) VAT report. The report is sortable and broken down by country, VAT rate, VAT type (traditional/variable) and order status, and can be exported as a CSV.
 
 - <strong>Forbid EU sales if any goods have VAT chargeable</strong> - for shop owners for whom EU VAT compliance is too burdensome, this feature will allow you to forbid EU customers to check-out if they have selected any goods which are subject to EU VAT (whilst still allowing purchase of other goods, unlike the built-in WooCommerce feature which allows you to forbid check-out from some countries entirely).
 
@@ -110,6 +110,21 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.10.1 - 2015-07-13 =
+
+* FEATURE: VAT summary report table now has an option to export the table directly as a CSV file
+* FEATURE: It is now possible to perform an extended VIES lookup, recording the customer's detailed information (if available) of any customers supplying VAT numbers (thanks to Sven Auhagen for code and ideas)
+* FEATURE: Cause the VAT number field to be pre-populated if a logged-in repeat customer checks out
+* FEATURE: Show the customer's VAT number (if any) in their profile page (in the WooCommerce customer information section)
+* FEATURE: Add support for WPML for multi-language translation of fields shown at the checkout and price suffixes
+* FIX: Fix issue which could cause VAT number field to wrongly not appear in certain complicated visiting country/customer country/goods/taxes combinations (required that GeoIP lookup was inaccurate, amongst other conditions)
+* TWEAK: Removed a little unused code
+* TWEAK: When advising of pre-WC-2.1 orders (which have incomplete information due to WC not recording it before 2.2), indicate which orders specifically are meant.
+* TWEAK: It turns out that a WooCommerce order can remain in the 'Payment Pending' state forever, causing a surprising "pre-WC-2.1 order" notice in one of the charts, if a customer comes back to complete a pending order from long ago. The wording of the notice has been changed to reflect this. (Obviously, as time goes on, this condition is even more unlikely to ever be seen).
+* TWEAK: Introduce wceuvat_check_cart_items_is_forbidden filter, to allow developers to apply arbitrary customisations to criteria for forbidding check-out for VAT-related reasons
+* TWEAK: Stop using PHP 4-style parent constructor call in widget class
+* TWEAK: Update bundled TableSorter library to latest (2.22.3)
 
 = 1.9.3 - 2015-06-27 =
 
@@ -447,4 +462,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.9.3 : Prevent PHP notice with bbPress due to current_user_can() being called early. Subscriptio support (Premium).
+* 1.10.1: WPML support. Various tweaks. Various new VAT-number-related new features and one fix (Premium).
