@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.2
 Tested up to: 4.2.2
-Stable tag: 1.10.2
+Stable tag: 1.10.3
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -110,6 +110,10 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.10.3 - 2015-07-16 =
+
+* FIX: Remove stray line of code in 1.10.2 which broke the EU VAT control centre page layout
 
 = 1.10.2 - 2015-07-16 =
 
@@ -470,4 +474,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.10.2: Include invoice numbers in CSV download (Premium); allow readiness tests to be automated/scheduled (Premium); show numbers in in-dashboard reports using configured decimal places; correct shortcode behaviour.
+* 1.10.3: Include invoice numbers in CSV download (Premium); allow readiness tests to be automated/scheduled (Premium); show numbers in in-dashboard reports using configured decimal places; correct shortcode behaviour. Fix page layout issue in 1.10.2

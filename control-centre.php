@@ -860,9 +860,6 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 	}
 
-
-
-
 	public function render_tab_readiness() {
 		echo '<h2>'.__('EU VAT Compliance Readiness', 'wc_eu_vat_compliance').'</h2>';
 
@@ -899,8 +896,6 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		$opts = get_option('wceuvat_background_tests');
 		$email = empty($opts['email']) ? '' : (string)$opts['email'];
 
-		if (!is_array($opts) || empty($opts['email']) || empty($opts['tests']) || !is_array($opts['tests'])) return;
-
 		$default_bottom_blurb = '<p><a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">'.__('To automatically run these tests daily, and notify yourself of any failed tests by email, use our Premium version.', 'wc_eu_vat_compliance').'</a></p>';
 		$bottom_blurb = apply_filters('wceuvat_readinesstests_bottom_section', $default_bottom_blurb, $email);
 		$premium_present = ($bottom_blurb == $default_bottom_blurb) ? false : true;
@@ -924,7 +919,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 			}
 			$row_bg = 'color:'.$col;
 
-			$checked = empty($opts['tests'][$id]) ? false : true;
+			$checked = (is_array($opts) && empty($opts['tests'][$id])) ? false : true;
 
 			?>
 
