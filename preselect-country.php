@@ -163,7 +163,9 @@ class WC_EU_VAT_Compliance_Preselect_Country {
 			'classes' => '',
 		), $atts, 'euvat_country_selector');
 
+		ob_start();
 		$this->render_dropdown($atts['include_notaxes'], $atts['classes']);
+		return ob_get_clean();
 	}
 
 	public function render_dropdown($include_notaxes = 1, $classes = '') {
