@@ -21,7 +21,7 @@ class WC_EU_VAT_Country_PreSelect_Widget extends WP_Widget {
 	public function __construct() {
 		$widget_ops = array('classname' => 'country_preselect', 'description' => __('Allow the visitor to set their taxation country (to show correct taxes)', 'wc_eu_vat_compliance') );
 		
-		$this->WP_Widget('WC_EU_VAT_Country_PreSelect_Widget', __('WooCommerce Tax Country Chooser', 'wc_eu_vat_compliance'), $widget_ops); 
+		parent::__construct('WC_EU_VAT_Country_PreSelect_Widget', __('WooCommerce Tax Country Chooser', 'wc_eu_vat_compliance'), $widget_ops); 
 	}
 
 	public function widget( $args, $instance ) {
