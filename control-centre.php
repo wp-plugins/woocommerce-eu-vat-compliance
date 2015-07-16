@@ -190,7 +190,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 
 		$any_failed = false;
 
-		$mail_body = site_url()."\r\n\r\n".__('The following readiness tests failed; for more information, or to change your configuration visit the EU VAT Compliance control centre in your WP dashboard.'."\r\n\r\n", 'wc_eu_vat_compliance');
+		$mail_body = site_url()."\r\n\r\n".__('The following readiness tests failed; for more information, or to change your configuration visit the EU VAT Compliance control centre in your WP dashboard.', 'wc_eu_vat_compliance')."\r\n\r\n";
 
 		foreach ($results as $id => $res) {
 			if (!is_array($res)) continue;
