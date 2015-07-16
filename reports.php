@@ -430,7 +430,7 @@ class WC_EU_VAT_Compliance_Reports {
 		$tax_based_on = get_option('woocommerce_tax_based_on');
 
 		if ($print_as_csv) {
-			$tax_based_on_extra = ", '_billing_country', '_shipping_country', '_customer_ip_address'";
+			$tax_based_on_extra = ", '_wcpdf_invoice_number', '_billing_country', '_shipping_country', '_customer_ip_address'";
 			$select_extra = ',orders.post_date';
 		} else {
 			$select_extra = '';
@@ -495,6 +495,10 @@ class WC_EU_VAT_Compliance_Reports {
 						case '_order_total_base_currency';
 						case '_order_currency';
 							$normalised_results[$order_status][$order_id][$res->meta_key] = $res->meta_value;
+						break;
+						// If other plugins provide invoice numbers through other keys, we can use this to get them all into the right place in the end
+						case '_wcpdf_invoice_number';
+							$normalised_results[$order_status][$order_id]['invc_no'] = $res->meta_value;
 						break;
 						case 'Valid EU VAT Number';
 							$normalised_results[$order_status][$order_id]['vatno_valid'] = $res->meta_value;
@@ -1023,6 +1027,8 @@ class WC_EU_VAT_Compliance_Reports {
 
 		// var_dump($tabulated_results); return;
 
+		$this->format_num_decimals = get_option('woocommerce_price_num_decimals', 2);
+
 		foreach ($tabulated_results as $order_status => $results) {
 			$status_text = $compliance->order_status_to_text($order_status);
 
@@ -1059,8 +1065,8 @@ class WC_EU_VAT_Compliance_Reports {
 					}
 
 				if ($this->at_least_22) {
-					$extra_col_items = '<td class="wceuvat_itemsdata">'.$reporting_currency_symbol.' '.$items_amount.'</td>';
-					$extra_col_refunds = '<td class="wceuvat_refundsdata">'.$reporting_currency_symbol.' '.$vat_refund_amount.'</td>';
+					$extra_col_items = '<td class="wceuvat_itemsdata">'.$reporting_currency_symbol.' '.$this->format_amount($items_amount).'</td>';
+					$extra_col_refunds = '<td class="wceuvat_refundsdata">'.$reporting_currency_symbol.' '.$this->format_amount($vat_refund_amount).'</td>';
 				} else {
 					$extra_col_items = '';
 					$extra_col_refunds = '';
@@ -1071,9 +1077,9 @@ class WC_EU_VAT_Compliance_Reports {
 						<td>$status_text</td>
 						<td>$country_label</td>".$extra_col_items."
 						<td>$vat_rate_label</td>
-						<td>$reporting_currency_symbol $vat_items_amount</td>
-						<td>$reporting_currency_symbol $vat_shipping_amount</td>".$extra_col_refunds."
-						<td>$reporting_currency_symbol $vat_total_amount</td>
+						<td>$reporting_currency_symbol ".$this->format_amount($vat_items_amount)."</td>
+						<td>$reporting_currency_symbol ".$this->format_amount($vat_shipping_amount)."</td>".$extra_col_refunds."
+						<td>$reporting_currency_symbol ".$this->format_amount($vat_total_amount)."</td>
 					</tr>";
 //						<td>$items_amount</td>
 
@@ -1108,6 +1114,10 @@ class WC_EU_VAT_Compliance_Reports {
 		$this->report_table_footer($reporting_currency_symbol);
 
 		add_action('admin_footer', array($this, 'admin_footer'));
+	}
+
+	private function format_amount($amount) {
+		return sprintf("%0.".$this->format_num_decimals."f", $amount);
 	}
 
 	public function get_converted_refunds_data($refunds_for_order, $order_currency, $conversion_rates) {

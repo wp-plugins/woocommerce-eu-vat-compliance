@@ -34,7 +34,7 @@ $potential_classes_to_activate = array(
 	'WC_EU_VAT_Compliance_Premium',
 );
 
-if (is_admin()) {
+if (is_admin() || ( defined('DOING_CRON') && DOING_CRON) ) {
 	@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/reports.php');
 	@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/control-centre.php');
 	$potential_classes_to_activate[] = 'WC_EU_VAT_Compliance_Reports';

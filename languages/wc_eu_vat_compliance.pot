@@ -1,19 +1,21 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce EU Vat Compliance\n"
-"POT-Creation-Date: 2015-04-09 12:45+0100\n"
-"PO-Revision-Date: 2015-04-09 12:45+0100\n"
-"Last-Translator: David Anderson <contact@updraftplus.com>\n"
-"Language-Team:  <contact@simbahosting.co.uk>\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-16 10:01+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
-"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_x:2c,1\n"
-"X-Poedit-Basepath: /home/david/MissionaryHosting/UpdraftPlus/tmp-"
-"testpluginsselling-wc23/wp-content/plugins/woocommerce-eu-vat-compliance-"
-"premium\n"
-"X-Poedit-SearchPath-0: .\n"
 
 #: widgets.php:22
 msgid "Allow the visitor to set their taxation country (to show correct taxes)"
@@ -53,233 +55,233 @@ msgid ""
 "with no VAT."
 msgstr ""
 
-#: premium.php:53
+#: premium.php:47
 msgid "Force VAT display on product pages for EU visitors"
 msgstr ""
 
-#: premium.php:54
+#: premium.php:48
 msgid ""
 "EU regulations require EU customers to be shown prices inclusive of VAT. "
 "Select this option to use geo-location (based upon the visitor's IP address) "
 "to enforce this requirement."
 msgstr ""
 
-#: premium.php:99
+#: premium.php:117
 msgid "Add exchange amount to invoices"
 msgstr ""
 
-#: premium.php:100
+#: premium.php:118
 msgid ""
 "If you have the free WooCommerce PDF packing slips and invoices plugin, then "
 "this option will add the foreign currency VAT amount to your PDF invoices "
 "(for supported PDF invoicing plugins)."
 msgstr ""
 
-#: premium.php:111
+#: premium.php:129
 msgid ""
 "Download all orders with VAT data (from the displayed date range) in CSV "
 "format"
 msgstr ""
 
-#: premium.php:119
-msgid "Export CSV"
+#: premium.php:137
+msgid "Export CSV (detailed)"
 msgstr ""
 
-#: premium.php:249
+#: premium.php:267
 msgid "Order ID"
 msgstr ""
 
-#: premium.php:250
+#: premium.php:268
 msgid "Order Number"
 msgstr ""
 
-#: premium.php:251
+#: premium.php:269
 msgid "Date (local)"
 msgstr ""
 
-#: premium.php:252
+#: premium.php:270
 msgid "Date (GMT)"
 msgstr ""
 
-#: premium.php:253
+#: premium.php:271
 msgid "Order status"
 msgstr ""
 
-#: premium.php:254
+#: premium.php:272
 msgid "Order currency"
 msgstr ""
 
-#: premium.php:255
+#: premium.php:273
 msgid "Order currency symbol"
 msgstr ""
 
-#: premium.php:256
+#: premium.php:274
 msgid "Reporting currency"
 msgstr ""
 
-#: premium.php:257
+#: premium.php:275
 msgid "Reporting currency symbol"
 msgstr ""
 
-#: premium.php:258 vat-number.php:435
+#: premium.php:276 vat-number.php:492
 msgid "Billing country"
 msgstr ""
 
-#: premium.php:259
+#: premium.php:277
 msgid "Billing country (ISO-3166-1)"
 msgstr ""
 
-#: premium.php:260 vat-number.php:438
+#: premium.php:278 vat-number.php:495
 msgid "Shipping country"
 msgstr ""
 
-#: premium.php:261
+#: premium.php:279
 msgid "Shipping country (ISO-3166-1)"
 msgstr ""
 
-#: premium.php:262
+#: premium.php:280
 msgid "Sales total (order currency)"
 msgstr ""
 
-#: premium.php:263
+#: premium.php:281
 msgid "Sales total (reporting currency)"
 msgstr ""
 
-#: premium.php:264
+#: premium.php:282
 msgid "Currency conversion rate"
 msgstr ""
 
-#: premium.php:265 premium.php:271 premium.php:277
+#: premium.php:283 premium.php:289 premium.php:295
 #, php-format
 msgid "VAT rate (%%, %s)"
 msgstr ""
 
-#: premium.php:266 premium.php:272 premium.php:278
+#: premium.php:284 premium.php:290 premium.php:296
 #, php-format
 msgid "VAT paid (%s, order currency)"
 msgstr ""
 
-#: premium.php:267 premium.php:273 premium.php:279
+#: premium.php:285 premium.php:291 premium.php:297
 #, php-format
 msgid "VAT paid (%s, reporting currency)"
 msgstr ""
 
-#: premium.php:268 premium.php:274 premium.php:280
+#: premium.php:286 premium.php:292 premium.php:298
 #, php-format
 msgid "VAT refunded (%s, order currency)"
 msgstr ""
 
-#: premium.php:269 premium.php:275 premium.php:281
+#: premium.php:287 premium.php:293 premium.php:299
 #, php-format
 msgid "VAT refunded (%s, reporting currency)"
 msgstr ""
 
-#: premium.php:270 premium.php:276 premium.php:282
+#: premium.php:288 premium.php:294 premium.php:300
 #, php-format
 msgid "VAT is variable (%s)"
 msgstr ""
 
-#: premium.php:283
+#: premium.php:301
 msgid "VAT paid (total, order currency)"
 msgstr ""
 
-#: premium.php:284
+#: premium.php:302
 msgid "VAT paid (items, order currency)"
 msgstr ""
 
-#: premium.php:285
+#: premium.php:303
 msgid "VAT paid (shipping, order currency)"
 msgstr ""
 
-#: premium.php:286
+#: premium.php:304
 msgid "VAT refunded (total, order currency)"
 msgstr ""
 
-#: premium.php:287
+#: premium.php:305
 msgid "VAT paid (total, reporting currency)"
 msgstr ""
 
-#: premium.php:288
+#: premium.php:306
 msgid "VAT paid (items, reporting currency)"
 msgstr ""
 
-#: premium.php:289
+#: premium.php:307
 msgid "VAT paid (shipping, reporting currency)"
 msgstr ""
 
-#: premium.php:290
+#: premium.php:308
 msgid "VAT refunded (total, reporting currency)"
 msgstr ""
 
-#: premium.php:291
+#: premium.php:309
 msgid "VAT number"
 msgstr ""
 
-#: premium.php:292
+#: premium.php:310
 msgid "VAT number valid"
 msgstr ""
 
-#: premium.php:293
+#: premium.php:311
 msgid "VAT number validated"
 msgstr ""
 
-#: premium.php:294
+#: premium.php:312
 msgid "Country used to calculate VAT (name)"
 msgstr ""
 
-#: premium.php:295
+#: premium.php:313
 msgid "Country used to calculate VAT (ISO-3166-1)"
 msgstr ""
 
-#: premium.php:296
+#: premium.php:314
 msgid "IP address"
 msgstr ""
 
-#: premium.php:297
+#: premium.php:315
 msgid "IP address country"
 msgstr ""
 
-#: premium.php:298
+#: premium.php:316
 msgid "IP address country  (ISO-3166-1)"
 msgstr ""
 
-#: premium.php:299
+#: premium.php:317
 msgid "IP address country detected via"
 msgstr ""
 
-#: premium.php:341 premium.php:353 premium.php:357 premium.php:363
-#: premium.php:367 premium.php:374 reports.php:872 reports.php:971
-#: bootstrap.php:673 vat-number.php:423 record-order-country.php:366
-#: record-order-country.php:382 record-order-country.php:384
-#: record-order-country.php:386 record-order-country.php:394
-#: record-order-country.php:398
+#: premium.php:359 premium.php:371 premium.php:375 premium.php:381
+#: premium.php:385 premium.php:392 reports.php:933 reports.php:1032
+#: bootstrap.php:667 vat-number.php:480 record-order-country.php:381
+#: record-order-country.php:397 record-order-country.php:399
+#: record-order-country.php:401 record-order-country.php:409
+#: record-order-country.php:413
 msgid "Unknown"
 msgstr ""
 
-#: premium.php:471 premium.php:477 premium.php:483 premium.php:493
-#: premium.php:494
+#: premium.php:489 premium.php:495 premium.php:501 premium.php:511
+#: premium.php:512
 msgid "No"
 msgstr ""
 
-#: premium.php:471 premium.php:477 premium.php:483 premium.php:493
-#: premium.php:494
+#: premium.php:489 premium.php:495 premium.php:501 premium.php:511
+#: premium.php:512
 msgid "Yes"
 msgstr ""
 
-#: premium.php:492
+#: premium.php:510
 msgid "None supplied"
 msgstr ""
 
-#: premium.php:493 premium.php:494
+#: premium.php:511 premium.php:512
 msgid "n/a"
 msgstr ""
 
-#: premium.php:566
+#: premium.php:584
 msgid ""
 "You can delete the free version of the WooCommerce EU VAT Compliance plugin"
 msgstr ""
 
-#: premium.php:567
+#: premium.php:585
 msgid "all of its features are part of the premium version."
 msgstr ""
 
@@ -287,46 +289,46 @@ msgstr ""
 msgid "EU VAT Report"
 msgstr ""
 
-#: reports.php:603
+#: reports.php:604
 msgid ""
 "The report below indicates the taxes actually charged on orders, when they "
 "were processed: it does not take into account later alterations manually "
 "made to order data."
 msgstr ""
 
-#: reports.php:605
+#: reports.php:606
 msgid ""
 "Downloading all orders with VAT data in CSV format is a feature of the "
 "Premium version of this plugin."
 msgstr ""
 
-#: reports.php:610
+#: reports.php:611
 msgid ""
 "The refund column in the table and CSV download is calculated from "
 "WooCommerce refunds."
 msgstr ""
 
-#: reports.php:610
+#: reports.php:611
 msgid "more information"
 msgstr ""
 
-#: reports.php:610
+#: reports.php:611
 msgid ""
 "These can be complete or partial refunds, and are separate to whether or not "
 "you have marked the order status as \"refunded\""
 msgstr ""
 
-#: reports.php:610
+#: reports.php:611
 msgid ""
 "Note that the refund column only includes refunds made within the chosen "
 "date range."
 msgstr ""
 
-#: reports.php:610
+#: reports.php:611
 msgid "i.e. This is a true VAT report for the chosen period."
 msgstr ""
 
-#: reports.php:610
+#: reports.php:611
 msgid ""
 "If you want to download data that includes refunds made at any time, then "
 "the best option is to choose a date range up until the current time, "
@@ -334,73 +336,76 @@ msgid ""
 "whose order date matches the period you are interested in."
 msgstr ""
 
-#: reports.php:658
+#: reports.php:661
 msgid "Include statuses (updates instantly):"
 msgstr ""
 
-#: reports.php:745
+#: reports.php:748
 #, php-format
-msgctxt "Q for quarter (date); e.g. Q1 2014"
 msgid "Q%d %d"
 msgstr ""
 
-#: reports.php:918
+#: reports.php:775
+msgid "Export CSV (this table)"
+msgstr ""
+
+#: reports.php:980
 msgid "Note:"
 msgstr ""
 
-#: reports.php:918
+#: reports.php:980
 msgid ""
-"The selected time period contains orders made under WooCommerce 2.1 or "
-"earlier."
+"The selected time period contains orders originally placed under WooCommerce "
+"2.1 or earlier."
 msgstr ""
 
-#: reports.php:918
+#: reports.php:980
 msgid ""
 "These WooCommerce versions did not record the data used to display the "
 "\"Items\" column, which is therefore incomplete and has been hidden."
 msgstr ""
 
-#: reports.php:918
+#: reports.php:980
 msgid "Show"
 msgstr ""
 
-#: reports.php:994
+#: reports.php:1055
 msgid "Fixed - i.e., traditional non-variable VAT"
 msgstr ""
 
-#: reports.php:994
+#: reports.php:1055
 msgid "fixed"
 msgstr ""
 
-#: reports.php:1032 reports.php:1183
+#: reports.php:1093 reports.php:1250
 msgid "Grand Total"
 msgstr ""
 
-#: reports.php:1262 reports.php:1278
+#: reports.php:1356 reports.php:1372
 msgid "Order Status"
 msgstr ""
 
-#: reports.php:1263 reports.php:1279
+#: reports.php:1357 reports.php:1373
 msgid "Country"
 msgstr ""
 
-#: reports.php:1265 reports.php:1281
+#: reports.php:1359 reports.php:1375
 msgid "Items (before VAT)"
 msgstr ""
 
-#: reports.php:1267 reports.php:1283
+#: reports.php:1361 reports.php:1377
 msgid "VAT rate"
 msgstr ""
 
-#: reports.php:1268 reports.php:1284
+#: reports.php:1362 reports.php:1378
 msgid "VAT (items)"
 msgstr ""
 
-#: reports.php:1269 reports.php:1285
+#: reports.php:1363 reports.php:1379
 msgid "VAT (shipping)"
 msgstr ""
 
-#: reports.php:1271
+#: reports.php:1365
 msgid ""
 "N.B. This column shows (only) amounts that were refunded using WooCommerce's "
 "refunds feature within the chosen date range - whether the WooCommerce order "
@@ -408,15 +413,15 @@ msgid ""
 "refund corresponds to is within the same date range."
 msgstr ""
 
-#: reports.php:1271 reports.php:1287
+#: reports.php:1365 reports.php:1381
 msgid "VAT refunded"
 msgstr ""
 
-#: reports.php:1273 reports.php:1289
+#: reports.php:1367 reports.php:1383
 msgid "Total VAT"
 msgstr ""
 
-#: reports.php:1287
+#: reports.php:1381
 msgid ""
 "N.B. This column shows (only) amounts that were refunded using WooCommerce's "
 "refunds feature - whether the WooCommerce order status is 'refunded' or not, "
@@ -440,38 +445,38 @@ msgstr ""
 msgid "MaxMind GeoIP database"
 msgstr ""
 
-#: bootstrap.php:127
+#: bootstrap.php:148
 msgid ""
 "Depending on your country, it may not be possible to purchase all the items "
 "in this cart. This is because this store does not sell items liable to EU "
 "VAT to EU customers (due to the high costs of complying with EU VAT laws)."
 msgstr ""
 
-#: bootstrap.php:131
+#: bootstrap.php:152
 msgid ""
 "This order cannot be processed. Due to the high costs of complying with EU "
 "VAT laws, we do not sell items liable to EU VAT to EU customers."
 msgstr ""
 
-#: bootstrap.php:142 rates.php:31
+#: bootstrap.php:165 rates.php:31
 msgid "Standard Rate"
 msgstr ""
 
-#: bootstrap.php:186 bootstrap.php:709
+#: bootstrap.php:209 bootstrap.php:703
 msgid "Relevant tax classes"
 msgstr ""
 
-#: bootstrap.php:189
+#: bootstrap.php:212
 msgid ""
 "Indicate all the WooCommerce tax classes for which variable-by-country EU "
 "VAT is charged."
 msgstr ""
 
-#: bootstrap.php:189
+#: bootstrap.php:212
 msgid "To create additional tax classes, go to the WooCommerce tax settings."
 msgstr ""
 
-#: bootstrap.php:189
+#: bootstrap.php:212
 msgid ""
 "Products which are not in one of these tax classes will be excluded from per-"
 "country VAT calculations recorded by this plugin (though they may still have "
@@ -479,79 +484,72 @@ msgid ""
 "purpose of this setting is to allow you to have a shop selling mixed goods)."
 msgstr ""
 
-#: bootstrap.php:639
+#: bootstrap.php:633
 msgid "EU VAT Compliance Dashboard"
 msgstr ""
 
-#: bootstrap.php:642
+#: bootstrap.php:636
 msgid "Premium Version"
 msgstr ""
 
-#: bootstrap.php:660
-msgctxt "Order status"
+#: bootstrap.php:654
 msgid "Pending Payment"
 msgstr ""
 
-#: bootstrap.php:661
-msgctxt "Order status"
+#: bootstrap.php:655
 msgid "Processing"
 msgstr ""
 
-#: bootstrap.php:662
-msgctxt "Order status"
+#: bootstrap.php:656
 msgid "On Hold"
 msgstr ""
 
-#: bootstrap.php:663
-msgctxt "Order status"
+#: bootstrap.php:657
 msgid "Completed"
 msgstr ""
 
-#: bootstrap.php:664
-msgctxt "Order status"
+#: bootstrap.php:658
 msgid "Cancelled"
 msgstr ""
 
-#: bootstrap.php:665
-msgctxt "Order status"
+#: bootstrap.php:659
 msgid "Refunded"
 msgstr ""
 
-#: bootstrap.php:666
-msgctxt "Order status"
+#: bootstrap.php:660 readiness-tests.php:10
 msgid "Failed"
 msgstr ""
 
-#: bootstrap.php:692
+#: bootstrap.php:686
 msgid "Forbid EU VAT checkout"
 msgstr ""
 
-#: bootstrap.php:693
+#: bootstrap.php:687
 msgid ""
 "If this option is selected, then <strong>all</strong> orders by EU customers "
 "(whether consumer or business) which contain goods subject to variable EU "
 "VAT (whether the customer is exempt or not) will be forbidden."
 msgstr ""
 
-#: bootstrap.php:694
+#: bootstrap.php:688
 msgid ""
 "This feature is intended only for sellers who wish to avoid issues from EU "
 "variable VAT regulations entirely, by not selling any qualifying goods to EU "
 "customers (even ones who are potentially VAT exempt)."
 msgstr ""
 
-#: bootstrap.php:694
+#: bootstrap.php:688
 msgid ""
 "Check-out will be forbidden if the cart contains any goods from the relevant "
 "tax classes indicated below, and if the customer's VAT country is part of "
 "the EU."
 msgstr ""
 
-#: bootstrap.php:701
+#: bootstrap.php:695
 msgid "Phrase matches used to identify VAT"
 msgstr ""
 
-#: bootstrap.php:702
+#: bootstrap.php:696
 msgid ""
 "A comma-separated (optional spaces) list of strings (phrases) used to "
 "identify taxes which are EU VAT taxes. One of these strings must be used in "
@@ -559,52 +557,52 @@ msgid ""
 "the tax to be identified as EU VAT."
 msgstr ""
 
-#: bootstrap.php:710
+#: bootstrap.php:704
 msgid ""
 "Select all tax classes which are used in your store for products sold under "
 "EU Digital VAT regulations"
 msgstr ""
 
-#: bootstrap.php:728
+#: bootstrap.php:722
 msgid "Invoice footer text (B2C)"
 msgstr ""
 
-#: bootstrap.php:729
+#: bootstrap.php:723
 msgid ""
 "Text to prepend to the footer of your PDF invoice for transactions with VAT "
 "paid and non-zero (for supported PDF invoicing plugins)"
 msgstr ""
 
-#: bootstrap.php:828
+#: bootstrap.php:812
 msgid "GeoIP database not found"
 msgstr ""
 
-#: bootstrap.php:829
+#: bootstrap.php:813
 msgid ""
 "You have the GeoIP plugin installed, but it has not yet downloaded its "
 "database. This is needed for country detection to work."
 msgstr ""
 
-#: bootstrap.php:830
+#: bootstrap.php:814
 msgid "Follow this link and press the Update Now button to download it"
 msgstr ""
 
-#: bootstrap.php:836
+#: bootstrap.php:820
 msgid "Required Plugin Not Found"
 msgstr ""
 
-#: bootstrap.php:837
+#: bootstrap.php:821
 msgid ""
 "For the WooCommerce EU VAT compliance module to be able to record the "
 "country that a customer is ordering from, the (free) GeoIP Detection plugin "
 "must be installed and activated."
 msgstr ""
 
-#: bootstrap.php:842
+#: bootstrap.php:826
 msgid "Follow this link to get it"
 msgstr ""
 
-#: bootstrap.php:844
+#: bootstrap.php:828
 msgid "Follow this link to activate it."
 msgstr ""
 
@@ -618,92 +616,121 @@ msgid ""
 "enter it below."
 msgstr ""
 
-#: vat-number.php:134
+#: vat-number.php:107 vat-number.php:463 vat-number.php:464
+msgid "VAT Number"
+msgstr ""
+
+#: vat-number.php:108
+msgid "Any VAT number entered by the customer at the check-out"
+msgstr ""
+
+#: vat-number.php:148
 msgid "Invoice footer text (B2B)"
 msgstr ""
 
-#: vat-number.php:135
+#: vat-number.php:149
 msgid ""
 "Text to prepend to the footer of your PDF invoice for transactions with "
 "validated VAT numbers (for supported PDF invoicing plugins). If you include "
 "{vat_number}, then it will be replaced with the validated number."
 msgstr ""
 
-#: vat-number.php:142
-msgid "Allow VAT numbers to be entered"
+#: vat-number.php:156
+msgid "VAT number entry at check-out"
 msgstr ""
 
-#: vat-number.php:143
+#: vat-number.php:157
 msgid ""
 "N.B. Some of the options further down the page are irrelevant, if you choose "
 "\"Never\" here."
 msgstr ""
 
-#: vat-number.php:147
+#: vat-number.php:161
 msgid ""
 "Permit: customers with valid EU VAT numbers can enter them, and become VAT-"
 "exempt."
 msgstr ""
 
-#: vat-number.php:148
+#: vat-number.php:162
 msgid "Never: VAT will always be charged whenever VAT-able items are present."
 msgstr ""
 
-#: vat-number.php:149
+#: vat-number.php:163
 msgid ""
 "Require: customers without a valid EU VAT number will not be permitted to "
 "check out on any order."
 msgstr ""
 
-#: vat-number.php:155
+#: vat-number.php:169
 msgid "EU VAT Title"
 msgstr ""
 
-#: vat-number.php:156
+#: vat-number.php:170
 msgid "The title that appears at checkout above the VAT Number box."
 msgstr ""
 
-#: vat-number.php:161
+#: vat-number.php:175
 msgid "EU VAT Message"
 msgstr ""
 
-#: vat-number.php:162
+#: vat-number.php:176
 msgid "The message that appears at checkout above the VAT Number box."
 msgstr ""
 
-#: vat-number.php:168
+#: vat-number.php:182
 msgid "Show field for base country"
 msgstr ""
 
-#: vat-number.php:169
+#: vat-number.php:183
 msgid "Show the VAT field even when the customer is in your base country"
 msgstr ""
 
-#: vat-number.php:174
+#: vat-number.php:188
 msgid "Deduct VAT for base country"
 msgstr ""
 
-#: vat-number.php:175
+#: vat-number.php:189
 msgid ""
 "Deduct the VAT even when the customer is in your base country and has a "
 "valid number"
 msgstr ""
 
-#: vat-number.php:180
+#: vat-number.php:194
 msgid "Store non-valid numbers"
 msgstr ""
 
-#: vat-number.php:181
+#: vat-number.php:195
 msgid ""
 "Enable this option to store numbers which don't pass validation, rather than "
 "reject them. Tax will not be made exempt."
 msgstr ""
 
-#: vat-number.php:186
+#: vat-number.php:201
+msgid "Your VAT number"
+msgstr ""
+
+#: vat-number.php:202
+msgid ""
+"If you enter your own VAT number, then an extended VAT lookup will be "
+"performed when validating customer VAT numbers. (The EU's look-up system "
+"requires your number in order to do this)."
+msgstr ""
+
+#: vat-number.php:202
+msgid "This is the only use currently made of this number."
+msgstr ""
+
+#: vat-number.php:202
+msgid ""
+"If you enter your VAT Number without a country-code, then the shop's base "
+"country will be assumed."
+msgstr ""
+
+#: vat-number.php:208
 msgid "Resolving conflicting VAT data"
 msgstr ""
 
-#: vat-number.php:187
+#: vat-number.php:209
 msgid ""
 "This option determines what will happen if the customer's apparent country "
 "(according to their IP address) conflicts with the country used to determine "
@@ -711,38 +738,38 @@ msgid ""
 "further up this page)."
 msgstr ""
 
-#: vat-number.php:187
+#: vat-number.php:209
 msgid ""
 "Which is the correct option for you depends upon the particular evidence "
 "your local taxman is happy with to verify the country of purchase."
 msgstr ""
 
-#: vat-number.php:191
+#: vat-number.php:213
 msgid ""
 "Require the customer to indicate the correct country when there is a conflict"
 msgstr ""
 
-#: vat-number.php:192
+#: vat-number.php:214
 msgid "Always show the customer the VAT country, even if there was no conflict"
 msgstr ""
 
-#: vat-number.php:193
+#: vat-number.php:215
 msgid ""
 "Always use the WooCommerce tax settings to indicate the country (never ask "
 "the customer)"
 msgstr ""
 
-#: vat-number.php:225 vat-number.php:254
+#: vat-number.php:247 vat-number.php:276
 msgid "VAT #:"
 msgstr ""
 
-#: vat-number.php:287
+#: vat-number.php:309
 msgid ""
 "N.B. The final country used may be modified according to your EU VAT "
 "settings, further down this page."
 msgstr ""
 
-#: vat-number.php:291 control-centre.php:903
+#: vat-number.php:313 control-centre.php:903
 msgid ""
 "N.B. The WooCommerce EU VAT Compliance plugin causes geo-location to "
 "identify the default address, regardless of whether you also activate the "
@@ -751,71 +778,67 @@ msgid ""
 "harmless, as both geo-locations should have the same result)."
 msgstr ""
 
-#: vat-number.php:401
+#: vat-number.php:458
 msgid "This shop does not allow the entry of EU VAT numbers for VAT exemption."
 msgstr ""
 
-#: vat-number.php:406 vat-number.php:407
-msgid "VAT Number"
-msgstr ""
-
-#: vat-number.php:430
+#: vat-number.php:487
 #, php-format
 msgid "%s (detected)"
 msgstr ""
 
-#: vat-number.php:442
+#: vat-number.php:499
 msgid ""
 "For the correct calculation of VAT, please confirm your country of residence:"
 msgstr ""
 
-#: vat-number.php:518
+#: vat-number.php:575
 msgid "The number entered was successfully validated."
 msgstr ""
 
-#: vat-number.php:520
+#: vat-number.php:577
 msgid ""
 "The number entered was not successfully validated for the chosen country."
 msgstr ""
 
-#: vat-number.php:524
+#: vat-number.php:581
 msgid ""
 "The number entered is not long enough to be valid for the chosen country."
 msgstr ""
 
-#: vat-number.php:526
+#: vat-number.php:583
 msgid "The validity of the number entered could not be ascertained."
 msgstr ""
 
-#: vat-number.php:591
+#: vat-number.php:648
 msgid "The number entered is being checked..."
 msgstr ""
 
-#: vat-number.php:659
+#: vat-number.php:716
 msgid "billing country"
 msgstr ""
 
-#: vat-number.php:733
+#: vat-number.php:790
 msgid "shipping country"
 msgstr ""
 
-#: vat-number.php:954
+#: vat-number.php:1011
 msgid ""
 "This store requires all orders to be accompanied by a valid EU VAT number"
 msgstr ""
 
-#: vat-number.php:960
+#: vat-number.php:1017
 msgid ""
 "You must certify your country of residence in order to complete your order."
 msgstr ""
 
-#: vat-number.php:985
+#: vat-number.php:1042
 #, php-format
 msgid ""
 "You cannot use a VAT number since your country (%s) is outside of the EU."
 msgstr ""
 
-#: vat-number.php:1055 vat-number.php:1082
+#: vat-number.php:1122
 #, php-format
 msgid "You have entered an invalid VAT number (%s) for your country."
 msgstr ""
@@ -824,67 +847,71 @@ msgstr ""
 msgid "Passed"
 msgstr ""
 
-#: readiness-tests.php:10
-msgid "Failed"
-msgstr ""
-
 #: readiness-tests.php:11
 msgid "Uncertain"
 msgstr ""
 
-#: readiness-tests.php:17
+#: readiness-tests.php:18
 msgid "WooCommerce version"
 msgstr ""
 
-#: readiness-tests.php:18
+#: readiness-tests.php:19
 msgid "Tax based upon"
 msgstr ""
 
-#: readiness-tests.php:19
+#: readiness-tests.php:20
 msgid "Coupons apply before tax"
 msgstr ""
 
-#: readiness-tests.php:20
+#: readiness-tests.php:21
 msgid "Store has tax enabled"
 msgstr ""
 
-#: readiness-tests.php:21
+#: readiness-tests.php:22
 msgid "Current rates can be fetched from network"
 msgstr ""
 
-#: readiness-tests.php:22
+#: readiness-tests.php:23
 msgid "VAT rates are up-to-date"
 msgstr ""
 
-#: readiness-tests.php:28
+#: readiness-tests.php:24
+msgid "Extended VAT Check"
+msgstr ""
+
+#: readiness-tests.php:32
 msgid "Support for the WooCommerce Subscriptions extension"
 msgstr ""
 
-#: readiness-tests.php:73
+#: readiness-tests.php:33
+msgid "Support for the RightPress Subscriptio extension"
+msgstr ""
+
+#: readiness-tests.php:77
 msgid ""
 "WooCommerce 2.3 removed the problematic \"apply coupon after tax\" option."
 msgstr ""
 
-#: readiness-tests.php:122
+#: readiness-tests.php:126
 msgid ""
 "The following currently-valid coupons use the \"apply coupon after tax\" "
 "option (which leads to non-compliant VAT invoices): "
 msgstr ""
 
-#: readiness-tests.php:124
+#: readiness-tests.php:128
 msgid ""
 "You have no currently-valid coupons which use the \"apply coupon after tax\" "
 "option (which leads to non-compliant VAT invoices)"
 msgstr ""
 
-#: readiness-tests.php:132
+#: readiness-tests.php:136
 #, php-format
 msgid ""
 "Your WooCommerce version (%s) is high enough to support all features of this "
 "plugin."
 msgstr ""
 
-#: readiness-tests.php:134
+#: readiness-tests.php:138
 #, php-format
 msgid ""
 "Your WooCommerce version (%s) is lower than %s - as a result, all features "
@@ -892,64 +919,81 @@ msgid ""
 "taxes for their location before the cart or checkout."
 msgstr ""
 
-#: readiness-tests.php:143 readiness-tests.php:146
+#: readiness-tests.php:147 readiness-tests.php:150
 msgid ""
 "Tax calculations must be based on either the customer billing or shipping "
 "address."
 msgstr ""
 
-#: readiness-tests.php:146
+#: readiness-tests.php:150
 msgid "They cannot be based upon the shop base address."
 msgstr ""
 
-#: readiness-tests.php:166
+#: readiness-tests.php:170
 msgid "Could not get any VAT rate information."
 msgstr ""
 
-#: readiness-tests.php:199
+#: readiness-tests.php:203
 msgid ""
 "The following countries have tax rates set in a tax table, that were not "
 "found as any current VAT rate:"
 msgstr ""
 
-#: readiness-tests.php:209
+#: readiness-tests.php:213
 msgid ""
 "All countries had at least one tax table in which a current VAT rate entry "
 "was found."
 msgstr ""
 
-#: readiness-tests.php:211
+#: readiness-tests.php:215
 msgid ""
 "No tax rates at all were found in your WooCommerce tax tables. Have you set "
 "any up yet?"
 msgstr ""
 
-#: readiness-tests.php:218
+#: readiness-tests.php:222
 #, php-format
 msgid ""
 "Your base country (%s) has no tax rate set in any tax rate table; but, "
 "perhaps this was intentional."
 msgstr ""
 
-#: readiness-tests.php:221
+#: readiness-tests.php:225
 msgid "These countries have no tax rate set in any tax rate table:"
 msgstr ""
 
-#: readiness-tests.php:230
+#: readiness-tests.php:236
+msgid ""
+"The extended VAT check is not enabled (you have not entered your VAT number)"
+msgstr ""
+
+#: readiness-tests.php:256
+#, php-format
+msgid "The store VAT ID (%s) is valid, so extended VAT checks are possible."
+msgstr ""
+
+#: readiness-tests.php:259
+#, php-format
+msgid ""
+"The store VAT ID (%s) is invalid, so the VAT number validity check will "
+"always fail."
+msgstr ""
+
+#: readiness-tests.php:269
 msgid "Testing ability to fetch current VAT rates from the network."
 msgstr ""
 
-#: readiness-tests.php:231
+#: readiness-tests.php:270
 msgid ""
 "If this fails, then check (with your web hosting company) the network "
 "connectivity from your webserver."
 msgstr ""
 
-#: readiness-tests.php:237
+#: readiness-tests.php:276
 msgid "Taxes need to be enabled in the WooCommerce tax settings."
 msgstr ""
 
-#: readiness-tests.php:248
+#: readiness-tests.php:284 readiness-tests.php:292
 #, php-format
 msgid ""
 "The %s plugin is active, but support for subscription orders is not part of "
@@ -957,8 +1001,210 @@ msgid ""
 "subscriptions will not have VAT compliance information attached."
 msgstr ""
 
-#: readiness-tests.php:248
+#: readiness-tests.php:284
 msgid "WooCommerce subscriptions"
+msgstr ""
+
+#: readiness-tests.php:292
+msgid "RightPress Subscriptio"
+msgstr ""
+
+#: updater/class-udm-updater.php:120 updater/class-udm-updater.php:123
+#: updater/class-udm-updater.php:168 updater/class-udm-updater.php:171
+msgid "Errors occurred:"
+msgstr ""
+
+#: updater/class-udm-updater.php:202
+#, php-format
+msgid "Dismiss from main dashboard (for %s weeks)"
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+msgid "Warning"
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+#, php-format
+msgid ""
+"The installed version of %s has not been tested on your version of WordPress "
+"(%s)."
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+#, php-format
+msgid "It has been tested up to version %s."
+msgstr ""
+
+#: updater/class-udm-updater.php:232
+msgid ""
+"You should update to make sure that you have a version that has been tested "
+"for compatibility."
+msgstr ""
+
+#: updater/class-udm-updater.php:240
+#, php-format
+msgid ""
+"Your paid access to %s updates for this site has expired. You will no longer "
+"receive updates."
+msgstr ""
+
+#: updater/class-udm-updater.php:240 updater/class-udm-updater.php:242
+msgid ""
+"To regain access to updates (including future features and compatibility "
+"with future WordPress releases) and support, please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:242
+#, php-format
+msgid "Your paid access to %s updates for %s add-ons on this site has expired."
+msgstr ""
+
+#: updater/class-udm-updater.php:246
+#, php-format
+msgid ""
+"Your paid access to %s updates for %s of the %s add-ons on this site will "
+"soon expire."
+msgstr ""
+
+#: updater/class-udm-updater.php:246 updater/class-udm-updater.php:248
+msgid ""
+"To retain your access, and maintain access to updates (including future "
+"features and compatibility with future WordPress releases) and support, "
+"please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:248
+#, php-format
+msgid "Your paid access to %s updates for this site will soon expire."
+msgstr ""
+
+#: updater/class-udm-updater.php:252
+#, php-format
+msgid "Your paid access to %s support has expired."
+msgstr ""
+
+#: updater/class-udm-updater.php:252
+msgid "To regain your access, please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:254
+#, php-format
+msgid "Your paid access to %s support will soon expire."
+msgstr ""
+
+#: updater/class-udm-updater.php:254
+msgid "To maintain your access to support, please renew."
+msgstr ""
+
+#: updater/class-udm-updater.php:311
+#, php-format
+msgid "Access to plugin updates (%s)"
+msgstr ""
+
+#: updater/class-udm-updater.php:346
+msgid "You need to enter both an email address and a password"
+msgstr ""
+
+#: updater/class-udm-updater.php:358
+msgid "Connecting..."
+msgstr ""
+
+#: updater/class-udm-updater.php:360 updater/class-udm-updater.php:466
+msgid "Connect"
+msgstr ""
+
+#: updater/class-udm-updater.php:366 updater/class-udm-updater.php:383
+#: updater/class-udm-updater.php:388 updater/class-udm-updater.php:416
+#: updater/class-udm-updater.php:421
+msgid ""
+"The response from the remote site could not be decoded. (More information is "
+"recorded in the browser console)."
+msgstr ""
+
+#: updater/class-udm-updater.php:372
+msgid "Your email address and password were not recognised."
+msgstr ""
+
+#: updater/class-udm-updater.php:376
+msgid "You have successfully connected for access to updates to this plugin."
+msgstr ""
+
+#: updater/class-udm-updater.php:379
+msgid ""
+"Your login was accepted, but no available entitlement for this plugin was "
+"found."
+msgstr ""
+
+#: updater/class-udm-updater.php:379
+msgid ""
+"Has your licence expired, or have you used all your available licences "
+"elsewhere?"
+msgstr ""
+
+#: updater/class-udm-updater.php:407
+msgid "Disconnecting..."
+msgstr ""
+
+#: updater/class-udm-updater.php:409 updater/class-udm-updater.php:457
+msgid "Disconnect"
+msgstr ""
+
+#: updater/class-udm-updater.php:413
+msgid "You have successfully disconnected access to updates to this plugin."
+msgstr ""
+
+#: updater/class-udm-updater.php:454
+#, php-format
+msgid "You are connected to receive updates for %s (login: %s)"
+msgstr ""
+
+#: updater/class-udm-updater.php:461
+#, php-format
+msgid "Please enter your customer login to access updates for %s"
+msgstr ""
+
+#: updater/class-udm-updater.php:464
+msgid "Email"
+msgstr ""
+
+#: updater/class-udm-updater.php:465
+msgid "Password"
+msgstr ""
+
+#: rate-providers/base-xml.php:43
+msgid "Using this rates provider requires no configuration. "
+msgstr ""
+
+#: rate-providers/russiacb.php:27
+msgid "The Central Bank of the Russian Federation"
+msgstr ""
+
+#: rate-providers/russiacb.php:29
+msgid "Official exchange rates from the Bank of Russia."
+msgstr ""
+
+#: rate-providers/danishnb.php:27
+msgid "Danish National Bank"
+msgstr ""
+
+#: rate-providers/danishnb.php:29
+msgid "Official exchange rates from the Danish National Bank."
+msgstr ""
+
+#: rate-providers/hmrc-uk.php:28
+msgid "HM Revenue & Customs (UK)"
+msgstr ""
+
+#: rate-providers/hmrc-uk.php:30
+msgid "Official exchange rates from HM Revenue & Customs (UK)."
+msgstr ""
+
+#: rate-providers/ecb.php:27
+msgid "European Central Bank"
+msgstr ""
+
+#: rate-providers/ecb.php:29
+msgid "Official exchange rates from the European Central Bank (ECB)."
 msgstr ""
 
 #: rates.php:32
@@ -1475,9 +1721,6 @@ msgid "VAT"
 msgstr ""
 
 #: record-order-country.php:287
-msgctxt ""
-"Traditional VAT = VAT that does not vary by country under the new digital "
-"regulations; i.e. the VAT still charged on physical goods until 1 Jan 2016"
 msgid "(Traditional VAT)"
 msgstr ""
 
@@ -1526,224 +1769,46 @@ msgstr ""
 msgid "Validated VAT number: %s"
 msgstr ""
 
+#: record-order-country.php:356
+msgid "VIES extended information:"
+msgstr ""
+
 #: record-order-country.php:357
+msgid "Validated at:"
+msgstr ""
+
+#: record-order-country.php:358
+msgid "Request ID:"
+msgstr ""
+
+#: record-order-country.php:360
+msgid "Trader address:"
+msgstr ""
+
+#: record-order-country.php:363
+msgid "Trader name:"
+msgstr ""
+
+#: record-order-country.php:372
 msgid "Currency conversion source:"
 msgstr ""
 
-#: record-order-country.php:366
+#: record-order-country.php:381
 msgid "VAT paid:"
 msgstr ""
 
-#: record-order-country.php:388
+#: record-order-country.php:403
 msgid "Raw information:"
 msgstr ""
 
-#: record-order-country.php:396
+#: record-order-country.php:411
 msgid "Country used to calculate tax:"
 msgstr ""
 
-#: record-order-country.php:406
+#: record-order-country.php:421
 msgid "IP Country:"
 msgstr ""
 
-#: record-order-country.php:407
+#: record-order-country.php:422
 msgid "Source:"
-msgstr ""
-
-#: updater/class-udm-updater.php:120 updater/class-udm-updater.php:123
-#: updater/class-udm-updater.php:168 updater/class-udm-updater.php:171
-msgid "Errors occurred:"
-msgstr ""
-
-#: updater/class-udm-updater.php:202
-#, php-format
-msgid "Dismiss from main dashboard (for %s weeks)"
-msgstr ""
-
-#: updater/class-udm-updater.php:232
-msgid "Warning"
-msgstr ""
-
-#: updater/class-udm-updater.php:232
-#, php-format
-msgid ""
-"The installed version of %s has not been tested on your version of WordPress "
-"(%s)."
-msgstr ""
-
-#: updater/class-udm-updater.php:232
-#, php-format
-msgid "It has been tested up to version %s."
-msgstr ""
-
-#: updater/class-udm-updater.php:232
-msgid ""
-"You should update to make sure that you have a version that has been tested "
-"for compatibility."
-msgstr ""
-
-#: updater/class-udm-updater.php:240
-#, php-format
-msgid ""
-"Your paid access to %s updates for this site has expired. You will no longer "
-"receive updates."
-msgstr ""
-
-#: updater/class-udm-updater.php:240 updater/class-udm-updater.php:242
-msgid ""
-"To regain access to updates (including future features and compatibility "
-"with future WordPress releases) and support, please renew."
-msgstr ""
-
-#: updater/class-udm-updater.php:242
-#, php-format
-msgid "Your paid access to %s updates for %s add-ons on this site has expired."
-msgstr ""
-
-#: updater/class-udm-updater.php:246
-#, php-format
-msgid ""
-"Your paid access to %s updates for %s of the %s add-ons on this site will "
-"soon expire."
-msgstr ""
-
-#: updater/class-udm-updater.php:246 updater/class-udm-updater.php:248
-msgid ""
-"To retain your access, and maintain access to updates (including future "
-"features and compatibility with future WordPress releases) and support, "
-"please renew."
-msgstr ""
-
-#: updater/class-udm-updater.php:248
-#, php-format
-msgid "Your paid access to %s updates for this site will soon expire."
-msgstr ""
-
-#: updater/class-udm-updater.php:252
-#, php-format
-msgid "Your paid access to %s support has expired."
-msgstr ""
-
-#: updater/class-udm-updater.php:252
-msgid "To regain your access, please renew."
-msgstr ""
-
-#: updater/class-udm-updater.php:254
-#, php-format
-msgid "Your paid access to %s support will soon expire."
-msgstr ""
-
-#: updater/class-udm-updater.php:254
-msgid "To maintain your access to support, please renew."
-msgstr ""
-
-#: updater/class-udm-updater.php:311
-#, php-format
-msgid "Access to plugin updates (%s)"
-msgstr ""
-
-#: updater/class-udm-updater.php:346
-msgid "You need to enter both an email address and a password"
-msgstr ""
-
-#: updater/class-udm-updater.php:358
-msgid "Connecting..."
-msgstr ""
-
-#: updater/class-udm-updater.php:360 updater/class-udm-updater.php:466
-msgid "Connect"
-msgstr ""
-
-#: updater/class-udm-updater.php:366 updater/class-udm-updater.php:383
-#: updater/class-udm-updater.php:388 updater/class-udm-updater.php:416
-#: updater/class-udm-updater.php:421
-msgid ""
-"The response from the remote site could not be decoded. (More information is "
-"recorded in the browser console)."
-msgstr ""
-
-#: updater/class-udm-updater.php:372
-msgid "Your email address and password were not recognised."
-msgstr ""
-
-#: updater/class-udm-updater.php:376
-msgid "You have successfully connected for access to updates to this plugin."
-msgstr ""
-
-#: updater/class-udm-updater.php:379
-msgid ""
-"Your login was accepted, but no available entitlement for this plugin was "
-"found."
-msgstr ""
-
-#: updater/class-udm-updater.php:379
-msgid ""
-"Has your licence expired, or have you used all your available licences "
-"elsewhere?"
-msgstr ""
-
-#: updater/class-udm-updater.php:407
-msgid "Disconnecting..."
-msgstr ""
-
-#: updater/class-udm-updater.php:409 updater/class-udm-updater.php:457
-msgid "Disconnect"
-msgstr ""
-
-#: updater/class-udm-updater.php:413
-msgid "You have successfully disconnected access to updates to this plugin."
-msgstr ""
-
-#: updater/class-udm-updater.php:454
-#, php-format
-msgid "You are connected to received updates for %s (login: %s)"
-msgstr ""
-
-#: updater/class-udm-updater.php:461
-#, php-format
-msgid "Please enter your customer login to access updates for %s"
-msgstr ""
-
-#: updater/class-udm-updater.php:464
-msgid "Email"
-msgstr ""
-
-#: updater/class-udm-updater.php:465
-msgid "Password"
-msgstr ""
-
-#: rate-providers/base-xml.php:43
-msgid "Using this rates provider requires no configuration. "
-msgstr ""
-
-#: rate-providers/russiacb.php:27
-msgid "The Central Bank of the Russian Federation"
-msgstr ""
-
-#: rate-providers/russiacb.php:29
-msgid "Official exchange rates from the Bank of Russia."
-msgstr ""
-
-#: rate-providers/danishnb.php:27
-msgid "Danish National Bank"
-msgstr ""
-
-#: rate-providers/danishnb.php:29
-msgid "Official exchange rates from the Danish National Bank."
-msgstr ""
-
-#: rate-providers/hmrc-uk.php:28
-msgid "HM Revenue & Customs (UK)"
-msgstr ""
-
-#: rate-providers/hmrc-uk.php:30
-msgid "Official exchange rates from HM Revenue & Customs (UK)."
-msgstr ""
-
-#: rate-providers/ecb.php:27
-msgid "European Central Bank"
-msgstr ""
-
-#: rate-providers/ecb.php:29
-msgid "Official exchange rates from the European Central Bank (ECB)."
 msgstr ""

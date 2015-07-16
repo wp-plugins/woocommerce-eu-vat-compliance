@@ -2,7 +2,7 @@
 Contributors: DavidAnderson
 Requires at least: 3.2
 Tested up to: 4.2.2
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -110,6 +110,14 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.10.2 - 2015-07-16 =
+
+* FIX: Country selector shortcode now returns its output, instead of echo-ing it (which could cause it to appear in the wrong place)
+* FEATURE: (Premium) All (or your selection of) "readiness tests" can now be run automatically daily, with results of any failing tests emailed to specified email addresses.
+* FEATURE: The comprehensive CSV download (Premium) now includes an 'Invoice Number' column, if that feature is in use, currently supporting the WooCommerce PDF & Packing Slips plugin
+* TWEAK: Remove a couple of error_log() debugging calls left in 1.10.1
+* TWEAK: In in-dashboard reports, show all amounts to the number of decimal places configured in the main WooCommerce settings
 
 = 1.10.1 - 2015-07-13 =
 
@@ -462,4 +470,4 @@ directory due to licensing complications.
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 == Upgrade Notice ==
-* 1.10.1: WPML support. Various tweaks. Various new VAT-number-related new features and one fix (Premium).
+* 1.10.2: Include invoice numbers in CSV download (Premium); allow readiness tests to be automated/scheduled (Premium); show numbers in in-dashboard reports using configured decimal places; correct shortcode behaviour.

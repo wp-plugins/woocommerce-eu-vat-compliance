@@ -28,17 +28,51 @@ class WC_EU_VAT_Compliance_Control_Centre {
 		add_filter('woocommerce_screen_ids', array($this, 'woocommerce_screen_ids'));
 		add_filter('woocommerce_reports_screen_ids', array($this, 'woocommerce_screen_ids'));
 		add_action('wp_ajax_wc_eu_vat_cc', array($this, 'ajax'));
+		add_action('wceuvat_background_tests', array($this, 'wceuvat_background_tests'));
 	}
 
 	public function ajax() {
 
 		if (empty($_POST) || empty($_POST['subaction']) || !isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'wc_eu_vat_nonce')) die('Security check');
 
-		if ('savesettings' == $_POST['subaction']) {
+		if ('savesettings' == $_POST['subaction'] || 'savereadiness' == $_POST['subaction']) {
 
 			if (empty($_POST['settings']) || !is_string($_POST['settings'])) die;
 
 			parse_str($_POST['settings'], $posted_settings);
+
+			if ('savereadiness' == $_POST['subaction']) {
+
+				$save_email = empty($posted_settings['wceuvat_compliance_readiness_report_emails']) ? '' : $posted_settings['wceuvat_compliance_readiness_report_emails'];
+
+				$tests = array();
+				foreach ($posted_settings as $key => $val) {
+					if (0 === strpos($key, 'wceuvat_test_')) {
+						$test = substr($key, 13);
+						$tests[$test] = (empty($val)) ? false : true;
+					}
+				}
+
+				update_option('wceuvat_background_tests', array(
+					'email' => $save_email,
+					'tests' => $tests
+				));
+				
+				wp_clear_scheduled_hook('wceuvat_background_tests');
+
+				if ($save_email) {
+					$time_now = time();
+					$day_start = $time_now - ($time_now % 86400);
+					// 2:15 am. Choose a fixed time so that the event doesn't run lots of times when the settings are saved.
+					$next_time = $day_start + 8100 + rand(0, 3600);
+					if ($next_time < $time_now) $next_time += 86400;
+					wp_schedule_event($next_time, 'daily', 'wceuvat_background_tests');
+				}
+
+				echo json_encode(array('result' => 'ok'));
+				die;
+			}
+
 			$vat_settings = $this->get_settings_vat();
 			$tax_settings = $this->get_settings_tax();
 
@@ -57,6 +91,7 @@ class WC_EU_VAT_Compliance_Control_Centre {
 			}
 
 			$all_settings = array_merge($vat_settings, $tax_settings, $exchange_rate_settings);
+		
 
 			$any_found = false;
 
@@ -140,6 +175,44 @@ class WC_EU_VAT_Compliance_Control_Centre {
 		die;
 
 	}
+
+	public function wceuvat_background_tests() {
+		$opts = get_option('wceuvat_background_tests');
+
+		if (!is_array($opts) || empty($opts['email']) || empty($opts['tests']) || !is_array($opts['tests'])) return;
+
+		if (!class_exists('WC_EU_VAT_Compliance_Readiness_Tests')) require_once(WC_EU_VAT_COMPLIANCE_DIR.'/readiness-tests.php');
+		$test = new WC_EU_VAT_Compliance_Readiness_Tests();
+
+		$results = $test->get_results($opts['tests']);
+
+		$result_descriptions = $test->result_descriptions();
+
+		$any_failed = false;
+
+		$mail_body = site_url()."\r\n\r\n".__('The following readiness tests failed; for more information, or to change your configuration visit the EU VAT Compliance control centre in your WP dashboard.'."\r\n\r\n", 'wc_eu_vat_compliance');
+
+		foreach ($results as $id => $res) {
+			if (!is_array($res)) continue;
+			// fail|pass|warning|?
+			if ($res['result'] != 'fail') continue;
+			$any_failed = true;
+			$mail_body .= $res['label'].': '.$res['info']."\r\n\r\n";
+		}
+
+		if (!$any_failed) return;
+
+		foreach (explode(',', $opts['email']) as $sendmail_addr) {
+
+			$subject = __('Failed EU VAT compliance readiness tests on '.site_url(), 'wc_eu_vat_compliance');
+
+			$sent = wp_mail(trim($sendmail_addr), $subject, $mail_body);
+
+		}
+
+	}
+
+
 
 	public function woocommerce_screen_ids($screen_ids) {
 		if (!in_array('woocommerce_page_wc_eu_vat_compliance_cc', $screen_ids)) $screen_ids[] = 'woocommerce_page_wc_eu_vat_compliance_cc';
@@ -660,8 +733,6 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 		echo '</div>';
 
-		$nonce = wp_create_nonce("wc_eu_vat_nonce");
-
 		echo '<button style="margin-left: 4px;" id="wc_euvat_cc_settings_save" class="button button-primary">'.__('Save Settings', 'wc_eu_vat_compliance').'</button>
 		<script>
 
@@ -681,45 +752,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 					wceuvat_query_leaving = true;
 				});
 				$("#wc_euvat_cc_settings_save").click(function() {
-					$.blockUI({ message: "<h1>'.__('Saving...', 'wc_eu_vat_compliance').'</h1>" });
-
-
-					// https://stackoverflow.com/questions/10147149/how-can-i-override-jquerys-serialize-to-include-unchecked-checkboxes
-					var formData = $("#wceuvat_settings_accordion input, #wceuvat_settings_accordion textarea, #wceuvat_settings_accordion select").serialize();
-
-					// include unchecked checkboxes. use filter to only include unchecked boxes.
-					$.each($("#wceuvat_settings_accordion input[type=checkbox]")
-					.filter(function(idx){
-						return $(this).prop("checked") === false
-					}),
-					function(idx, el){
-						// attach matched element names to the formData with a chosen value.
-						var emptyVal = "0";
-						formData += "&" + $(el).attr("name") + "=" + emptyVal;
-					}
-					);
-
-					$.post(ajaxurl, {
-						action: "wc_eu_vat_cc",
-						subaction: "savesettings",
-						settings: formData,
-						_wpnonce: "'.$nonce.'"
-					}, function(response) {
-						try {
-							resp = $.parseJSON(response);
-							if (resp.result == "ok") {
-// 								alert("'.esc_js(__('Settings Saved.', 'wc_eu_vat_compliance')).'");
-								wceuvat_query_leaving = false;
-							} else {
-								alert("'.esc_js(__('Response:', 'wc_eu_vat_compliance')).' "+resp.result);
-							}
-						} catch(err) {
-							alert("'.esc_js(__('Response:', 'wc_eu_vat_compliance')).' "+response);
-							console.log(response);
-							console.log(err);
-						}
-						$.unblockUI();
-					});
+					wceuvat_savesettings("savesettings");
 				});
 			});
 		</script>
@@ -827,6 +860,9 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 
 	}
 
+
+
+
 	public function render_tab_readiness() {
 		echo '<h2>'.__('EU VAT Compliance Readiness', 'wc_eu_vat_compliance').'</h2>';
 
@@ -839,8 +875,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 			echo '<p><strong><em>'.__('N.B. It is not yet the 1st of January 2015; so, you may not want to act on all the items mentioned below yet.', 'wc_eu_vat_compliance').'</em></strong></p>';
 		}
 
-		// TODO
-		echo '<p>'.__('Please come back here after your next plugin update, to see what has been added - this feature is still under development. When done, it will advise you on which of your WooCommerce and other settings may need adjusting for EU VAT compliance.', 'wc_eu_vat_compliance').'</p>';
+// 		echo '<p>'.__('Please come back here after your next plugin update, to see what has been added - this feature is still under development. When done, it will advise you on which of your WooCommerce and other settings may need adjusting for EU VAT compliance.', 'wc_eu_vat_compliance').'</p>';
 
 		if (!class_exists('WC_EU_VAT_Compliance_Readiness_Tests')) require_once(WC_EU_VAT_COMPLIANCE_DIR.'/readiness-tests.php');
 		$test = new WC_EU_VAT_Compliance_Readiness_Tests();
@@ -852,6 +887,7 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		<table>
 		<thead>
 			<tr>
+				<th></th>
 				<th style="text-align:left; min-width: 140px;"><?php _e('Test', 'wc_eu_vat_compliance');?></th>
 				<th style="text-align:left; min-width:60px;"><?php _e('Result', 'wc_eu_vat_compliance');?></th>
 				<th style="text-align:left;"><?php _e('Futher information', 'wc_eu_vat_compliance');?></th>
@@ -859,6 +895,15 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		</thead>
 		<tbody>
 		<?php
+
+		$opts = get_option('wceuvat_background_tests');
+		$email = empty($opts['email']) ? '' : (string)$opts['email'];
+
+		if (!is_array($opts) || empty($opts['email']) || empty($opts['tests']) || !is_array($opts['tests'])) return;
+
+		$default_bottom_blurb = '<p><a href="https://www.simbahosting.co.uk/s3/product/woocommerce-eu-vat-compliance/">'.__('To automatically run these tests daily, and notify yourself of any failed tests by email, use our Premium version.', 'wc_eu_vat_compliance').'</a></p>';
+		$bottom_blurb = apply_filters('wceuvat_readinesstests_bottom_section', $default_bottom_blurb, $email);
+		$premium_present = ($bottom_blurb == $default_bottom_blurb) ? false : true;
 
 		foreach ($results as $id => $res) {
 			if (!is_array($res)) continue;
@@ -878,9 +923,18 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 					break;
 			}
 			$row_bg = 'color:'.$col;
+
+			$checked = empty($opts['tests'][$id]) ? false : true;
+
 			?>
+
 			<tr style="<?php echo $row_bg;?>">
-				<td style="vertical-align:top;"><?php echo $res['label'];?></td>
+				<td style="vertical-align:top;"><?php
+				if ($premium_present) { ?>
+					<input type="checkbox" id="wceuvat_test_<?php echo esc_attr($id);?>" name="wceuvat_test_<?php echo esc_attr($id);?>" value="1" <?php if ($checked) echo 'checked="checked"'; ?>>
+				<?php } ?>
+				</td>
+				<td style="vertical-align:top;"><label for="wceuvat_test_<?php echo esc_attr($id);?>"><?php echo $res['label'];?></label></td>
 				<td style="vertical-align:top;"><?php echo $result_descriptions[$res['result']];?></td>
 				<td style="vertical-align:top;"><?php echo $res['info'];?></td>
 			</tr>
@@ -892,7 +946,8 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		</table>
 		<?php
 
-		// TODO: Links to the other stuff
+		echo $bottom_blurb;
+		// TODO: Links to the other stuff?
 
 		echo '</div>';
 
@@ -905,8 +960,62 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 		$test = esc_js(__('Test Provider', 'wc_eu_vat_compliance'));
 		$nonce = wp_create_nonce("wc_eu_vat_nonce");
 		$response = esc_js(__('Response:', 'wc_eu_vat_compliance'));
+
+		echo '
+		<script>;
+			function wceuvat_savesettings(subaction) {
+
+				jQuery.blockUI({ message: "<h1>'.__('Saving...', 'wc_eu_vat_compliance').'</h1>" });
+
+				// https://stackoverflow.com/questions/10147149/how-can-i-override-jquerys-serialize-to-include-unchecked-checkboxes
+
+				var formData;
+				var which_checkboxes;
+
+				if ("savereadiness" == subaction) {
+					formData = jQuery("#wceuvat-navtab-readiness-content input, #wceuvat-navtab-readiness-content textarea, #wceuvat-navtab-readiness-content select").serialize();
+					which_checkboxes = "#wceuvat-navtab-readiness-content";
+				} else {
+					formData = jQuery("#wceuvat_settings_accordion input, #wceuvat_settings_accordion textarea, #wceuvat_settings_accordion select").serialize();
+					which_checkboxes = "#wceuvat_settings_accordion";
+				}
+
+				// include unchecked checkboxes. use filter to only include unchecked boxes.
+				jQuery.each(jQuery(which_checkboxes+" input[type=checkbox]")
+				.filter(function(idx){
+					return jQuery(this).prop("checked") === false
+				}),
+				function(idx, el){
+					// attach matched element names to the formData with a chosen value.
+					var emptyVal = "0";
+					formData += "&" + jQuery(el).attr("name") + "=" + emptyVal;
+				}
+				);
+
+				jQuery.post(ajaxurl, {
+					action: "wc_eu_vat_cc",
+					subaction: subaction,
+					settings: formData,
+					_wpnonce: "'.$nonce.'"
+				}, function(response) {
+					try {
+						resp = jQuery.parseJSON(response);
+						if (resp.result == "ok") {
+// 								alert("'.esc_js(__('Settings Saved.', 'wc_eu_vat_compliance')).'");
+							wceuvat_query_leaving = false;
+						} else {
+							alert("'.esc_js(__('Response:', 'wc_eu_vat_compliance')).' "+resp.result);
+						}
+					} catch(err) {
+						alert("'.esc_js(__('Response:', 'wc_eu_vat_compliance')).' "+response);
+						console.log(response);
+						console.log(err);
+					}
+					jQuery.unblockUI();
+				});
+			}';
+
 		echo <<<ENDHERE
-		<script>
 			function test_provider(key) {
 				jQuery('#wc_eu_vat_test_provider_button_'+key).html('$testing');
 				jQuery.post(ajaxurl, {
@@ -928,6 +1037,11 @@ GeoIP is not really a setting. We need a separate panel for checking that everyt
 				jQuery('#wc_eu_vat_test_provider_button_'+key).html('$test');
 			}
 			jQuery(document).ready(function($) {
+
+				$("#wc_euvat_cc_readiness_save").click(function() {
+					wceuvat_savesettings("savereadiness");
+				});
+
 				function show_correct_provider() {
 					var provider = $('#woocommerce_eu_vat_compliance_exchange_rate_provider').val();
 					$('.wceuvat-rate-provider_container').hide();

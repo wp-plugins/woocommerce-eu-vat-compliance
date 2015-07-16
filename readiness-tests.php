@@ -37,11 +37,14 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 
 	}
 
-	public function get_results() {
+	public function get_results($only_these_tests = false) {
 
 		$results = array();
 
 		foreach ($this->tests as $test => $label) {
+
+			if (is_array($only_these_tests) && empty($only_these_tests[$test])) continue;
+
 			if (!method_exists($this, $test)) continue;
 			$res = call_user_func(array($this, $test));
 			// label, result, info
