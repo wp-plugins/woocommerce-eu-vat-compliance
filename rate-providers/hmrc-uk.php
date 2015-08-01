@@ -38,10 +38,13 @@ class WC_EU_VAT_Compliance_Rate_Provider_hmrc_uk extends WC_EU_VAT_Compliance_Ra
 		$yer = gmdate('y', $the_time);
 
 		if ($yer >= 15) {
-			# Just why did they do this? Grrr...
+			# Jan 2015: Just why did they do this? Grrr...
+			# Feb 2015: Again!!
+			# Mar 2015: Uses previous (Dec 2014) format, so change order to save cycles.
 			return array(
+				"exrates-monthly-$mon$yer.xml",
+				"excrates_monthly$mon$yer.xml",
 				"exrates_monthly_$mon$yer.xml",
-				"exrates-monthly-$mon$yer.xml"
 			);
 		} else {
 			return "exrates-monthly-$mon$yer.xml";

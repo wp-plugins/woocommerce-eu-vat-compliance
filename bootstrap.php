@@ -34,7 +34,7 @@ $potential_classes_to_activate = array(
 	'WC_EU_VAT_Compliance_Premium',
 );
 
-if (is_admin()) {
+if (is_admin() || ( defined('DOING_CRON') && DOING_CRON) ) {
 	@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/reports.php');
 	@include_once(WC_EU_VAT_COMPLIANCE_DIR.'/control-centre.php');
 	$potential_classes_to_activate[] = 'WC_EU_VAT_Compliance_Reports';
@@ -48,6 +48,8 @@ class WC_EU_VAT_Compliance {
 
 	private $default_vat_matches = 'VAT, V.A.T, IVA, I.V.A., Value Added Tax, TVA, T.V.A.';
 	public $wc;
+
+	public $at_least_22 = true;
 	public $settings;
 
 	private $wcpdf_order_id;
@@ -58,6 +60,7 @@ class WC_EU_VAT_Compliance {
 
 		$this->data_sources = array(
 			'HTTP_CF_IPCOUNTRY' => __('CloudFlare Geo-Location', 'wc_eu_vat_compliance'),
+			'woocommerce' => __('WooCommerce 2.3+ built-in geo-location', 'wc_eu_vat_compliance'),
 			'geoip_detect_get_info_from_ip_function_not_available' => __('MaxMind GeoIP database was not installed', 'wc_eu_vat_compliance'),
 			'geoip_detect_get_info_from_ip' => __('MaxMind GeoIP database', 'wc_eu_vat_compliance'),
 		);
@@ -65,10 +68,10 @@ class WC_EU_VAT_Compliance {
 		add_action('before_woocommerce_init', array($this, 'before_woocommerce_init'), 1, 1);
 		add_action('plugins_loaded', array($this, 'plugins_loaded'));
 
+		add_action('init', array($this, 'init'));
+
 		add_action( 'woocommerce_settings_tax_options_end', array($this, 'woocommerce_settings_tax_options_end'));
 		add_action( 'woocommerce_update_options_tax', array( $this, 'woocommerce_update_options_tax'));
-
-		add_action('woocommerce_checkout_process', array($this, 'woocommerce_checkout_process'));
 
 		add_filter('network_admin_plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
 		add_filter('plugin_action_links', array($this, 'plugin_action_links'), 10, 2);
@@ -84,15 +87,32 @@ class WC_EU_VAT_Compliance {
 		add_action('woocommerce_check_cart_items', array($this, 'woocommerce_check_cart_items'));
 		add_action('woocommerce_checkout_process', array($this, 'woocommerce_check_cart_items'));
 
+		if (file_exists(WC_EU_VAT_COMPLIANCE_DIR.'/updater/updater.php')) include_once(WC_EU_VAT_COMPLIANCE_DIR.'/updater/updater.php');
+
+	}
+
+	public function init() {
+		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || class_exists('WC_Geolocation') || !is_admin() || !current_user_can('manage_options')) return;
+
+		if (!function_exists('geoip_detect_get_info_from_ip')) {
+			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
+		}
+
+		if (function_exists('geoip_detect_get_database_upload_filename')) {
+			$filename = geoip_detect_get_database_upload_filename();
+			if (!file_exists($filename)) add_action('admin_notices', array($this, 'admin_notice_no_geoip_database'));
+		}
 	}
 
 	// If EU VAT checkout is forbidden, then this function is where the work is done to prevent it
 	public function woocommerce_check_cart_items() {
 
 		// Taxes turned on on the store, and VAT-able orders not forbidden?
-		if ('yes' != get_option('woocommerce_eu_vat_compliance_forbid_vatable_checkout', 'no') || 'yes' != get_option('woocommerce_calc_taxes')) return;
+		if ('yes' != get_option('woocommerce_eu_vat_compliance_forbid_vatable_checkout', 'no') | 'yes' != get_option('woocommerce_calc_taxes')) return;
+
 		$opts_classes = $this->get_euvat_tax_classes();
 
+		$is_forbidden = false;
 		$relevant_products_found = false;
 		$cart = $this->wc->cart->get_cart();
 
@@ -108,24 +128,32 @@ class WC_EU_VAT_Compliance {
 				break;
 			}
 		}
-		if (!$relevant_products_found) return;
 
-		$taxable_address = $this->wc->customer->get_taxable_address();
-		$eu_vat_countries = $this->get_european_union_vat_countries();
+		if ($relevant_products_found) {
+			$taxable_address = $this->wc->customer->get_taxable_address();
+			$eu_vat_countries = $this->get_european_union_vat_countries();
 
-		if (empty($taxable_address[0]) || !in_array($taxable_address[0], $eu_vat_countries)) return;
-
-		// If in cart, then warn - they still may select a different VAT country.
-		$current_filter = current_filter();
-		if ('woocommerce_checkout_process' != $current_filter) {
-			// Cart: just warn
-			echo "<p class=\"woocommerce-info\" id=\"wceuvat_notpossible\">".apply_filters('wceuvat_euvatcart_message', __('Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws).', 'wc_eu_vat_compliance'))."</p>";
-		} else {
-			// Attempting to check-out: prevent
-			$this->add_wc_error(
-				apply_filters('wceuvat_euvatcheckoutforbidden_message', __('This order cannot be processed. Due to the high costs of complying with EU VAT laws, we do not sell items liable to EU VAT to EU customers.', 'wc_eu_vat_compliance'))
-			);
+			if (!empty($taxable_address[0]) && in_array($taxable_address[0], $eu_vat_countries)) {
+				$is_forbidden = true;
+			}
 		}
+
+		$is_forbidden = apply_filters('wceuvat_check_cart_items_is_forbidden', $is_forbidden, $relevant_products_found);
+
+		if ($is_forbidden) {
+			// If in cart, then warn - they still may select a different VAT country.
+			$current_filter = current_filter();
+			if ('woocommerce_checkout_process' != $current_filter) {
+				// Cart: just warn
+				echo "<p class=\"woocommerce-info\" id=\"wceuvat_notpossible\">".apply_filters('wceuvat_euvatcart_message', __('Depending on your country, it may not be possible to purchase all the items in this cart. This is because this store does not sell items liable to EU VAT to EU customers (due to the high costs of complying with EU VAT laws).', 'wc_eu_vat_compliance'))."</p>";
+			} else {
+				// Attempting to check-out: prevent
+				$this->add_wc_error(
+					apply_filters('wceuvat_euvatcheckoutforbidden_message', __('This order cannot be processed. Due to the high costs of complying with EU VAT laws, we do not sell items liable to EU VAT to EU customers.', 'wc_eu_vat_compliance'))
+				);
+			}
+		}
+
 	}
 
 	public function get_tax_classes() {
@@ -245,35 +273,6 @@ class WC_EU_VAT_Compliance {
 		return array_merge($eu_countries, $extra_countries);
 	}
 
-	public function woocommerce_checkout_process() {
-
-		return;
-
-		$classes = get_option('woocommerce_eu_vat_compliance_restricted_classes');
-		if (empty($classes) || !is_array($classes)) return;
-
-		// TODO: Finish this
-		$relevant_products_found = false;
-		$cart = $this->wc->cart->get_cart();
-		foreach ($cart as $item) {
-			$_product = $item['data'];
-			$shipping_class = $_product->get_shipping_class_id();
-			if (!empty($shipping_class) && in_array($shipping_class, $classes)) {
-				$relevant_products_found = true;
-				break;
-			}
-		}
-		if (!$relevant_products_found) return;
-
-		# TODO: Check the country. Call $this->add_wc_error() if checkout needs to be halted.
-		# TODO: Also put up a warning at the cart stage. That is done via simply echoing:
-		/*
-e.g.
-echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filters('openinghours_frontendtext_currentlyclosedinfo', __('We are currently closed; but you will be able to choose a time for later delivery.', 'openinghours'))."</p>";
-		*/
-
-	}
-
 	public function enqueue_jquery_ui_style() {
 		global $wp_scripts;
 		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
@@ -344,6 +343,7 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		return $order;
 	}
 
+	// This function is for output - it will add on conversions into the indicate currencies
 	public function get_amount_in_conversion_currencies($amount, $conversion_currencies, $conversion_rates, $order_currency, $paid = false) {
 		foreach ($conversion_currencies as $currency) {
 			$rate = ($currency == $order_currency) ? 1 : (isset($conversion_rates['rates'][$currency]) ? $conversion_rates['rates'][$currency] : '??');
@@ -413,7 +413,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 		$vat_shipping_total = 0;
 		$vat_total_base_currency = 0;
 		$vat_shipping_total_base_currency = 0;
-		$base_currency_totals_are_reliable = true;
 
 		// Add extra information
 		$taxes = $this->add_tax_rates_details($taxes);
@@ -453,7 +452,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 						// This will be wrong, of course, unless your conversion rate is 1:1
 						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount'];
 						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount'];
-						$base_currency_totals_are_reliable = false;
 					} else {
 						if (!empty($tax['tax_amount'])) $vat_total_base_currency += $tax['tax_amount_base_currency'];
 						if (!empty($tax['shipping_tax_amount'])) $vat_shipping_total_base_currency += $tax['shipping_tax_amount_base_currency'];
@@ -476,7 +474,6 @@ echo "<p class=\"woocommerce-info\" id=\"openinghours-notpossible\">".apply_filt
 			'items_total_base_currency' => $vat_total_base_currency,
 			'shipping_total_base_currency' => $vat_shipping_total_base_currency,
 			'total_base_currency' => $vat_total_base_currency + $vat_shipping_total_base_currency,
-			'base_currency_totals_are_reliable' => $base_currency_totals_are_reliable
 		), $order, $taxes, $currency, $base_currency);
 
 /*
@@ -547,6 +544,11 @@ Array
 
 		return $vat_paid;
 
+	}
+
+	// This is here as a funnel that can be changed in future, without needing to adapt everywhere that calls it
+	public function round_amount($amount) {
+		return round($amount, 2);
 	}
 
 	// This function lightly adapted from the work of Diego Zanella
@@ -649,13 +651,13 @@ Array
 	// From WC 2.2
 	public function order_status_to_text($status) {
 		$order_statuses = array(
-			'wc-pending'    => _x( 'Pending Payment', 'Order status', 'woocommerce' ),
-			'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ),
-			'wc-on-hold'    => _x( 'On Hold', 'Order status', 'woocommerce' ),
-			'wc-completed'  => _x( 'Completed', 'Order status', 'woocommerce' ),
-			'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ),
-			'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
-			'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
+			'wc-pending'    => _x( 'Pending Payment', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-processing' => _x( 'Processing', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-on-hold'    => _x( 'On Hold', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-completed'  => _x( 'Completed', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-refunded'   => _x( 'Refunded', 'Order status', 'wc_eu_vat_compliance' ),
+			'wc-failed'     => _x( 'Failed', 'Order status', 'wc_eu_vat_compliance' ),
 		);
 		$order_statuses = apply_filters( 'wc_order_statuses', $order_statuses );
 
@@ -675,6 +677,8 @@ Array
 	}
 
 	public function plugins_loaded() {
+
+		$this->at_least_22 = (defined('WOOCOMMERCE_VERSION') && version_compare(WOOCOMMERCE_VERSION, '2.2', '<')) ? false : true;
 
 		load_plugin_textdomain('wc_eu_vat_compliance', false, basename(WC_EU_VAT_COMPLIANCE_DIR).'/languages');
 
@@ -703,7 +707,7 @@ Array
 			'default'		=> 'yes'
 		);
 
-# TODO
+# This is always on - there's no reason to make it an option
 // 		if (!defined('WOOCOMMERCE_VERSION') || version_compare(WOOCOMMERCE_VERSION, '2.2.9', '>=')) {
 // 			$this->settings[] = array(
 // 				'name' 		=> __( "Show prices based on visitor's GeoIP-detected country", 'wc_eu_vat_compliance' ),
@@ -722,16 +726,6 @@ Array
 			'css'		=> 'width:100%; height: 100px;'
 		);
 
-		if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"]) || !is_admin() || !current_user_can('manage_options')) return;
-
-		if (!function_exists('geoip_detect_get_info_from_ip')) {
-			if (empty($_REQUEST['action']) || ('install-plugin' != $_REQUEST['action'] && 'activate' != $_REQUEST['action'])) add_action('admin_notices', array($this, 'admin_notice_no_geoip_plugin'));
-		}
-
-		if (function_exists('geoip_detect_get_database_upload_filename')) {
-			$filename = geoip_detect_get_database_upload_filename();
-			if (!file_exists($filename)) add_action('admin_notices', array($this, 'admin_notice_no_geoip_database'));
-		}
 	}
 
 	# Function adapted from Aelia Currency Switcher under the GPLv3 (http://aelia.co)
@@ -766,6 +760,12 @@ Array
 			$country_info = array(
 				'source' => 'HTTP_CF_IPCOUNTRY',
 				'data' => $_SERVER["HTTP_CF_IPCOUNTRY"]
+			);
+		} elseif (class_exists('WC_Geolocation') && ($data = WC_Geolocation::geolocate_ip()) && is_array($data) && isset($data['country'])) {
+			$info = null;
+			$country_info = array(
+				'source' => 'woocommerce',
+				'data' => $data['country']
 			);
 		} elseif (!function_exists('geoip_detect_get_info_from_ip')) {
 			$country_info = array(
@@ -822,7 +822,8 @@ Array
 
 		if (current_user_can('install_plugins')) {
 			if (!file_exists(WP_PLUGIN_DIR.'/geoip-detect')) {
-				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
+// 				echo '<a href="'.wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=geoip-detect'), 'install-plugin_geoip-detect').'">'.__('Follow this link to install it', 'wc_eu_vat_compliance').'</a>';
+				echo '<a href="https://github.com/yellowtree/wp-geoip-detect/releases">'.__('Follow this link to get it', 'wc_eu_vat_compliance').'</a>';
 			} elseif (file_exists(WP_PLUGIN_DIR.'/geoip-detect/geoip-detect.php')) {
 				echo '<a href="'.esc_url(wp_nonce_url(self_admin_url('plugins.php?action=activate&plugin=geoip-detect/geoip-detect.php'), 'activate-plugin_geoip-detect/geoip-detect.php')).'">'.__('Follow this link to activate it.', 'wc_eu_vat_compliance').'</a>';
 			}

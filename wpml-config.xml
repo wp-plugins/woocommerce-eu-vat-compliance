@@ -1,0 +1,9 @@
+<wpml-config>
+	<admin-texts>
+		<key name="wc_eu_vat_compliance">
+			<key name="woocommerce_eu_vat_compliance_checkout_title" />
+			<key name="woocommerce_eu_vat_compliance_checkout_message" />
+			<key name="woocommerce_price_display_suffix" />
+		</key>
+	</admin-texts>
+</wpml-config>
