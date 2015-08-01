@@ -1,8 +1,8 @@
 === WooCommerce EU VAT Compliance ===
 Contributors: DavidAnderson
 Requires at least: 3.2
-Tested up to: 4.2.2
-Stable tag: 1.10.3
+Tested up to: 4.3
+Stable tag: 1.10.4
 Tags: woocommerce, eu vat, vat compliance, iva, moss, vat rates, eu tax, hmrc, digital vat, tax, woocommerce taxes
 License: GPLv3+
 Donate link: http://david.dw-perspective.org.uk/donate
@@ -63,7 +63,7 @@ It is believed (but not legally guaranteed), that armed with the above capabilit
 
 = Footnotes and legalese =
 
-This plugin is tested on WooCommerce 2.1 up to 2.3 (releases up to 1.7.1 were also tested on WC 2.0 - you can still download those versions if you wish). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
+This plugin is tested on WooCommerce 2.1 up to 2.4 (releases up to 1.7.1 were also tested on WC 2.0 - you can still download those versions if you wish). It fetches data on current VAT rales from Amazon S3 (using SSL if possible); or, upon failure to connect to Amazon S3, from https://euvatrates.com. If your server's firewall does not permit this, then it will use static data contained in the plugin.
 
 Geographical IP lookups are performed via WooCommerce's built-in geo-location features (WC 2.3+), or if on WC 2.2 or earlier then via the MaxMind GeoIP database via the GeoIP-plugin, which you will be prompted to install; or, alternatively, if you use CloudFlare, then you can <a href="https://support.cloudflare.com/hc/en-us/articles/200168236-What-does-CloudFlare-IP-Geolocation-do-">activate the CloudFlare feature for sending geographical information</a>.
 
@@ -110,6 +110,12 @@ There is a widget for this; so, look in your dashboard, in Appearance -> Widgets
 This is not strictly an EU VAT compliance issue, and so does not come under the remit of this plugin. (Suggestions that can be found on the Internet that charging different prices in difference countries breaks non-discrimination law have no basis in fact). There are, however, solutions available for this problem; for example: https://marketpress.com/product/woocommerce-eu-vat-checkout/
 
 == Changelog ==
+
+= 1.10.4 - 2015-08-01 =
+
+* TWEAK: Store's VAT number check (Premium) in readiness report will display an error message, if possible, if validation fails
+* COMPATIBILITY: Tested with WooCommerce 2.4 (RC1) and WP 4.3 (RC1). No issues identified (i.e. existing release believed to be compatible).
+* TRANSLATION: Updated French translation (thanks to Guy Pasteger)
 
 = 1.10.3 - 2015-07-16 =
 

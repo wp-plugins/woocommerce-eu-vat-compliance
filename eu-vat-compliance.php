@@ -9,7 +9,7 @@ Domain Path: /languages
 Author: David Anderson
 Author URI: http://www.simbahosting.co.uk/s3/shop/
 Requires at least: 3.2
-Tested up to: 4.2
+Tested up to: 4.3
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

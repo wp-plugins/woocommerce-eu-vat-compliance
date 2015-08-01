@@ -254,12 +254,21 @@ class WC_EU_VAT_Compliance_Readiness_Tests {
 			$response = $this->vatnumber_class->get_validation_result_from_network($storevat_country, $storevat_id, true);
 
 			//if the VAT is valid
-			if (!empty( $response['body'] ) && $response['body'] == "true" ) {
+			if (is_array($response) && !empty( $response['body'] ) && $response['body'] == "true" ) {
 				$result = true;
 				$info = sprintf(__('The store VAT ID (%s) is valid, so extended VAT checks are possible.', 'wc_eu_vat_compliance'), $storevat_country.' '.$storevat_id);
 			} else {
 				$result = false;
-				$info = sprintf(__('The store VAT ID (%s) is invalid, so the VAT number validity check will always fail.', 'wc_eu_vat_compliance'), $storevat_country.' '.$storevat_id);
+
+				$info = sprintf(__('The store VAT ID (%s) could not be confirmed as valid, so the VAT number validity check will always fail.', 'wc_eu_vat_compliance'), $storevat_country.' '.$storevat_id);
+
+				if (is_array($response) && !empty($response['body'])) {
+					$resp = json_decode($response['body'], true);
+					if (is_array($resp) && !empty($resp['error']) && !empty($resp['error_message'])) {
+						$info .= ' '.__('Error:', 'wc_eu_vat_compliance').' '.$resp['error_message'];
+					}
+				}
+
 			}
 
 		}
